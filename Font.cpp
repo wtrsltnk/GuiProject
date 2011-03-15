@@ -6,6 +6,7 @@
  */
 
 #include "Font.h"
+#include <stdio.h>
 
 using namespace ui;
 
