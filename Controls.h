@@ -1,12 +1,12 @@
 /*
- * box
+ * Controls.h
  *
  *  Created on: Mar 14, 2011
  *      Author: wouter
  */
 
-#ifndef BOX_H
-#define BOX_H
+#ifndef CONTROLS_H
+#define CONTROLS_H
 
 #include "GuiManager.h"
 
@@ -60,6 +60,7 @@ namespace ControlTypes
 {
 enum
 {
+	Label = 0,
 	Button = 1,
 	Checkbox = 2,
 	Textbox = 3,
@@ -71,13 +72,27 @@ class Control
 {
 public:
 	Control(int type);
+	Control(int type, int x, int y, int w, int h);
 	virtual ~Control();
 
-	virtual void render() = 0;
+	void renderControl();
 
 	int getType() { return this->mType; }
+
+	virtual void position(float pos[2]);
+	virtual void setPosition(float pos[2]);
+	virtual void setPosition(float x, float y);
+
+	virtual void size(float size[2]);
+	virtual void setSize(float size[2]);
+	virtual void setSize(float w, float h);
+
+	virtual void updateBox();
+
 protected:
 	box_t box;
+
+	virtual void render() = 0;
 
 	void renderBox(bool ignoreState = false);
 	void renderText(float x, float y, const char *text, unsigned int color);
@@ -86,11 +101,14 @@ private:
 	friend class GuiManager;
 };
 
-class TextControl : public Control
+class Label : public Control
 {
 public:
-	TextControl(int type, const char* text);
-	virtual ~TextControl();
+	Label(const char* text, int type = ControlTypes::Label);
+	Label(const char* text, int x, int y, int w, int h, int type = ControlTypes::Label);
+	virtual ~Label();
+
+	virtual void render();
 
 	virtual const char* text() const;
 	virtual void setText(const char* text);
@@ -103,7 +121,7 @@ protected:
 typedef Event<EventType::Click> ClickEvent;
 typedef ClickEvent::Handler ClickEventHandler;
 
-class Button : public TextControl
+class Button : public Label
 {
 public:
 	Button(int x, int y, int w, int h, const char* text);
@@ -112,12 +130,13 @@ public:
 	virtual void render();
 
 	ClickEvent Click;
+
 };
 
 typedef Event<EventType::StateChanged> StateChangedEvent;
 typedef StateChangedEvent::Handler StateChangedEventHandler;
 
-class Checkbox : public TextControl
+class Checkbox : public Label
 {
 public:
 	Checkbox(int x, int y, int w, int h, const char* text);
@@ -131,12 +150,14 @@ public:
 
 	StateChangedEvent StateChanged;
 
+	virtual void updateBox();
+
 private:
 	bool mChecked;
 
 };
 
-class Textbox : public TextControl
+class Textbox : public Label
 {
 public:
 	Textbox(int x, int y, int w, int h, const char* text);
@@ -184,4 +205,4 @@ protected:
 
 }	/* namespace ui */
 
-#endif	/* BOX_H */
+#endif	/* CONTROLS_H */

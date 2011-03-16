@@ -11,7 +11,7 @@
 #include "GlutApplication.h"
 #include "Font.h"
 #include "GuiManager.h"
-#include "box.h"
+#include "Controls.h"
 
 class MainWindow : public GlutApplication, public ui::GuiEventHandler
 {
@@ -31,6 +31,7 @@ public:
 	virtual void render();
 
 	ui::Checkbox* cb;
+	ui::Textbox* tb;
 };
 
 #endif /* MAINWINDOW_H_ */

@@ -1,11 +1,11 @@
 /*
- * box.cpp
+ * Controls
  *
  *  Created on: Mar 14, 2011
  *      Author: wouter
  */
 
-#include "box.h"
+#include "Controls.h"
 #include "Font.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -21,10 +21,10 @@ using namespace ui;
 bool box_t::isPointInBox(float point[2])
 {
 	if (point[0] < this->hitbox[0]) return false;
-	if (point[0] > this->hitbox[2]) return false;
+	if (point[0] > this->hitbox[0] + this->hitbox[2]) return false;
 
 	if (point[1] < this->hitbox[1]) return false;
-	if (point[1] > this->hitbox[3]) return false;
+	if (point[1] > this->hitbox[1] + this->hitbox[3]) return false;
 
 	return true;
 }
@@ -36,6 +36,19 @@ bool box_t::isPointInBox(float point[2])
 Control::Control(int type)
 	: mType(type)
 {
+	this->setPosition(0, 0);
+	this->setSize(64, 24);
+
+	GuiManager::instance()->addControl(this);
+	this->box.font = GuiManager::instance()->sDefaultFont;
+}
+
+Control::Control(int type, int x, int y, int w, int h)
+	: mType(type)
+{
+	this->setPosition(x, y);
+	this->setSize(w, h);
+
 	GuiManager::instance()->addControl(this);
 	this->box.font = GuiManager::instance()->sDefaultFont;
 }
@@ -45,8 +58,60 @@ Control::~Control()
 	GuiManager::instance()->removeControl(this);
 }
 
+void Control::renderControl()
+{
+	// ToDo : some extra stuff which is control wide
+	this->render();
+}
+
+void Control::position(float pos[2])
+{
+	pos[0] = this->box.hitbox[0];
+	pos[1] = this->box.hitbox[1];
+}
+
+void Control::setPosition(float pos[2])
+{
+	this->box.hitbox[0] = pos[0];
+	this->box.hitbox[1] = pos[1];
+}
+
+void Control::setPosition(float x, float y)
+{
+	this->box.hitbox[0] = x;
+	this->box.hitbox[1] = y;
+}
+
+void Control::size(float size[2])
+{
+	size[0] = this->box.hitbox[2];
+	size[1] = this->box.hitbox[3];
+}
+
+void Control::setSize(float size[2])
+{
+	this->box.hitbox[2] = size[0];
+	this->box.hitbox[3] = size[1];
+}
+
+void Control::setSize(float w, float h)
+{
+	this->box.hitbox[2] = (w > 10 ? w : 10);
+	this->box.hitbox[3] = (h > 10 ? h : 10);
+}
+
+void Control::updateBox()
+{
+	this->box.boxPosition[0] = this->box.hitbox[0];
+	this->box.boxPosition[1] = this->box.hitbox[1];
+	this->box.boxSize[0] = this->box.hitbox[2];
+	this->box.boxSize[1] = this->box.hitbox[3];
+}
+
 void Control::renderBox(bool ignoreState)
 {
+	this->updateBox();
+
 	float transx = this->box.boxPosition[0];
 	float transy = this->box.boxPosition[1];
 
@@ -131,24 +196,41 @@ void Control::renderText(float x, float y, const char *text, unsigned int color)
 /******************************************************************************************/
 /*** Text Control																	   ****/
 /******************************************************************************************/
-TextControl::TextControl(int type, const char* text)
+Label::Label(const char* text, int type)
 	: Control(type), mText(0)
 {
 	this->setText(text);
 }
 
-TextControl::~TextControl()
+Label::Label(const char* text, int x, int y, int w, int h, int type)
+	: Control(type, x, y, w, h), mText(0)
+{
+	this->setText(text);
+	this->box.boxSize[0] = this->box.boxSize[1] = 0;
+}
+
+Label::~Label()
 {
 	if (this->mText != 0)
 		delete [] this->mText;
 }
 
-const char* TextControl::text() const
+void Label::render()
+{
+	int length = this->box.font->getTextLength(this->mText);
+	int height = this->box.font->getTextHeight(this->mText);
+
+	Control::renderText(this->box.hitbox[0]+this->box.hitbox[2]/2.0f - float(length)/2.0f,
+			this->box.hitbox[1]+this->box.hitbox[3]/2.0f - float(height) / 4.0f,
+			this->mText, RGBA(255, 255, 255, 255));
+}
+
+const char* Label::text() const
 {
 	return this->mText;
 }
 
-void TextControl::setText(const char* text)
+void Label::setText(const char* text)
 {
 	if (this->mText != 0)
 		delete [] this->mText;
@@ -165,17 +247,8 @@ void TextControl::setText(const char* text)
 /*** Button																			   ****/
 /******************************************************************************************/
 Button::Button(int x, int y, int w, int h, const char* text)
-	: TextControl(ControlTypes::Button, text), Click(ClickEvent(this))
+	: Label(text, x, y, w, h, ControlTypes::Button), Click(ClickEvent(this))
 {
-	this->box.hitbox[0] = x;
-	this->box.hitbox[1] = y;
-	this->box.hitbox[2] = x + w;
-	this->box.hitbox[3] = y + h;
-
-	this->box.boxPosition[0] = x;
-	this->box.boxPosition[1] = y;
-	this->box.boxSize[0] = w;
-	this->box.boxSize[1] = h;
 }
 
 Button::~Button()
@@ -188,8 +261,8 @@ void Button::render()
 	int length = this->box.font->getTextLength(this->mText);
 	int height = this->box.font->getTextHeight(this->mText);
 
-	Control::renderText(this->box.boxPosition[0]+this->box.boxSize[0]/2.0f - float(length)/2.0f,
-			this->box.boxPosition[1]+this->box.boxSize[1]/2.0f - float(height) / 4.0f,
+	Control::renderText(this->box.hitbox[0]+this->box.hitbox[2]/2.0f - float(length)/2.0f,
+			this->box.hitbox[1]+this->box.hitbox[3]/2.0f - float(height) / 4.0f,
 			this->mText, RGBA(255, 255, 255, 255));
 }
 
@@ -199,17 +272,8 @@ void Button::render()
 /*** Checkbox																		   ****/
 /******************************************************************************************/
 Checkbox::Checkbox(int x, int y, int w, int h, const char* text)
-	: TextControl(ControlTypes::Checkbox, text), StateChanged(StateChangedEvent(this))
+	: Label(text, x, y, w, h, ControlTypes::Checkbox), StateChanged(StateChangedEvent(this))
 {
-	this->box.hitbox[0] = x;
-	this->box.hitbox[1] = y;
-	this->box.hitbox[2] = x + w;
-	this->box.hitbox[3] = y + h;
-
-	this->box.boxPosition[0] = x;
-	this->box.boxPosition[1] = y;
-	this->box.boxSize[0] = 16;
-	this->box.boxSize[1] = 16;
 }
 
 Checkbox::~Checkbox()
@@ -256,28 +320,26 @@ void Checkbox::toggleChecked()
 		this->setChecked(true);
 }
 
+void Checkbox::updateBox()
+{
+	this->box.boxPosition[0] = this->box.hitbox[0];
+	this->box.boxPosition[1] = this->box.hitbox[1];
+	this->box.boxSize[0] = 16;
+	this->box.boxSize[1] = 16;
+}
+
 
 /******************************************************************************************/
 /*** Textbox																		   ****/
 /******************************************************************************************/
 Textbox::Textbox(int x, int y, int w, int h, const char* text)
-	: TextControl(ControlTypes::Textbox, text), mTextLength(0), mCursorIndex(0), mCursorPosition(0)
+	: Label(text, x, y, w, h, ControlTypes::Textbox), mTextLength(0), mCursorIndex(0), mCursorPosition(0)
 {
 	while (text[this->mTextLength] != 0)
 		this->mTextLength++;
 	this->mBufferLength = this->mTextLength;
 	this->mCursorIndex = this->mTextLength;
 	this->mCursorPosition = this->box.font->getTextLength(text, this->mCursorIndex);
-
-	this->box.hitbox[0] = x;
-	this->box.hitbox[1] = y;
-	this->box.hitbox[2] = x + w;
-	this->box.hitbox[3] = y + h;
-
-	this->box.boxPosition[0] = x;
-	this->box.boxPosition[1] = y;
-	this->box.boxSize[0] = w;
-	this->box.boxSize[1] = h;
 }
 
 Textbox::~Textbox()
@@ -313,7 +375,7 @@ void Textbox::setText(const char* text)
 	while (text[this->mTextLength] != 0)
 		this->mTextLength++;
 	this->mBufferLength = this->mTextLength;
-	TextControl::setText(text);
+	Label::setText(text);
 }
 
 void Textbox::addChar(char c)
@@ -369,19 +431,9 @@ void Textbox::moveCursor(int amount)
 /*** Valuebox																		   ****/
 /******************************************************************************************/
 Valuebox::Valuebox(int x, int y, int w, int h, float value, float min, float max)
-	: Control(ControlTypes::Valuebox), mValue(value), mMinValue(min), mMaxValue(max)
+	: Control(ControlTypes::Valuebox, x, y, w, h), mValue(value), mMinValue(min), mMaxValue(max)
 {
 	this->mInput[0] = 0;
-
-	this->box.hitbox[0] = x;
-	this->box.hitbox[1] = y;
-	this->box.hitbox[2] = x + w;
-	this->box.hitbox[3] = y + h;
-
-	this->box.boxPosition[0] = x;
-	this->box.boxPosition[1] = y;
-	this->box.boxSize[0] = w;
-	this->box.boxSize[1] = h;
 }
 
 Valuebox::~Valuebox()

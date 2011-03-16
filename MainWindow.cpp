@@ -32,14 +32,22 @@ void MainWindow::anderenaam(ui::Control* box, ui::EventArgs* e)
 		// Voorbeeld waarin de Handler op zichzelf ook aanroepbaar is
 		ui::StateChangedEventHandler h(this, (ui::eventFn)&MainWindow::anderenaam2);
 		h(cb, e);
-		delete cb;
-		cb=0;
+
+		float pos[2];
+		cb->position(pos);
+		pos[0] += 5;
+		cb->setPosition(pos);
 	}
 }
 
 void MainWindow::anderenaam2(ui::Control* box, ui::EventArgs* e)
 {
-	printf("Button 2\n");
+	float size[2];
+	tb->size(size);
+	if (((ui::Checkbox*)box)->checked())
+		tb->setSize(size[0]+50, size[1]);
+	else
+		tb->setSize(size[0]-50, size[1]);
 }
 
 bool MainWindow::initialize()
@@ -48,8 +56,9 @@ bool MainWindow::initialize()
 
 	ui::Button* b = new ui::Button(10, 10, 64, 24, (const char*)"FDfgsdf");
 	cb = new ui::Checkbox(10, 80, 64, 24, (const char*)"asdfasd");
-	new ui::Textbox(10, 110, 164, 54, (const char*)"Wouters");
+	tb = new ui::Textbox(10, 110, 164, 54, (const char*)"Wouters");
 	new ui::Valuebox(10, 180, 64, 24, 5.8346, 0, 10000);
+	new ui::Label("test", 10, 240, 64, 24);
 
 	// Voorbeeld van het toevoegen van events
 	b->Click += ui::ClickEventHandler(this, (ui::eventFn)&MainWindow::anderenaam);

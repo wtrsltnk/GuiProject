@@ -121,6 +121,7 @@ void GuiManager::initiateEvent(Control* box, int eventType, EventArgs* e)
 
 void GuiManager::addControl(Control* ctr)
 {
+	ctr->updateBox();
 	this->mControls.push_back(ctr);
 }
 
@@ -162,7 +163,7 @@ void GuiManager::render()
 
 	for (std::vector<Control*>::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 	{
-		(*itr)->render();
+		(*itr)->renderControl();
 	}
 
 	if (this->mFocus != 0)
