@@ -26,17 +26,10 @@ void MainWindow::anderenaam(ui::Control* box, ui::EventArgs* e)
 
 	if (cb != 0)
 	{
-		// Voorbeeld van het weghalen van een event
-		cb->StateChanged -= ui::StateChangedEventHandler(this, (ui::eventFn)&MainWindow::anderenaam2);
-
-		// Voorbeeld waarin de Handler op zichzelf ook aanroepbaar is
-		ui::StateChangedEventHandler h(this, (ui::eventFn)&MainWindow::anderenaam2);
-		h(cb, e);
-
 		float pos[2];
-		cb->position(pos);
-		pos[0] += 5;
-		cb->setPosition(pos);
+		cb->size(pos);
+		pos[1] += 4;
+		cb->setSize(pos);
 	}
 }
 
@@ -45,9 +38,16 @@ void MainWindow::anderenaam2(ui::Control* box, ui::EventArgs* e)
 	float size[2];
 	tb->size(size);
 	if (((ui::Checkbox*)box)->checked())
-		tb->setSize(size[0]+50, size[1]);
+		tb->setSize(size[0], size[1]+10);
 	else
-		tb->setSize(size[0]-50, size[1]);
+		tb->setSize(size[0], size[1]-10);
+}
+
+void MainWindow::anderenaam3(ui::Control* box, ui::EventArgs* e)
+{
+	ui::Textbox* tb = (ui::Textbox*)box;
+	printf("%s\n", tb->text());
+	lbl->setText(tb->text());
 }
 
 bool MainWindow::initialize()
@@ -57,12 +57,16 @@ bool MainWindow::initialize()
 	ui::Button* b = new ui::Button(10, 10, 64, 24, (const char*)"FDfgsdf");
 	cb = new ui::Checkbox(10, 80, 64, 24, (const char*)"asdfasd");
 	tb = new ui::Textbox(10, 110, 164, 54, (const char*)"Wouters");
-	new ui::Valuebox(10, 180, 64, 24, 5.8346, 0, 10000);
-	new ui::Label("test", 10, 240, 64, 24);
+	vb = new ui::Valuebox(10, 180, 64, 24, 5.8346, 0, 10000);
+	lbl = new ui::Label("test", 10, 240, 64, 24);
+	ui::Container* cnt = new ui::Container(120, 10, 72, 100);
+	cnt->addControl(cb);
+	cnt->addControl(tb);
 
 	// Voorbeeld van het toevoegen van events
 	b->Click += ui::ClickEventHandler(this, (ui::eventFn)&MainWindow::anderenaam);
 	cb->StateChanged += ui::StateChangedEventHandler(this, (ui::eventFn)&MainWindow::anderenaam2);
+	tb->TextChanged += ui::TextChangedEventHandler(this, (ui::eventFn)&MainWindow::anderenaam3);
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 

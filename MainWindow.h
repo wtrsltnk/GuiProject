@@ -21,6 +21,7 @@ public:
 
 	virtual void anderenaam(ui::Control* box, ui::EventArgs* e);
 	virtual void anderenaam2(ui::Control* box, ui::EventArgs* e);
+	virtual void anderenaam3(ui::Control* box, ui::EventArgs* e);
 
 	virtual bool initialize();
 	virtual void resize(int w, int h);
@@ -32,6 +33,9 @@ public:
 
 	ui::Checkbox* cb;
 	ui::Textbox* tb;
+	ui::Valuebox* vb;
+	ui::Label* lbl;
+
 };
 
 #endif /* MAINWINDOW_H_ */

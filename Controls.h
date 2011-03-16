@@ -60,13 +60,16 @@ namespace ControlTypes
 {
 enum
 {
-	Label = 0,
-	Button = 1,
-	Checkbox = 2,
-	Textbox = 3,
-	Valuebox = 4
+	Container = 1,
+	Label = 101,
+	Button = 102,
+	Checkbox = 103,
+	Textbox = 104,
+	Valuebox = 105
 };
 }
+
+class Container;
 
 class Control
 {
@@ -80,17 +83,22 @@ public:
 	int getType() { return this->mType; }
 
 	virtual void position(float pos[2]);
+	virtual float x();
+	virtual float y();
 	virtual void setPosition(float pos[2]);
 	virtual void setPosition(float x, float y);
 
 	virtual void size(float size[2]);
+	virtual float width();
+	virtual float height();
 	virtual void setSize(float size[2]);
 	virtual void setSize(float w, float h);
 
 	virtual void updateBox();
 
 protected:
-	box_t box;
+	box_t mBox;
+	Container* mParent;
 
 	virtual void render() = 0;
 
@@ -99,6 +107,34 @@ protected:
 private:
 	int mType;
 	friend class GuiManager;
+	friend class Container;
+};
+
+typedef std::vector<Control*> ControlList;
+
+class Container : public Control
+{
+public:
+	Container(int x, int y, int w, int h);
+	virtual ~Container();
+
+	virtual void render();
+
+	void addControl(Control* ctr);
+	void removeControl(Control* ctr);
+
+	float padding();
+	void setPadding(float padding);
+
+	ControlList& getControls() { return this->mControls; }
+
+private:
+	ControlList mControls;
+	float mPadding;
+
+	void updateChildControls();
+
+	friend class Control;
 };
 
 class Label : public Control
@@ -157,6 +193,9 @@ private:
 
 };
 
+typedef Event<EventType::TextChanged> TextChangedEvent;
+typedef TextChangedEvent::Handler TextChangedEventHandler;
+
 class Textbox : public Label
 {
 public:
@@ -170,13 +209,21 @@ public:
 	char removeChar();
 	void moveCursor(int amount);
 
+	TextChangedEvent TextChanged;
+
 private:
 	int mTextLength;
 	int mBufferLength;
 	int mCursorIndex;
 	int mCursorPosition;
+	float mScroll;
+	int mPadding;
 
+	void setCursorIndex(int index);
 };
+
+typedef Event<EventType::ValueChanged> ValueChangedEvent;
+typedef ValueChangedEvent::Handler ValueChangedEventHandler;
 
 class Valuebox : public Control
 {

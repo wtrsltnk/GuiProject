@@ -34,23 +34,23 @@ bool box_t::isPointInBox(float point[2])
 /*** Control																		   ****/
 /******************************************************************************************/
 Control::Control(int type)
-	: mType(type)
+	: mParent(0), mType(type)
 {
 	this->setPosition(0, 0);
 	this->setSize(64, 24);
 
 	GuiManager::instance()->addControl(this);
-	this->box.font = GuiManager::instance()->sDefaultFont;
+	this->mBox.font = GuiManager::instance()->sDefaultFont;
 }
 
 Control::Control(int type, int x, int y, int w, int h)
-	: mType(type)
+	: mParent(0), mType(type)
 {
 	this->setPosition(x, y);
 	this->setSize(w, h);
 
 	GuiManager::instance()->addControl(this);
-	this->box.font = GuiManager::instance()->sDefaultFont;
+	this->mBox.font = GuiManager::instance()->sDefaultFont;
 }
 
 Control::~Control()
@@ -60,78 +60,145 @@ Control::~Control()
 
 void Control::renderControl()
 {
-	// ToDo : some extra stuff which is control wide
+	glClearStencil(0);
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glEnable(GL_STENCIL_TEST);
+
+	glStencilFunc(GL_ALWAYS, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glColor4f(0, 0, 0, 0);
+	glBegin(GL_QUADS);
+	glVertex2f(this->mBox.hitbox[0], this->mBox.hitbox[1]);
+	glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2], this->mBox.hitbox[1]);
+	glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2], this->mBox.hitbox[1]+this->mBox.hitbox[3]);
+	glVertex2f(this->mBox.hitbox[0], this->mBox.hitbox[1]+this->mBox.hitbox[3]);
+	glEnd();
+	glDisable(GL_BLEND);
+
+	glStencilFunc(GL_EQUAL, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
 	this->render();
+
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glDisable(GL_STENCIL_TEST);
 }
 
 void Control::position(float pos[2])
 {
-	pos[0] = this->box.hitbox[0];
-	pos[1] = this->box.hitbox[1];
+	pos[0] = this->mBox.hitbox[0];
+	pos[1] = this->mBox.hitbox[1];
+}
+
+float Control::x()
+{
+	return this->mBox.hitbox[0];
+}
+
+float Control::y()
+{
+	return this->mBox.hitbox[1];
 }
 
 void Control::setPosition(float pos[2])
 {
-	this->box.hitbox[0] = pos[0];
-	this->box.hitbox[1] = pos[1];
+	if (this->mParent == 0)
+	{
+		this->mBox.hitbox[0] = pos[0];
+		this->mBox.hitbox[1] = pos[1];
+	}
 }
 
 void Control::setPosition(float x, float y)
 {
-	this->box.hitbox[0] = x;
-	this->box.hitbox[1] = y;
+	if (this->mParent == 0)
+	{
+		this->mBox.hitbox[0] = x;
+		this->mBox.hitbox[1] = y;
+	}
 }
 
 void Control::size(float size[2])
 {
-	size[0] = this->box.hitbox[2];
-	size[1] = this->box.hitbox[3];
+	size[0] = this->mBox.hitbox[2];
+	size[1] = this->mBox.hitbox[3];
+}
+
+float Control::width()
+{
+	return this->mBox.hitbox[2];
+}
+
+float Control::height()
+{
+	return this->mBox.hitbox[3];
 }
 
 void Control::setSize(float size[2])
 {
-	this->box.hitbox[2] = size[0];
-	this->box.hitbox[3] = size[1];
+	this->mBox.hitbox[2] = (size[0] > 10 ? size[0] : 10);
+	this->mBox.hitbox[3] = (size[1] > 10 ? size[1] : 10);
+	if (this->mParent != 0)
+	{
+		if (size[0] > this->mParent->width() - 4)
+		{
+			this->mBox.hitbox[2] = this->mParent->width() - 4;
+		}
+		this->mParent->updateChildControls();
+	}
+	this->updateBox();
 }
 
 void Control::setSize(float w, float h)
 {
-	this->box.hitbox[2] = (w > 10 ? w : 10);
-	this->box.hitbox[3] = (h > 10 ? h : 10);
+	this->mBox.hitbox[2] = (w > 10 ? w : 10);
+	this->mBox.hitbox[3] = (h > 10 ? h : 10);
+	if (this->mParent != 0)
+	{
+		if (w > this->mParent->width() - 4)
+		{
+			this->mBox.hitbox[2] = this->mParent->width() - 4;
+		}
+		this->mParent->updateChildControls();
+	}
+	this->updateBox();
 }
 
 void Control::updateBox()
 {
-	this->box.boxPosition[0] = this->box.hitbox[0];
-	this->box.boxPosition[1] = this->box.hitbox[1];
-	this->box.boxSize[0] = this->box.hitbox[2];
-	this->box.boxSize[1] = this->box.hitbox[3];
+	this->mBox.boxPosition[0] = this->mBox.hitbox[0];
+	this->mBox.boxPosition[1] = this->mBox.hitbox[1];
+	this->mBox.boxSize[0] = this->mBox.hitbox[2];
+	this->mBox.boxSize[1] = this->mBox.hitbox[3];
 }
 
 void Control::renderBox(bool ignoreState)
 {
 	this->updateBox();
 
-	float transx = this->box.boxPosition[0];
-	float transy = this->box.boxPosition[1];
+	float transx = this->mBox.boxPosition[0];
+	float transy = this->mBox.boxPosition[1];
 
 	glPushMatrix();
 	glTranslatef(transx, transy, 0);
 	glBegin(GL_QUADS);
 
-	if (this->box.state & BoxState::Hovered && ignoreState == false)
+	if (this->mBox.state & BoxState::Hovered && ignoreState == false)
 		glColor3f(107.0f / 255.0f, 107.0f / 255.0f, 107.0f / 255.0f);
 	else
 		glColor3f(82.0f / 255.0f, 82.0f / 255.0f, 82.0f / 255.0f);
 	glVertex2f(0.0f, 0.0f);
-	glVertex2f(this->box.boxSize[0], 0.0f);
+	glVertex2f(this->mBox.boxSize[0], 0.0f);
 
-	if (this->box.state & BoxState::Hovered && ignoreState == false)
+	if (this->mBox.state & BoxState::Hovered && ignoreState == false)
 		glColor3f(82.0f / 255.0f, 82.0f / 255.0f, 82.0f / 255.0f);
 	else
 		glColor3f(107.0f / 255.0f, 107.0f / 255.0f, 107.0f / 255.0f);
-	glVertex2f(this->box.boxSize[0], this->box.boxSize[1]);
-	glVertex2f(0.0f, this->box.boxSize[1]);
+	glVertex2f(this->mBox.boxSize[0], this->mBox.boxSize[1]);
+	glVertex2f(0.0f, this->mBox.boxSize[1]);
 
 	glEnd();
 
@@ -139,43 +206,43 @@ void Control::renderBox(bool ignoreState)
 	glBegin(GL_LINES);
 	glColor3f(72.0f / 255.0f, 72.0f / 255.0f, 72.0f / 255.0f);
 	glVertex2f(0.0f, 0.0f);
-	glVertex2f(this->box.boxSize[0], 0.0f);
+	glVertex2f(this->mBox.boxSize[0], 0.0f);
 
-	glVertex2f(this->box.boxSize[0], 0.0f);
-	glVertex2f(this->box.boxSize[0], this->box.boxSize[1]);
+	glVertex2f(this->mBox.boxSize[0], 0.0f);
+	glVertex2f(this->mBox.boxSize[0], this->mBox.boxSize[1]);
 
-	glVertex2f(this->box.boxSize[0], this->box.boxSize[1]);
-	glVertex2f(0.0f, this->box.boxSize[1]);
+	glVertex2f(this->mBox.boxSize[0], this->mBox.boxSize[1]);
+	glVertex2f(0.0f, this->mBox.boxSize[1]);
 
-	glVertex2f(0.0f, this->box.boxSize[1]);
+	glVertex2f(0.0f, this->mBox.boxSize[1]);
 	glVertex2f(0.0f, 0.0f);
 
 
 	glColor3f(47.0f / 255.0f, 47.0f / 255.0f, 47.0f / 255.0f);
 	glVertex2f(1.0f, 1.0f);
-	glVertex2f(this->box.boxSize[0]-1.0f, 1.0f);
+	glVertex2f(this->mBox.boxSize[0]-1.0f, 1.0f);
 
-	glVertex2f(this->box.boxSize[0]-1.0f, 1.0f);
-	glVertex2f(this->box.boxSize[0]-1.0f, this->box.boxSize[1]-1.0f);
+	glVertex2f(this->mBox.boxSize[0]-1.0f, 1.0f);
+	glVertex2f(this->mBox.boxSize[0]-1.0f, this->mBox.boxSize[1]-1.0f);
 
-	glVertex2f(this->box.boxSize[0]-1.0f, this->box.boxSize[1]-1.0f);
-	glVertex2f(1.0f,this-> box.boxSize[1]-1.0f);
+	glVertex2f(this->mBox.boxSize[0]-1.0f, this->mBox.boxSize[1]-1.0f);
+	glVertex2f(1.0f,this-> mBox.boxSize[1]-1.0f);
 
-	glVertex2f(1.0f, this->box.boxSize[1]-1.0f);
+	glVertex2f(1.0f, this->mBox.boxSize[1]-1.0f);
 	glVertex2f(1.0f, 1.0f);
 
 
 	glColor3f(85.0f / 255.0f, 83.0f / 255.0f, 80.0f / 255.0f);
 	glVertex2f(2.0f, 2.0f);
-	glVertex2f(this->box.boxSize[0]-2.0f, 2.0f);
+	glVertex2f(this->mBox.boxSize[0]-2.0f, 2.0f);
 
-	glVertex2f(this->box.boxSize[0]-2.0f, 2.0f);
-	glVertex2f(this->box.boxSize[0]-2.0f, this->box.boxSize[1]-2.0f);
+	glVertex2f(this->mBox.boxSize[0]-2.0f, 2.0f);
+	glVertex2f(this->mBox.boxSize[0]-2.0f, this->mBox.boxSize[1]-2.0f);
 
-	glVertex2f(this->box.boxSize[0]-2.0f, this->box.boxSize[1]-2.0f);
-	glVertex2f(2.0f, this->box.boxSize[1]-2.0f);
+	glVertex2f(this->mBox.boxSize[0]-2.0f, this->mBox.boxSize[1]-2.0f);
+	glVertex2f(2.0f, this->mBox.boxSize[1]-2.0f);
 
-	glVertex2f(2.0f, this->box.boxSize[1]-2.0f);
+	glVertex2f(2.0f, this->mBox.boxSize[1]-2.0f);
 	glVertex2f(2.0f, 2.0f);
 	glEnd();
 
@@ -187,10 +254,81 @@ void Control::renderText(float x, float y, const char *text, unsigned int color)
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	this->box.font->drawText(x, y, text, color);
+	this->mBox.font->drawText(x, y, text, color);
 	glDisable(GL_BLEND);
 	glDisable(GL_TEXTURE_2D);
 }
+
+
+
+/******************************************************************************************/
+/*** Container																		   ****/
+/******************************************************************************************/
+Container::Container(int x, int y, int w, int h)
+	: Control(ControlTypes::Container, x, y, w, h), mPadding(4)
+{
+}
+
+Container::~Container()
+{
+}
+
+void Container::render()
+{
+	this->renderBox(false);
+	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
+	{
+		(*itr)->renderControl();
+	}
+}
+
+void Container::addControl(Control* ctr)
+{
+	this->mControls.push_back(ctr);
+	this->updateChildControls();
+	ctr->mParent = this;
+}
+
+void Container::removeControl(Control* ctr)
+{
+	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
+	{
+		if ((*itr) == ctr)
+		{
+			this->mControls.erase(itr);
+			ctr->mParent = 0;
+			break;
+		}
+	}
+}
+
+float Container::padding()
+{
+	return this->mPadding;
+}
+
+void Container::setPadding(float padding)
+{
+	this->mPadding = padding;
+}
+
+void Container::updateChildControls()
+{
+	float x = this->mBox.hitbox[0];
+	float y = this->mBox.hitbox[1] + this->mBox.hitbox[3];
+
+	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
+	{
+		Control* c = *itr;
+		c->mBox.hitbox[0] = x + this->mPadding;
+		c->mBox.hitbox[1] = y - this->mPadding - c->height();
+		c->mBox.hitbox[2] = this->width() - (this->mPadding * 2);
+		c->updateBox();
+		y -= c->height() + this->mPadding;
+	}
+}
+
+
 
 
 /******************************************************************************************/
@@ -206,7 +344,7 @@ Label::Label(const char* text, int x, int y, int w, int h, int type)
 	: Control(type, x, y, w, h), mText(0)
 {
 	this->setText(text);
-	this->box.boxSize[0] = this->box.boxSize[1] = 0;
+	this->mBox.boxSize[0] = this->mBox.boxSize[1] = 0;
 }
 
 Label::~Label()
@@ -217,11 +355,12 @@ Label::~Label()
 
 void Label::render()
 {
-	int length = this->box.font->getTextLength(this->mText);
-	int height = this->box.font->getTextHeight(this->mText);
+	float length = this->mBox.font->getTextLength(this->mText);
+	float height = this->mBox.font->getTextHeight(this->mText);
 
-	Control::renderText(this->box.hitbox[0]+this->box.hitbox[2]/2.0f - float(length)/2.0f,
-			this->box.hitbox[1]+this->box.hitbox[3]/2.0f - float(height) / 4.0f,
+	Control::renderText(
+			this->mBox.hitbox[0] + (this->mBox.hitbox[2]/2.0f) - (length/2.0f),
+			this->mBox.hitbox[1] + (this->mBox.hitbox[3]/2.0f) - (height/4.0f),
 			this->mText, RGBA(255, 255, 255, 255));
 }
 
@@ -258,11 +397,12 @@ Button::~Button()
 void Button::render()
 {
 	this->renderBox(false);
-	int length = this->box.font->getTextLength(this->mText);
-	int height = this->box.font->getTextHeight(this->mText);
+	float length = this->mBox.font->getTextLength(this->mText);
+	float height = this->mBox.font->getTextHeight(this->mText);
 
-	Control::renderText(this->box.hitbox[0]+this->box.hitbox[2]/2.0f - float(length)/2.0f,
-			this->box.hitbox[1]+this->box.hitbox[3]/2.0f - float(height) / 4.0f,
+	Control::renderText(
+			this->mBox.hitbox[0] + (this->mBox.hitbox[2]/2.0f) - (length/2.0f),
+			this->mBox.hitbox[1] + (this->mBox.hitbox[3]/2.0f) - (height/4.0f),
 			this->mText, RGBA(255, 255, 255, 255));
 }
 
@@ -288,16 +428,17 @@ void Checkbox::render()
 	{
 		glColor3f(0.3f, 0.7f, 1.0f);
 		glBegin(GL_QUADS);
-		glVertex2f(this->box.boxPosition[0]+3, this->box.boxPosition[1]+3);
-		glVertex2f(this->box.boxPosition[0]+this->box.boxSize[0]-4, this->box.boxPosition[1]+3);
-		glVertex2f(this->box.boxPosition[0]+this->box.boxSize[0]-4, this->box.boxPosition[1]+this->box.boxSize[1]-4);
-		glVertex2f(this->box.boxPosition[0]+3, this->box.boxPosition[1]+this->box.boxSize[1]-4);
+		glVertex2f(this->mBox.boxPosition[0]+3, this->mBox.boxPosition[1]+3);
+		glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0]-4, this->mBox.boxPosition[1]+3);
+		glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0]-4, this->mBox.boxPosition[1]+this->mBox.boxSize[1]-4);
+		glVertex2f(this->mBox.boxPosition[0]+3, this->mBox.boxPosition[1]+this->mBox.boxSize[1]-4);
 		glEnd();
 	}
 
-	int height = this->box.font->getTextHeight(this->mText);
-
-	Control::renderText(this->box.boxPosition[0]+this->box.boxSize[0], this->box.boxPosition[1]+this->box.boxSize[1]/2.0f - float(height) / 4.0f, this->mText, RGBA(255, 255, 255, 255));
+	Control::renderText(
+			this->mBox.boxPosition[0] + (this->mBox.boxSize[0]) + 2.0f,
+			this->mBox.boxPosition[1] + (this->mBox.boxSize[1]/2.0f) - 5.0f,
+			this->mText, RGBA(255, 255, 255, 255));
 }
 
 bool Checkbox::checked()
@@ -322,10 +463,10 @@ void Checkbox::toggleChecked()
 
 void Checkbox::updateBox()
 {
-	this->box.boxPosition[0] = this->box.hitbox[0];
-	this->box.boxPosition[1] = this->box.hitbox[1];
-	this->box.boxSize[0] = 16;
-	this->box.boxSize[1] = 16;
+	this->mBox.boxPosition[0] = this->mBox.hitbox[0];
+	this->mBox.boxPosition[1] = this->mBox.hitbox[1] + (this->mBox.hitbox[3]/2.0f) - 8.0f;
+	this->mBox.boxSize[0] = 16;
+	this->mBox.boxSize[1] = 16;
 }
 
 
@@ -333,13 +474,12 @@ void Checkbox::updateBox()
 /*** Textbox																		   ****/
 /******************************************************************************************/
 Textbox::Textbox(int x, int y, int w, int h, const char* text)
-	: Label(text, x, y, w, h, ControlTypes::Textbox), mTextLength(0), mCursorIndex(0), mCursorPosition(0)
+	: Label(text, x, y, w, h, ControlTypes::Textbox), TextChanged(TextChangedEvent(this)), mTextLength(0), mCursorIndex(0), mCursorPosition(0), mScroll(0), mPadding(4)
 {
 	while (text[this->mTextLength] != 0)
 		this->mTextLength++;
 	this->mBufferLength = this->mTextLength;
-	this->mCursorIndex = this->mTextLength;
-	this->mCursorPosition = this->box.font->getTextLength(text, this->mCursorIndex);
+	this->setCursorIndex(this->mTextLength);
 }
 
 Textbox::~Textbox()
@@ -349,23 +489,35 @@ Textbox::~Textbox()
 void Textbox::render()
 {
 	this->renderBox(false);
-	int height = this->box.font->getTextHeight(this->mText);
+	float height = this->mBox.font->getTextHeight(this->mText);
+
+	glClearStencil(0);
+	glClear(GL_STENCIL_BUFFER_BIT);
+	glStencilFunc(GL_ALWAYS, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
 	glColor3f(0.3f, 0.7f, 1.0f);
 	glBegin(GL_QUADS);
-	glVertex2f(this->box.boxPosition[0]+3, this->box.boxPosition[1]+3);
-	glVertex2f(this->box.boxPosition[0]+this->box.boxSize[0]-4, this->box.boxPosition[1]+3);
-	glVertex2f(this->box.boxPosition[0]+this->box.boxSize[0]-4, this->box.boxPosition[1]+this->box.boxSize[1]-4);
-	glVertex2f(this->box.boxPosition[0]+3, this->box.boxPosition[1]+this->box.boxSize[1]-4);
+	glVertex2f(this->mBox.boxPosition[0]+this->mPadding, this->mBox.boxPosition[1]+this->mPadding);
+	glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0]-this->mPadding, this->mBox.boxPosition[1]+this->mPadding);
+	glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0]-this->mPadding, this->mBox.boxPosition[1]+this->mBox.boxSize[1]-this->mPadding);
+	glVertex2f(this->mBox.boxPosition[0]+this->mPadding, this->mBox.boxPosition[1]+this->mBox.boxSize[1]-this->mPadding);
 	glEnd();
 
-	Control::renderText(this->box.boxPosition[0]+4, this->box.boxPosition[1]+this->box.boxSize[1] - float(height), this->mText, RGBA(0, 0, 0, 255));
+	glStencilFunc(GL_EQUAL, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
+	Control::renderText(
+			this->mBox.boxPosition[0] + this->mPadding + this->mScroll,
+			this->mBox.boxPosition[1] + this->mBox.boxSize[1] - height,
+			this->mText, RGBA(0, 0, 0, 255));
+
+	// Render cursor
 	glBegin(GL_QUADS);
-	glVertex2f(this->box.boxPosition[0] + this->mCursorPosition+4, this->box.boxPosition[1]+this->box.boxSize[1]-4);
-	glVertex2f(this->box.boxPosition[0] + this->mCursorPosition+4+2, this->box.boxPosition[1]+this->box.boxSize[1]-4);
-	glVertex2f(this->box.boxPosition[0] + this->mCursorPosition+4+2, this->box.boxPosition[1]+this->box.boxSize[1]-20);
-	glVertex2f(this->box.boxPosition[0] + this->mCursorPosition+4, this->box.boxPosition[1]+this->box.boxSize[1]-20);
+	glVertex2f(this->mBox.boxPosition[0] + this->mCursorPosition + 4 + this->mScroll, this->mBox.boxPosition[1]+this->mBox.boxSize[1] - 4);
+	glVertex2f(this->mBox.boxPosition[0] + this->mCursorPosition + 4 + 2 + this->mScroll, this->mBox.boxPosition[1]+this->mBox.boxSize[1] - 4);
+	glVertex2f(this->mBox.boxPosition[0] + this->mCursorPosition + 4 + 2 + this->mScroll, this->mBox.boxPosition[1]+this->mBox.boxSize[1] - 20);
+	glVertex2f(this->mBox.boxPosition[0] + this->mCursorPosition + 4 + this->mScroll, this->mBox.boxPosition[1]+this->mBox.boxSize[1] - 20);
 	glEnd();
 
 }
@@ -384,16 +536,18 @@ void Textbox::addChar(char c)
 	{
 		this->mBufferLength *= 2;
 		char* buff = new char[this->mBufferLength];
-		for (int i = 0; i < this->mBufferLength; i++) buff[i] = 0;
+		for (int i = 0; i < this->mBufferLength; i++)
+			buff[i] = 0;
 		for (int i = 0; i < this->mTextLength; i++)
 			buff[i] = this->mText[i];
 		delete []this->mText;
 		this->mText = buff;
 	}
-	for (int i = this->mBufferLength; i > this->mCursorIndex; i--) this->mText[i] = this->mText[i-1];
-	this->mText[this->mCursorIndex++] = c;
+	for (int i = this->mBufferLength; i > this->mCursorIndex; i--)
+		this->mText[i] = this->mText[i-1];
+	this->mText[this->mCursorIndex] = c;
 	this->mTextLength++;
-	this->mCursorPosition = this->box.font->getTextLength(this->mText, this->mCursorIndex);
+	this->setCursorIndex(this->mCursorIndex+1);
 }
 
 char Textbox::removeChar()
@@ -405,11 +559,7 @@ char Textbox::removeChar()
 		for (int i = this->mCursorIndex - 1; i < this->mBufferLength; i++)
 			this->mText[i] = this->mText[i+1];
 		this->mTextLength--;
-		this->mCursorIndex--;
-
-		this->mCursorPosition = 0;
-		if (this->mCursorIndex > 0)
-			this->mCursorPosition = this->box.font->getTextLength(this->mText, this->mCursorIndex);
+		this->setCursorIndex(this->mCursorIndex-1);
 	}
 
 	return res;
@@ -423,7 +573,28 @@ void Textbox::moveCursor(int amount)
 
 	this->mCursorPosition = 0;
 	if (this->mCursorIndex > 0)
-		this->mCursorPosition = this->box.font->getTextLength(this->mText, this->mCursorIndex);
+		this->mCursorPosition = this->mBox.font->getTextLength(this->mText, this->mCursorIndex);
+
+	this->setCursorIndex(this->mCursorIndex);
+}
+
+void Textbox::setCursorIndex(int index)
+{
+	this->mCursorIndex = index;
+	if (this->mCursorIndex <= 0)
+	{
+		this->mCursorIndex = 0;
+		this->mCursorPosition = 0;
+	}
+	else
+		this->mCursorPosition = this->mBox.font->getTextLength(this->mText, this->mCursorIndex);
+
+	float combine = this->mCursorPosition + this->mScroll;
+	float diff = combine + 10 - this->mBox.hitbox[2];
+	if (diff >= 0)
+		this->mScroll -= diff;
+	else if (combine < 0)
+		this->mScroll -= combine;
 }
 
 
@@ -450,11 +621,11 @@ void Valuebox::render()
 	else
 		strcpy(str, this->mInput);
 
-	int length = this->box.font->getTextLength(str);
-	int height = this->box.font->getTextHeight("W");
+	int length = this->mBox.font->getTextLength(str);
+	int height = this->mBox.font->getTextHeight("W");
 
-	Control::renderText(this->box.boxPosition[0]+this->box.boxSize[0]/2.0f - float(length)/2.0f,
-			this->box.boxPosition[1]+this->box.boxSize[1]/2.0f - float(height) / 4.0f-4,
+	Control::renderText(this->mBox.boxPosition[0]+this->mBox.boxSize[0]/2.0f - float(length)/2.0f,
+			this->mBox.boxPosition[1]+this->mBox.boxSize[1]/2.0f - float(height) / 4.0f-4,
 			str, RGBA(255, 255, 255, 255));
 }
 

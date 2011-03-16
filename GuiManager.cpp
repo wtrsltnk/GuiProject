@@ -143,6 +143,40 @@ void GuiManager::removeControl(Control* ctr)
 		}
 	}
 }
+
+Control* GuiManager::getClickedControl(float point[2], Container* container)
+{
+	Control* result = 0;
+
+	std::vector<Control*>* controls = &GuiManager::sInstance->mControls;
+
+	if (container != 0)
+	{
+		controls = &container->getControls();
+	}
+
+	for (std::vector<Control*>::iterator itr = controls->begin(); itr != controls->end(); ++itr)
+	{
+		Control* c = (*itr);
+		if (c->mBox.isPointInBox(point))
+		{
+			result = c;
+
+			Container* cc = dynamic_cast<Container*>(c);
+			if (cc != 0)
+			{
+				Control* tmp = getClickedControl(point, cc);
+				if (tmp != 0)
+					result = tmp;
+			}
+
+			break;
+		}
+	}
+
+	return result;
+}
+
 void GuiManager::setupSize(int w, int h)
 {
 	this->mViewSize[0] = w;
@@ -163,22 +197,23 @@ void GuiManager::render()
 
 	for (std::vector<Control*>::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 	{
-		(*itr)->renderControl();
+		if ((*itr)->mParent == 0)
+			(*itr)->renderControl();
 	}
 
 	if (this->mFocus != 0)
 	{
-		float transx = this->mFocus->box.boxPosition[0];
-		float transy = this->mFocus->box.boxPosition[1];
+		float transx = this->mFocus->mBox.boxPosition[0];
+		float transy = this->mFocus->mBox.boxPosition[1];
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		glBegin(GL_QUADS);
 		glColor4f(0.0f, 0.6f, 1.0f, 0.1f);
 		glVertex2f(transx+1, transy+1);
-		glVertex2f(transx + this->mFocus->box.boxSize[0]-2, transy+1);
-		glVertex2f(transx + this->mFocus->box.boxSize[0]-2, transy + this->mFocus->box.boxSize[1]-2);
-		glVertex2f(transx+1, transy + this->mFocus->box.boxSize[1]-2);
+		glVertex2f(transx + this->mFocus->mBox.boxSize[0]-2, transy+1);
+		glVertex2f(transx + this->mFocus->mBox.boxSize[0]-2, transy + this->mFocus->mBox.boxSize[1]-2);
+		glVertex2f(transx+1, transy + this->mFocus->mBox.boxSize[1]-2);
 		glEnd();
 		glDisable(GL_BLEND);
 	}
@@ -198,9 +233,17 @@ void GuiManager::glutKeyboard(unsigned char key, int x, int y)
 		{
 			Textbox* tb = (Textbox*)GuiManager::sInstance->mFocus;
 			if (key == 8)
+			{
 				tb->removeChar();
+				EventArgs e;
+				tb->TextChanged(&e);
+			}
 			else if (key >= 32 && key < 128)
+			{
 				tb->addChar(key);
+				EventArgs e;
+				tb->TextChanged(&e);
+			}
 		}
 		else if (GuiManager::sInstance->mFocus->getType() == ControlTypes::Valuebox)
 		{
@@ -240,32 +283,32 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 {
 	float point[2] = { x, GuiManager::sInstance->mViewSize[1] - y };
 
-	for (std::vector<Control*>::iterator itr = GuiManager::sInstance->mControls.begin(); itr != GuiManager::sInstance->mControls.end(); ++itr)
+	Control* control = GuiManager::sInstance->getClickedControl(point);
+
+	if (control != 0)
 	{
-		if ((*itr)->box.isPointInBox(point))
+		if (state == 0)
 		{
-			if (state == 0)
+			GuiManager::sInstance->mFocus = control;
+			control->mBox.state = BoxState::Pressed;
+			if (control->getType() == ControlTypes::Checkbox)
 			{
-				GuiManager::sInstance->mFocus = (*itr);
-				(*itr)->box.state = BoxState::Pressed;
-				if ((*itr)->getType() == ControlTypes::Checkbox)
-				{
-					Checkbox* c = (Checkbox*)(*itr);
-					c->toggleChecked();
-				}
-				else if ((*itr)->getType() == ControlTypes::Button)
-				{
-					Button* b = (Button*)(*itr);
-					EventArgs e;
-					b->Click(&e);
-				}
+				Checkbox* c = (Checkbox*)control;
+				c->toggleChecked();
 			}
-			else
+			else if (control->getType() == ControlTypes::Button)
 			{
-				(*itr)->box.state = BoxState::Hovered;
+				Button* b = (Button*)control;
+				EventArgs e;
+				b->Click(&e);
 			}
 		}
+		else
+		{
+			control->mBox.state = BoxState::Hovered;
+		}
 	}
+
 	glutPostRedisplay();
 }
 
@@ -273,12 +316,14 @@ void GuiManager::glutMouseMove(int x, int y)
 {
 	float point[2] = { x, GuiManager::sInstance->mViewSize[1] - y };
 
-	for (std::vector<Control*>::iterator itr = GuiManager::sInstance->mControls.begin(); itr != GuiManager::sInstance->mControls.end(); ++itr)
+	Control* control = GuiManager::sInstance->getClickedControl(point);
+
+	if (control != 0 && control->getType() != ControlTypes::Container)
 	{
-		if ((*itr)->box.isPointInBox(point))
-			(*itr)->box.state = BoxState::Hovered;
+		if (control->mBox.isPointInBox(point))
+			control->mBox.state = BoxState::Hovered;
 		else
-			(*itr)->box.state = BoxState::None;
+			control->mBox.state = BoxState::None;
 	}
 	glutPostRedisplay();
 }

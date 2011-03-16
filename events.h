@@ -12,6 +12,7 @@ namespace ui
 {
 
 class Control;
+class Container;
 
 class GuiEventHandler
 {
@@ -34,6 +35,7 @@ enum
 	Click = 0,
 	StateChanged,
 	TextChanged,
+	ValueChanged,
 };
 }
 

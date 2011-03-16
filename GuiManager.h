@@ -43,6 +43,7 @@ private:
 	void addControl(Control* ctr);
 	void removeControl(Control* ctr);
 
+	Control* getClickedControl(float point[2], Container* container = 0);
 private:
 	static Font* sDefaultFont;
 	int mViewSize[2];
