@@ -6,6 +6,12 @@ void display();
 
 bool running = true;
 
+void idle(int value)
+{
+	glutTimerFunc(30, &idle, 0);
+	glutPostRedisplay();
+}
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -14,6 +20,7 @@ int main(int argc, char** argv)
 
 	glutCreateWindow(gApplication->title);
 	glutReshapeFunc(&resize);
+	glutTimerFunc(30, &idle, 0);
 	glutDisplayFunc(&display);
 	if (gApplication != 0)
 	{

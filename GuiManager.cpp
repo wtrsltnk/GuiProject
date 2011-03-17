@@ -144,7 +144,7 @@ void GuiManager::removeControl(Control* ctr)
 	}
 }
 
-Control* GuiManager::getClickedControl(float point[2], Container* container)
+Control* GuiManager::getTopControlAt(float point[2], Container* container)
 {
 	Control* result = 0;
 
@@ -165,7 +165,7 @@ Control* GuiManager::getClickedControl(float point[2], Container* container)
 			Container* cc = dynamic_cast<Container*>(c);
 			if (cc != 0)
 			{
-				Control* tmp = getClickedControl(point, cc);
+				Control* tmp = getTopControlAt(point, cc);
 				if (tmp != 0)
 					result = tmp;
 			}
@@ -251,7 +251,6 @@ void GuiManager::glutKeyboard(unsigned char key, int x, int y)
 			vb->addInput(key);
 		}
 	}
-	glutPostRedisplay();
 }
 
 void GuiManager::glutSpecialKeyboard(int key, int x, int y)
@@ -276,14 +275,13 @@ void GuiManager::glutSpecialKeyboard(int key, int x, int y)
 				vb->setValue(vb->value() + diff);
 		}
 	}
-	glutPostRedisplay();
 }
 
 void GuiManager::glutMouseClick(int button, int state, int x, int y)
 {
 	float point[2] = { x, GuiManager::sInstance->mViewSize[1] - y };
 
-	Control* control = GuiManager::sInstance->getClickedControl(point);
+	Control* control = GuiManager::sInstance->getTopControlAt(point);
 
 	if (control != 0)
 	{
@@ -308,24 +306,22 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 			control->mBox.state = BoxState::Hovered;
 		}
 	}
-
-	glutPostRedisplay();
 }
 
 void GuiManager::glutMouseMove(int x, int y)
 {
 	float point[2] = { x, GuiManager::sInstance->mViewSize[1] - y };
 
-	Control* control = GuiManager::sInstance->getClickedControl(point);
+	static Control* lastHovered = 0;
+	Control* control = GuiManager::sInstance->getTopControlAt(point);
+
+	if (lastHovered != 0)
+		lastHovered->mBox.state = BoxState::None;
 
 	if (control != 0 && control->getType() != ControlTypes::Container)
-	{
-		if (control->mBox.isPointInBox(point))
-			control->mBox.state = BoxState::Hovered;
-		else
-			control->mBox.state = BoxState::None;
-	}
-	glutPostRedisplay();
+		control->mBox.state = BoxState::Hovered;
+
+	lastHovered = control;
 }
 
 #endif
