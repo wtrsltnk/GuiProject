@@ -682,3 +682,40 @@ void Valuebox::addInput(char key)
 		this->mInput[0] = 0;
 	}
 }
+
+
+/******************************************************************************************/
+/*** Listbox																		   ****/
+/******************************************************************************************/
+Listbox::Listbox(int x, int y, int w, int h)
+	: Control(ControlTypes::Listbox, x, y, w, h)
+{
+}
+
+Listbox::~Listbox()
+{
+}
+
+void Listbox::render()
+{
+	this->renderBox(true);
+}
+
+int Listbox::addItem(const char* text, void* data)
+{
+	this->mItems.push_back(Listbox::ListboxItem(text, data));
+
+	return this->mItems.size() - 1;
+}
+
+void Listbox::removeItem(int index)
+{
+	for (std::vector<ListboxItem>::iterator itr = this->mItems.begin(); itr != this->mItems.end(); ++itr)
+	{
+//		if ((*itr).mText == this->mItems.at(index))
+//		{
+//			this->mItems.erase(itr);
+//			break;
+//		}
+	}
+}

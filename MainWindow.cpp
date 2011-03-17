@@ -58,7 +58,7 @@ bool MainWindow::initialize()
 	cb = new ui::Checkbox(10, 80, 64, 24, (const char*)"asdfasd");
 	tb = new ui::Textbox(10, 110, 164, 54, (const char*)"Wouters");
 	vb = new ui::Valuebox(10, 180, 64, 24, 5.8346, 0, 10000);
-	lbl = new ui::Label("test", 10, 240, 64, 24);
+	lbl = new ui::Label("test", 10, 440, 164, 24);
 	ui::Container* cnt = new ui::Container(120, 10, 72, 100);
 	cnt->addControl(cb);
 	cnt->addControl(tb);
@@ -69,6 +69,8 @@ bool MainWindow::initialize()
 	tb->TextChanged += ui::TextChangedEventHandler(this, (ui::eventFn)&MainWindow::anderenaam3);
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
+
+	this->video.load("/media/data/Films/tron/Tron.Legacy.2010.x264.1080.BluRay.AC3-DTS.NLSUBS-SRT/Tron.Legacy.2010.x264.1080.BluRay.AC3-DTS.NLSUBS-SRT.mkv");
 
 	return true;
 }
@@ -82,7 +84,10 @@ void MainWindow::resize(int w, int h)
 
 void MainWindow::render()
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
+	this->video.nextFrame();
+	this->video.render();
 
 	ui::GuiManager::instance()->render();
 }

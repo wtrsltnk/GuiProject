@@ -184,8 +184,8 @@ int main(int arg, char **argv)
    float scale;
    char *text = "Heljo World!";
 
-   fread(buffer, 1, 1000000, fopen("c:/windows/fonts/arialbd.ttf", "rb"));
-   stbtt_InitFont(&font, buffer, 0);
+   fread(m_pBuffer, 1, 1000000, fopen("c:/windows/fonts/arialbd.ttf", "rb"));
+   stbtt_InitFont(&font, m_pBuffer, 0);
 
    scale = stbtt_ScaleForPixelHeight(&font, 16);
    memset(screen, 0, sizeof(screen));

@@ -65,7 +65,8 @@ enum
 	Button = 102,
 	Checkbox = 103,
 	Textbox = 104,
-	Valuebox = 105
+	Valuebox = 105,
+	Listbox = 106,
 };
 }
 
@@ -247,6 +248,31 @@ protected:
 	float mMinValue;
 	float mMaxValue;
 	char mInput[32];
+
+};
+
+class Listbox : public Control
+{
+public:
+	Listbox(int x, int y, int w, int h);
+	virtual ~Listbox();
+
+	virtual void render();
+
+	int addItem(const char* text, void* data);
+	void removeItem(int index);
+
+private:
+	class ListboxItem
+	{
+	public:
+		ListboxItem(const char* text, void* data) : mText(text), mData(data) { }
+
+		const char* mText;
+		void* mData;
+	};
+
+	std::vector<ListboxItem> mItems;
 
 };
 
