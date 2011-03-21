@@ -79,7 +79,7 @@ public:
 	Control(int type, int x, int y, int w, int h);
 	virtual ~Control();
 
-	void renderControl();
+	virtual void renderControl();
 
 	int getType() { return this->mType; }
 

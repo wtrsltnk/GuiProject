@@ -382,6 +382,9 @@ void Container::updateChildControls()
 		c->mBox.hitbox[2] = this->width() - (this->mPadding * 2);
 		c->updateBox();
 		y -= c->height() + this->mPadding;
+		Container* cc = dynamic_cast<Container*> (c);
+		if (cc != 0)
+			cc->updateChildControls();
 	}
 }
 
