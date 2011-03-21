@@ -54,7 +54,7 @@ private:
 	Control* mFocus;
 	VerticalContainer* mRoot;
 
-#ifdef USE_GLUT
+#ifndef SKIP_GLUT
 public:
 	static void glutKeyboard(unsigned char key, int x, int y);
 	static void glutSpecialKeyboard(int key, int x, int y);

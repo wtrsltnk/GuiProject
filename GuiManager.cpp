@@ -88,7 +88,7 @@ void GuiManager::initialize(const char* fontpath)
 
 	GuiManager::instance()->mRoot = new ui::VerticalContainer(20, 20, 10, 10);
 
-#ifdef USE_GLUT
+#ifndef SKIP_GLUT
 	glutKeyboardFunc(&GuiManager::glutKeyboard);
 	glutSpecialFunc(&GuiManager::glutSpecialKeyboard);
 	glutMouseFunc(&GuiManager::glutMouseClick);
@@ -240,7 +240,7 @@ void GuiManager::render()
 	glPopMatrix();
 }
 
-#ifdef USE_GLUT
+#ifndef SKIP_GLUT
 void GuiManager::glutKeyboard(unsigned char key, int x, int y)
 {
 	if (GuiManager::instance()->mFocus != 0)

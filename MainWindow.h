@@ -12,7 +12,7 @@
 #include "Font.h"
 #include "GuiManager.h"
 #include "Controls.h"
-#include "Video.h"
+//#include "Video.h"
 
 class MainWindow : public GlutApplication, public EventHandler
 {
@@ -36,7 +36,7 @@ public:
 	ui::Textbox* tb;
 	ui::Valuebox* vb;
 	ui::Label* lbl;
-	Video video;
+//	Video video;
 
 };
 
