@@ -76,6 +76,24 @@ int Clipper::stack = 0;
 
 
 /******************************************************************************************/
+/*** GuiEventArgs																	   ****/
+/******************************************************************************************/
+GuiEventArgs::GuiEventArgs(Control* ctr)
+	: mControl(ctr)
+{
+}
+
+GuiEventArgs::~GuiEventArgs()
+{
+}
+
+Control* GuiEventArgs::control()
+{
+	return this->mControl;
+}
+
+
+/******************************************************************************************/
 /*** Control																		   ****/
 /******************************************************************************************/
 Control::Control(int type)
@@ -106,7 +124,6 @@ Control::~Control()
 void Control::renderControl()
 {
 	Clipper c(this->mBox.hitbox);
-//printf("render:%f %f %f %f\n", this->mBox.hitbox[0], this->mBox.hitbox[1], this->mBox.hitbox[2], this->mBox.hitbox[3]);
 	this->render();
 
 	if (this == GuiManager::instance()->mFocus)
@@ -307,16 +324,16 @@ bool Control::isPointInBox(float point[2])
 /******************************************************************************************/
 /*** Container																		   ****/
 /******************************************************************************************/
-Container::Container(int x, int y, int w, int h)
+VerticalContainer::VerticalContainer(int x, int y, int w, int h)
 	: Control(ControlTypes::Container, x, y, w, h), mPadding(4), mChildHeight(0), mScroll(0)
 {
 }
 
-Container::~Container()
+VerticalContainer::~VerticalContainer()
 {
 }
 
-void Container::render()
+void VerticalContainer::render()
 {
 	float scrollbarWidth = 0;
 	this->renderBox(false);
@@ -352,7 +369,7 @@ void Container::render()
 	glPopMatrix();
 }
 
-void Container::addControl(Control* ctr)
+void VerticalContainer::addControl(Control* ctr)
 {
 	if (ctr->mParent != 0)
 		ctr->mParent->removeControl(ctr);
@@ -361,7 +378,7 @@ void Container::addControl(Control* ctr)
 	ctr->mParent = this;
 }
 
-void Container::removeControl(Control* ctr)
+void VerticalContainer::removeControl(Control* ctr)
 {
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 	{
@@ -374,17 +391,17 @@ void Container::removeControl(Control* ctr)
 	}
 }
 
-float Container::padding()
+float VerticalContainer::padding()
 {
 	return this->mPadding;
 }
 
-void Container::setPadding(float padding)
+void VerticalContainer::setPadding(float padding)
 {
 	this->mPadding = padding;
 }
 
-void Container::scrollUp()
+void VerticalContainer::scrollUp()
 {
 	if (this->mChildHeight > this->height())
 	{
@@ -399,7 +416,7 @@ void Container::scrollUp()
 	}
 }
 
-void Container::scrollDown()
+void VerticalContainer::scrollDown()
 {
 	if (this->mChildHeight > this->height())
 	{
@@ -413,14 +430,14 @@ void Container::scrollDown()
 	}
 }
 
-float Container::getScroll()
+float VerticalContainer::getScroll()
 {
 	if (this->mParent != 0)
 		return this->mParent->getScroll() + this->mScroll;
 	return this->mScroll;
 }
 
-void Container::updateChildControls()
+void VerticalContainer::updateChildControls()
 {
 	float scrollbarWidth = 0;
 	float x = this->mBox.hitbox[0];
@@ -441,13 +458,13 @@ void Container::updateChildControls()
 		c->mBox.hitbox[2] = this->width() - (this->mPadding * 2) - scrollbarWidth;
 		c->updateBox();
 		y -= c->height() + this->mPadding;
-		Container* cc = dynamic_cast<Container*> (c);
+		VerticalContainer* cc = dynamic_cast<VerticalContainer*> (c);
 		if (cc != 0)
 			cc->updateChildControls();
 	}
 }
 
-void Container::setSize(float w, float h)
+void VerticalContainer::setSize(float w, float h)
 {
 	Control::setSize(w, h);
 	this->updateChildControls();

@@ -20,7 +20,7 @@ MainWindow::~MainWindow()
 	ui::GuiManager::destroyInstance();
 }
 
-void MainWindow::anderenaam(ui::Control* box, ui::EventArgs* e)
+void MainWindow::anderenaam(void* sender, EventArgs* e)
 {
 	if (cb != 0)
 	{
@@ -31,14 +31,14 @@ void MainWindow::anderenaam(ui::Control* box, ui::EventArgs* e)
 	}
 }
 
-void MainWindow::anderenaam2(ui::Control* box, ui::EventArgs* e)
+void MainWindow::anderenaam2(void* sender, EventArgs* e)
 {
 	printf("hellow world\n");
 }
 
-void MainWindow::anderenaam3(ui::Control* box, ui::EventArgs* e)
+void MainWindow::anderenaam3(void* sender, EventArgs* e)
 {
-	ui::Textbox* tb = (ui::Textbox*)box;
+	ui::Textbox* tb = (ui::Textbox*)sender;
 	lbl->setText(tb->text());
 }
 
@@ -51,25 +51,25 @@ bool MainWindow::initialize()
 	tb = new ui::Textbox(10, 110, 164, 54, (const char*)"Wouter Saaltink");
 	vb = new ui::Valuebox(10, 180, 64, 24, 5.8346, 0, 10000);
 	lbl = new ui::Label("test", 10, 440, 164, 24);
-	ui::Container* cnt = new ui::Container(120, 50, 72, 100);
-	ui::Container* cnt2 = new ui::Container(210, 50, 200, 150);
-	ui::Container* cnt3 = new ui::Container(210, 50, 200, 500);
-	ui::Container* cnt4 = new ui::Container(210, 50, 200, 250);
-	ui::Container* cnt5 = new ui::Container(210, 50, 200, 300);
+	ui::VerticalContainer* cnt = new ui::VerticalContainer(120, 50, 72, 100);
+	ui::VerticalContainer* cnt2 = new ui::VerticalContainer(210, 50, 200, 150);
+	ui::VerticalContainer* cnt3 = new ui::VerticalContainer(210, 50, 200, 500);
+	ui::VerticalContainer* cnt4 = new ui::VerticalContainer(210, 50, 200, 250);
+	ui::VerticalContainer* cnt5 = new ui::VerticalContainer(210, 50, 200, 300);
 	cnt->addControl(cb);
 	cnt->addControl(tb);
-	cnt->addControl(vb);
-	cnt->addControl(lbl);
 	cnt->addControl(b);
+	cnt->addControl(lbl);
+	cnt->addControl(vb);
 	cnt2->addControl(cnt);
 	cnt3->addControl(cnt2);
 	cnt4->addControl(cnt3);
 	cnt5->addControl(cnt4);
 
 	// Voorbeeld van het toevoegen van events
-	b->Click += ui::ClickEventHandler(this, (ui::eventFn)&MainWindow::anderenaam);
-	cb->StateChanged += ui::StateChangedEventHandler(this, (ui::eventFn)&MainWindow::anderenaam2);
-	tb->TextChanged += ui::TextChangedEventHandler(this, (ui::eventFn)&MainWindow::anderenaam3);
+	b->Click += ui::ClickEventHandler(this, (eventFn)&MainWindow::anderenaam);
+	cb->StateChanged += ui::StateChangedEventHandler(this, (eventFn)&MainWindow::anderenaam2);
+	tb->TextChanged += ui::TextChangedEventHandler(this, (eventFn)&MainWindow::anderenaam3);
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 

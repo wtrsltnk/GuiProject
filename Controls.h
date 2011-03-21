@@ -69,7 +69,31 @@ enum
 };
 }
 
-class Container;
+namespace EventType
+{
+enum
+{
+	Click = 0,
+	StateChanged,
+	TextChanged,
+	ValueChanged,
+};
+}
+
+class GuiEventArgs : public EventArgs
+{
+public:
+	GuiEventArgs(Control* ctr);
+	virtual ~GuiEventArgs();
+
+	Control* control();
+
+private:
+	Control* mControl;
+
+};
+
+class VerticalContainer;
 
 class Control
 {
@@ -99,7 +123,7 @@ public:
 	bool isPointInBox(float point[2]);
 protected:
 	box_t mBox;
-	Container* mParent;
+	VerticalContainer* mParent;
 
 	virtual void render() = 0;
 
@@ -108,16 +132,16 @@ protected:
 private:
 	int mType;
 	friend class GuiManager;
-	friend class Container;
+	friend class VerticalContainer;
 };
 
 typedef std::vector<Control*> ControlList;
 
-class Container : public Control
+class VerticalContainer : public Control
 {
 public:
-	Container(int x, int y, int w, int h);
-	virtual ~Container();
+	VerticalContainer(int x, int y, int w, int h);
+	virtual ~VerticalContainer();
 
 	virtual void render();
 
@@ -162,7 +186,7 @@ protected:
 
 };
 
-typedef Event<EventType::Click> ClickEvent;
+typedef Event<Control, EventArgs, EventType::Click> ClickEvent;
 typedef ClickEvent::Handler ClickEventHandler;
 
 class Button : public Label
@@ -177,7 +201,7 @@ public:
 
 };
 
-typedef Event<EventType::StateChanged> StateChangedEvent;
+typedef Event<Control, EventArgs, EventType::StateChanged> StateChangedEvent;
 typedef StateChangedEvent::Handler StateChangedEventHandler;
 
 class Checkbox : public Label
@@ -201,7 +225,7 @@ private:
 
 };
 
-typedef Event<EventType::TextChanged> TextChangedEvent;
+typedef Event<Control, EventArgs, EventType::TextChanged> TextChangedEvent;
 typedef TextChangedEvent::Handler TextChangedEventHandler;
 
 class Textbox : public Label
@@ -232,7 +256,7 @@ private:
 	void setCursorIndex(int index);
 };
 
-typedef Event<EventType::ValueChanged> ValueChangedEvent;
+typedef Event<Control, EventArgs, EventType::ValueChanged> ValueChangedEvent;
 typedef ValueChangedEvent::Handler ValueChangedEventHandler;
 
 class Valuebox : public Control

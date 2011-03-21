@@ -14,13 +14,12 @@
 namespace ui
 {
 
-class EventHandler;
+class VerticalContainer;
 class Font;
 
-class GuiManager
+class GuiManager : public EventManager<ui::Control>
 {
 	GuiManager();
-	static GuiManager* sInstance;
 public:
 	static GuiManager* createInstance(const char* fontpath);
 	static GuiManager* instance();
@@ -34,28 +33,26 @@ public:
 	void onMouseMove(int x, int y);
 	void render();
 
-private:
-	void addEventHandler(GuiEventHandler* handler, eventFn method, Control* box, int eventType);
-	void removeEventHandler(GuiEventHandler* handler, eventFn method, Control* box);
-	void initiateEvent(Control* box, int eventType, EventArgs* e);
+	VerticalContainer* getRoot();
+	Control* getTopControlAt(float point[2], VerticalContainer* container = 0);
 
-	// These two are only needed by the Control class in its constructor and destructor
+private:
+	virtual void initialize(const char* fontpath);
+	virtual void addEventHandler(EventHandler* handler, eventFn method, Control* box, int eventType);
+	virtual void removeEventHandler(EventHandler* handler, eventFn method, Control* box);
+	virtual void initiateEvent(Control* box, int eventType, EventArgs* e);
+
+private:
 	void addControl(Control* ctr);
 	void removeControl(Control* ctr);
+	friend class Control;
 
-	Container* getRoot();
-
-	Control* getTopControlAt(float point[2], Container* container = 0);
 private:
 	static Font* sDefaultFont;
 	int mViewSize[2];
-	std::vector<EventHandler*> mHandlers;
 	std::vector<Control*> mControls;
 	Control* mFocus;
-	Container* mRoot;
-
-	friend class Control;
-	template <int t> friend class Event;
+	VerticalContainer* mRoot;
 
 #ifdef USE_GLUT
 public:
@@ -64,41 +61,6 @@ public:
 	static void glutMouseClick(int button, int state, int x, int y);
 	static void glutMouseMove(int x, int y);
 #endif
-};
-
-template <int t>
-class Event
-{
-public:
-	class Handler
-	{
-	public:
-		Handler(GuiEventHandler* handler, eventFn method) : mHandler(handler), mMethod(method), mEventType(t) { }
-
-		inline void operator () (Control* ctr, EventArgs* e)
-		{ ((this->mHandler)->*this->mMethod)(ctr, e); }
-
-	private:
-		GuiEventHandler* mHandler;
-		eventFn mMethod;
-		int mEventType;
-
-		friend class Event;
-	};
-public:
-	Event(Control* ctr) : mControl(ctr) { }
-
-	inline void operator += (Handler handler)
-			{ GuiManager::instance()->addEventHandler(handler.mHandler, handler.mMethod, this->mControl, handler.mEventType); }
-
-	inline void operator -= (Handler handler)
-			{ GuiManager::instance()->removeEventHandler(handler.mHandler, handler.mMethod, this->mControl); }
-
-	inline void operator () (EventArgs* e)
-			{ GuiManager::instance()->initiateEvent(this->mControl, t, e); }
-private:
-	Control* mControl;
-
 };
 
 }

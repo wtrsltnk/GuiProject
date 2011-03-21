@@ -14,15 +14,15 @@
 #include "Controls.h"
 #include "Video.h"
 
-class MainWindow : public GlutApplication, public ui::GuiEventHandler
+class MainWindow : public GlutApplication, public EventHandler
 {
 public:
 	MainWindow();
 	virtual ~MainWindow();
 
-	virtual void anderenaam(ui::Control* box, ui::EventArgs* e);
-	virtual void anderenaam2(ui::Control* box, ui::EventArgs* e);
-	virtual void anderenaam3(ui::Control* box, ui::EventArgs* e);
+	virtual void anderenaam(void* sender, EventArgs* e);
+	virtual void anderenaam2(void* sender, EventArgs* e);
+	virtual void anderenaam3(void* sender, EventArgs* e);
 
 	virtual bool initialize();
 	virtual void resize(int w, int h);

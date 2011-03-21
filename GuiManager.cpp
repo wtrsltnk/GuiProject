@@ -11,19 +11,20 @@
 #include "Controls.h"
 #include <GL/freeglut.h>
 
-namespace ui
-{
-class EventHandler
+template <class T>
+class EventManager<T>::PrivateHandler
 {
 public:
-	EventHandler(GuiEventHandler* handler, eventFn eventFn, Control* control, int type) : mHandler(handler), mEventFn(eventFn), mControl(control), mEventType(type) { }
+	PrivateHandler(EventHandler* handler, eventFn eventFn, ui::Control* control, int type) : mHandler(handler), mEventFn(eventFn), mControl(control), mEventType(type) { }
 
-	GuiEventHandler* mHandler;
+	EventHandler* mHandler;
 	eventFn mEventFn;
-	Control* mControl;
+	ui::Control* mControl;
 	int mEventType;
 };
-}
+
+template <class T>
+EventManager<T>* EventManager<T>::sInstance = 0;
 
 using namespace ui;
 
@@ -32,51 +33,36 @@ GuiManager::GuiManager()
 {
 }
 
-GuiManager* GuiManager::sInstance = 0;
 Font* GuiManager::sDefaultFont = 0;
 
 GuiManager* GuiManager::createInstance(const char* fontpath)
 {
-	if (GuiManager::sInstance != 0)
-		delete GuiManager::sInstance;
+	if (EventManager<ui::Control>::sInstance != 0)
+		delete EventManager<ui::Control>::sInstance;
 
-	GuiManager::sInstance = new GuiManager();
-	GuiManager::sInstance->mRoot = new Container(20, 20, 10, 10);
-	GuiManager::sInstance->mRoot->mParent = 0;
+	EventManager<ui::Control>::sInstance = new GuiManager();
+	EventManager<ui::Control>::sInstance->initialize(fontpath);
 
-	if (GuiManager::sDefaultFont != 0)
-		delete GuiManager::sDefaultFont;
-	GuiManager::sDefaultFont = new Font();
-	GuiManager::sDefaultFont->initializeFont(fontpath);
-
-#ifdef USE_GLUT
-	glutKeyboardFunc(&GuiManager::glutKeyboard);
-	glutSpecialFunc(&GuiManager::glutSpecialKeyboard);
-	glutMouseFunc(&GuiManager::glutMouseClick);
-	glutMotionFunc(&GuiManager::glutMouseMove);
-	glutPassiveMotionFunc(&GuiManager::glutMouseMove);
-#endif
-
-	return GuiManager::sInstance;
+	return (GuiManager*)EventManager<ui::Control>::sInstance;
 }
 
 GuiManager* GuiManager::instance()
 {
-	return GuiManager::sInstance;
+	return (GuiManager*)EventManager<ui::Control>::sInstance;
 }
 
 void GuiManager::destroyInstance()
 {
-	if (GuiManager::sInstance != 0)
-		delete GuiManager::sInstance;
-	GuiManager::sInstance = 0;
+	if (EventManager<ui::Control>::sInstance != 0)
+		delete EventManager<ui::Control>::sInstance;
+	EventManager<ui::Control>::sInstance = 0;
 }
 
 GuiManager::~GuiManager()
 {
 	while (this->mHandlers.empty() == false)
 	{
-		EventHandler* h = this->mHandlers.back();
+		PrivateHandler* h = this->mHandlers.back();
 		this->mHandlers.pop_back();
 		delete h;
 	}
@@ -92,16 +78,35 @@ GuiManager::~GuiManager()
 		delete this->mRoot;
 }
 
-void GuiManager::addEventHandler(GuiEventHandler* handler, eventFn method, Control* box, int eventType)
+void GuiManager::initialize(const char* fontpath)
 {
-	this->mHandlers.push_back(new EventHandler(handler, method, box, eventType));
+	if (GuiManager::sDefaultFont != 0)
+		delete GuiManager::sDefaultFont;
+
+	GuiManager::sDefaultFont = new Font();
+	GuiManager::sDefaultFont->initializeFont(fontpath);
+
+	GuiManager::instance()->mRoot = new ui::VerticalContainer(20, 20, 10, 10);
+
+#ifdef USE_GLUT
+	glutKeyboardFunc(&GuiManager::glutKeyboard);
+	glutSpecialFunc(&GuiManager::glutSpecialKeyboard);
+	glutMouseFunc(&GuiManager::glutMouseClick);
+	glutMotionFunc(&GuiManager::glutMouseMove);
+	glutPassiveMotionFunc(&GuiManager::glutMouseMove);
+#endif
 }
 
-void GuiManager::removeEventHandler(GuiEventHandler* handler, eventFn method, Control* box)
+void GuiManager::addEventHandler(EventHandler* handler, eventFn method, Control* box, int eventType)
 {
-	for (std::vector<EventHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
+	this->mHandlers.push_back(new PrivateHandler(handler, method, box, eventType));
+}
+
+void GuiManager::removeEventHandler(EventHandler* handler, eventFn method, Control* box)
+{
+	for (std::vector<PrivateHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
 	{
-		EventHandler* h = *itr;
+		PrivateHandler* h = *itr;
 		if (h->mControl == box && h->mEventFn == method && h->mHandler == handler)
 		{
 			this->mHandlers.erase(itr);
@@ -113,13 +118,13 @@ void GuiManager::removeEventHandler(GuiEventHandler* handler, eventFn method, Co
 
 void GuiManager::initiateEvent(Control* box, int eventType, EventArgs* e)
 {
-	for (std::vector<EventHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
+	for (std::vector<PrivateHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
 	{
 		if ((*itr)->mEventType == eventType)
 		{
 			if ((*itr)->mControl == box)
 			{
-				((*(*itr)->mHandler).*(*itr)->mEventFn)((*itr)->mControl, e);
+				((*(*itr)->mHandler).*(*itr)->mEventFn)(box, e);
 			}
 		}
 	}
@@ -143,7 +148,7 @@ void GuiManager::removeControl(Control* ctr)
 			break;
 		}
 	}
-	for (std::vector<EventHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
+	for (std::vector<PrivateHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
 	{
 		if ((*itr)->mControl == ctr)
 		{
@@ -152,17 +157,17 @@ void GuiManager::removeControl(Control* ctr)
 	}
 }
 
-Container* GuiManager::getRoot()
+VerticalContainer* GuiManager::getRoot()
 {
 	return this->mRoot;
 }
 
-Control* GuiManager::getTopControlAt(float point[2], Container* container)
+Control* GuiManager::getTopControlAt(float point[2], VerticalContainer* container)
 {
 	Control* result = 0;
 
 	if (container == 0)
-		container = GuiManager::sInstance->mRoot;
+		container = GuiManager::instance()->mRoot;
 
 	if (container != 0)
 	{
@@ -173,7 +178,7 @@ Control* GuiManager::getTopControlAt(float point[2], Container* container)
 			{
 				result = c;
 
-				Container* cc = dynamic_cast<Container*>(c);
+				VerticalContainer* cc = dynamic_cast<VerticalContainer*>(c);
 				if (cc != 0)
 				{
 					Control* tmp = getTopControlAt(point, cc);
@@ -224,7 +229,8 @@ void GuiManager::render()
 	glVertex2f(0, this->mViewSize[1]);
 	glEnd();
 
-	this->mRoot->renderControl();
+	if (this->mRoot != 0)
+		this->mRoot->renderControl();
 
 	glDisable(GL_STENCIL_TEST);
 
@@ -237,27 +243,27 @@ void GuiManager::render()
 #ifdef USE_GLUT
 void GuiManager::glutKeyboard(unsigned char key, int x, int y)
 {
-	if (GuiManager::sInstance->mFocus != 0)
+	if (GuiManager::instance()->mFocus != 0)
 	{
-		if (GuiManager::sInstance->mFocus->getType() == ControlTypes::Textbox)
+		if (GuiManager::instance()->mFocus->getType() == ControlTypes::Textbox)
 		{
-			Textbox* tb = (Textbox*)GuiManager::sInstance->mFocus;
+			Textbox* tb = (Textbox*)GuiManager::instance()->mFocus;
 			if (key == 8)
 			{
 				tb->removeChar();
-				EventArgs e;
+				GuiEventArgs e(tb);
 				tb->TextChanged(&e);
 			}
 			else if (key >= 32 && key < 128)
 			{
 				tb->addChar(key);
-				EventArgs e;
+				GuiEventArgs e(tb);
 				tb->TextChanged(&e);
 			}
 		}
-		else if (GuiManager::sInstance->mFocus->getType() == ControlTypes::Valuebox)
+		else if (GuiManager::instance()->mFocus->getType() == ControlTypes::Valuebox)
 		{
-			Valuebox* vb = (Valuebox*)GuiManager::sInstance->mFocus;
+			Valuebox* vb = (Valuebox*)GuiManager::instance()->mFocus;
 			vb->addInput(key);
 		}
 	}
@@ -265,19 +271,19 @@ void GuiManager::glutKeyboard(unsigned char key, int x, int y)
 
 void GuiManager::glutSpecialKeyboard(int key, int x, int y)
 {
-	if (GuiManager::sInstance->mFocus != 0)
+	if (GuiManager::instance()->mFocus != 0)
 	{
-		if (GuiManager::sInstance->mFocus->getType() == ControlTypes::Textbox)
+		if (GuiManager::instance()->mFocus->getType() == ControlTypes::Textbox)
 		{
-			Textbox* tb = (Textbox*)GuiManager::sInstance->mFocus;
+			Textbox* tb = (Textbox*)GuiManager::instance()->mFocus;
 			if (key == GLUT_KEY_LEFT)
 				tb->moveCursor(-1);
 			else if (key == GLUT_KEY_RIGHT)
 				tb->moveCursor(1);
 		}
-		else if (GuiManager::sInstance->mFocus->getType() == ControlTypes::Valuebox)
+		else if (GuiManager::instance()->mFocus->getType() == ControlTypes::Valuebox)
 		{
-			Valuebox* vb = (Valuebox*)GuiManager::sInstance->mFocus;
+			Valuebox* vb = (Valuebox*)GuiManager::instance()->mFocus;
 			float diff = (vb->maxValue() - vb->minValue()) / 10.0f;
 			if (key == GLUT_KEY_LEFT || key == GLUT_KEY_DOWN)
 				vb->setValue(vb->value() - diff);
@@ -289,15 +295,17 @@ void GuiManager::glutSpecialKeyboard(int key, int x, int y)
 
 void GuiManager::glutMouseClick(int button, int state, int x, int y)
 {
-	float point[2] = { x, GuiManager::sInstance->mViewSize[1] - y };
+	float point[2] = { x, GuiManager::instance()->mViewSize[1] - y };
 
-	Control* control = GuiManager::sInstance->getTopControlAt(point);
+	Control* control = GuiManager::instance()->getTopControlAt(point);
 
 	if (control != 0)
 	{
 		if (button == 0 && state == 0)
 		{
-			GuiManager::sInstance->mFocus = control;
+			if (control->getType() != ControlTypes::Container)
+				GuiManager::instance()->mFocus = control;
+
 			control->mBox.state = BoxState::Pressed;
 			if (control->getType() == ControlTypes::Checkbox)
 			{
@@ -307,15 +315,15 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 			else if (control->getType() == ControlTypes::Button)
 			{
 				Button* b = (Button*)control;
-				EventArgs e;
+				GuiEventArgs e(b);
 				b->Click(&e);
 			}
 		}
 		else
 		{
-			Container* cc = 0;
+			VerticalContainer* cc = 0;
 			if (control->getType() == ControlTypes::Container)
-				cc = (Container*)control;
+				cc = (VerticalContainer*)control;
 			else
 				cc = control->mParent;
 
@@ -334,10 +342,10 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 
 void GuiManager::glutMouseMove(int x, int y)
 {
-	float point[2] = { x, GuiManager::sInstance->mViewSize[1] - y };
+	float point[2] = { x, GuiManager::instance()->mViewSize[1] - y };
 
 	static Control* lastHovered = 0;
-	Control* control = GuiManager::sInstance->getTopControlAt(point);
+	Control* control = GuiManager::instance()->getTopControlAt(point);
 
 	if (lastHovered != 0)
 		lastHovered->mBox.state = BoxState::None;
