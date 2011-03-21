@@ -52,10 +52,16 @@ bool MainWindow::initialize()
 	vb = new ui::Valuebox(10, 180, 64, 24, 5.8346, 0, 10000);
 	lbl = new ui::Label("test", 10, 440, 164, 24);
 	ui::Container* cnt = new ui::Container(120, 50, 72, 100);
-	ui::Container* cnt2 = new ui::Container(210, 50, 200, 300);
+	ui::Container* cnt2 = new ui::Container(210, 50, 200, 150);
+	ui::Container* cnt3 = new ui::Container(210, 50, 200, 200);
+	ui::Container* cnt4 = new ui::Container(210, 50, 200, 250);
+	ui::Container* cnt5 = new ui::Container(210, 50, 200, 300);
 	cnt->addControl(cb);
 	cnt->addControl(tb);
 	cnt2->addControl(cnt);
+	cnt3->addControl(cnt2);
+	cnt4->addControl(cnt3);
+	cnt5->addControl(cnt4);
 
 	// Voorbeeld van het toevoegen van events
 	b->Click += ui::ClickEventHandler(this, (ui::eventFn)&MainWindow::anderenaam);
