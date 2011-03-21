@@ -28,7 +28,7 @@ public:
 using namespace ui;
 
 GuiManager::GuiManager()
-	: mFocus(0)
+	: mFocus(0), mRoot(0)
 {
 }
 
@@ -41,6 +41,8 @@ GuiManager* GuiManager::createInstance(const char* fontpath)
 		delete GuiManager::sInstance;
 
 	GuiManager::sInstance = new GuiManager();
+	GuiManager::sInstance->mRoot = new Container(20, 20, 10, 10);
+	GuiManager::sInstance->mRoot->mParent = 0;
 
 	if (GuiManager::sDefaultFont != 0)
 		delete GuiManager::sDefaultFont;
@@ -85,6 +87,9 @@ GuiManager::~GuiManager()
 		Control* c = this->mControls.back();
 		delete c;
 	}
+
+	if (this->mRoot != 0)
+		delete this->mRoot;
 }
 
 void GuiManager::addEventHandler(GuiEventHandler* handler, eventFn method, Control* box, int eventType)
@@ -124,6 +129,8 @@ void GuiManager::addControl(Control* ctr)
 {
 	ctr->updateBox();
 	this->mControls.push_back(ctr);
+	if (ctr->mParent == 0 && this->mRoot != 0)
+		this->mRoot->addControl(ctr);
 }
 
 void GuiManager::removeControl(Control* ctr)
@@ -145,40 +152,24 @@ void GuiManager::removeControl(Control* ctr)
 	}
 }
 
+Container* GuiManager::getRoot()
+{
+	return this->mRoot;
+}
+
 Control* GuiManager::getTopControlAt(float point[2], Container* container)
 {
 	Control* result = 0;
 
-	std::vector<Control*>* controls = &GuiManager::sInstance->mControls;
+	if (container == 0)
+		container = GuiManager::sInstance->mRoot;
 
 	if (container != 0)
 	{
-		controls = &container->getControls();
-		for (std::vector<Control*>::iterator itr = controls->begin(); itr != controls->end(); ++itr)
+		for (std::vector<Control*>::iterator itr = container->getControls().begin(); itr != container->getControls().end(); ++itr)
 		{
 			Control* c = (*itr);
 			if (c->isPointInBox(point))
-			{
-				result = c;
-
-				Container* cc = dynamic_cast<Container*>(c);
-				if (cc != 0)
-				{
-					Control* tmp = getTopControlAt(point, cc);
-					if (tmp != 0)
-						result = tmp;
-				}
-
-				break;
-			}
-		}
-	}
-	else
-	{
-		for (std::vector<Control*>::iterator itr = controls->begin(); itr != controls->end(); ++itr)
-		{
-			Control* c = (*itr);
-			if (c->mParent == 0 && c->isPointInBox(point))
 			{
 				result = c;
 
@@ -202,6 +193,8 @@ void GuiManager::setupSize(int w, int h)
 {
 	this->mViewSize[0] = w;
 	this->mViewSize[1] = h;
+	if (this->mRoot != 0)
+		this->mRoot->setSize(w-40, h-40);
 }
 
 void GuiManager::render()
@@ -231,11 +224,7 @@ void GuiManager::render()
 	glVertex2f(0, this->mViewSize[1]);
 	glEnd();
 
-	for (std::vector<Control*>::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
-	{
-		if ((*itr)->mParent == 0)
-			(*itr)->renderControl();
-	}
+	this->mRoot->renderControl();
 
 	glDisable(GL_STENCIL_TEST);
 

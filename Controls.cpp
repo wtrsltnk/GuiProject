@@ -106,7 +106,7 @@ Control::~Control()
 void Control::renderControl()
 {
 	Clipper c(this->mBox.hitbox);
-
+//printf("render:%f %f %f %f\n", this->mBox.hitbox[0], this->mBox.hitbox[1], this->mBox.hitbox[2], this->mBox.hitbox[3]);
 	this->render();
 
 	if (this == GuiManager::instance()->mFocus)
@@ -177,17 +177,7 @@ float Control::height()
 
 void Control::setSize(float size[2])
 {
-	this->mBox.hitbox[2] = (size[0] > 10 ? size[0] : 10);
-	this->mBox.hitbox[3] = (size[1] > 10 ? size[1] : 10);
-	if (this->mParent != 0)
-	{
-		if (size[0] > this->mParent->width() - 4)
-		{
-			this->mBox.hitbox[2] = this->mParent->width() - 4;
-		}
-		this->mParent->updateChildControls();
-	}
-	this->updateBox();
+	this->setSize(size[0], size[1]);
 }
 
 void Control::setSize(float w, float h)
@@ -301,9 +291,7 @@ bool Control::isPointInBox(float point[2])
 {
 	float scroll = 0;
 	if (this->mParent != 0)
-	{
 		scroll = this->mParent->getScroll();
-	}
 
 	if (point[0] < this->mBox.hitbox[0]) return false;
 	if (point[0] > this->mBox.hitbox[0] + this->mBox.hitbox[2]) return false;
@@ -343,8 +331,8 @@ void Container::render()
 		glBegin(GL_QUADS);
 		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-10, this->mBox.hitbox[1]+this->mBox.hitbox[3] - 4 - (this->mScroll*sbh));
 		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-4, this->mBox.hitbox[1]+this->mBox.hitbox[3] - 4 - (this->mScroll*sbh));
-		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-4, this->mBox.hitbox[1]+this->mBox.hitbox[3] - ((this->mBox.hitbox[3] + this->mScroll)*sbh));
-		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-10, this->mBox.hitbox[1]+this->mBox.hitbox[3] - ((this->mBox.hitbox[3] + this->mScroll)*sbh));
+		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-4, this->mBox.hitbox[1]+this->mBox.hitbox[3] - ((this->mBox.hitbox[3] - 8 + this->mScroll)*sbh));
+		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-10, this->mBox.hitbox[1]+this->mBox.hitbox[3] - ((this->mBox.hitbox[3] - 8 + this->mScroll)*sbh));
 		glEnd();
 		scrollbarWidth = 7;
 	}
@@ -366,6 +354,8 @@ void Container::render()
 
 void Container::addControl(Control* ctr)
 {
+	if (ctr->mParent != 0)
+		ctr->mParent->removeControl(ctr);
 	this->mControls.push_back(ctr);
 	this->updateChildControls();
 	ctr->mParent = this;
@@ -442,6 +432,7 @@ void Container::updateChildControls()
 
 	if (this->mChildHeight > this->height())
 		scrollbarWidth = 7;
+
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 	{
 		Control* c = *itr;
@@ -454,6 +445,12 @@ void Container::updateChildControls()
 		if (cc != 0)
 			cc->updateChildControls();
 	}
+}
+
+void Container::setSize(float w, float h)
+{
+	Control::setSize(w, h);
+	this->updateChildControls();
 }
 
 
@@ -707,6 +704,7 @@ void Textbox::moveCursor(int amount)
 
 void Textbox::setCursorIndex(int index)
 {
+	float textLength = this->mBox.font->getTextLength(this->mText, this->mCursorIndex);
 	this->mCursorIndex = index;
 	if (this->mCursorIndex <= 0)
 	{
@@ -714,7 +712,10 @@ void Textbox::setCursorIndex(int index)
 		this->mCursorPosition = 0;
 	}
 	else
-		this->mCursorPosition = this->mBox.font->getTextLength(this->mText, this->mCursorIndex);
+		this->mCursorPosition = textLength;
+
+	if (textLength < this->width())
+		this->mScroll = 0;
 
 	float combine = this->mCursorPosition + this->mScroll;
 	float diff = combine + 10 - this->mBox.hitbox[2];
@@ -723,6 +724,13 @@ void Textbox::setCursorIndex(int index)
 	else if (combine < 0)
 		this->mScroll -= combine;
 }
+
+void Textbox::updateBox()
+{
+	Control::updateBox();
+	this->setCursorIndex(this->mCursorIndex);
+}
+
 
 
 /******************************************************************************************/

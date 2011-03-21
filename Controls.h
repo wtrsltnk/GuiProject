@@ -133,6 +133,7 @@ public:
 
 	ControlList& getControls() { return this->mControls; }
 
+	virtual void setSize(float w, float h);
 private:
 	ControlList mControls;
 	float mPadding;
@@ -217,6 +218,8 @@ public:
 	void moveCursor(int amount);
 
 	TextChangedEvent TextChanged;
+
+	virtual void updateBox();
 
 private:
 	int mTextLength;

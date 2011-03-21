@@ -44,7 +44,6 @@ private:
 	void removeControl(Control* ctr);
 
 	Container* getRoot();
-	void setRoot(Container* root);
 
 	Control* getTopControlAt(float point[2], Container* container = 0);
 private:
@@ -53,6 +52,7 @@ private:
 	std::vector<EventHandler*> mHandlers;
 	std::vector<Control*> mControls;
 	Control* mFocus;
+	Container* mRoot;
 
 	friend class Control;
 	template <int t> friend class Event;
