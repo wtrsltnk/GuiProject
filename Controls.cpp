@@ -74,20 +74,6 @@ private:
 
 int Clipper::stack = 0;
 
-/******************************************************************************************/
-/*** box_t																			   ****/
-/******************************************************************************************/
-bool box_t::isPointInBox(float point[2])
-{
-	if (point[0] < this->hitbox[0]) return false;
-	if (point[0] > this->hitbox[0] + this->hitbox[2]) return false;
-
-	if (point[1] < this->hitbox[1]) return false;
-	if (point[1] > this->hitbox[1] + this->hitbox[3]) return false;
-
-	return true;
-}
-
 
 /******************************************************************************************/
 /*** Control																		   ****/
@@ -311,13 +297,30 @@ void Control::renderText(float x, float y, const char *text, unsigned int color)
 	glDisable(GL_TEXTURE_2D);
 }
 
+bool Control::isPointInBox(float point[2])
+{
+	float scroll = 0;
+	if (this->mParent != 0)
+	{
+		scroll = this->mParent->getScroll();
+	}
+
+	if (point[0] < this->mBox.hitbox[0]) return false;
+	if (point[0] > this->mBox.hitbox[0] + this->mBox.hitbox[2]) return false;
+
+	if (point[1] > this->mBox.hitbox[1] + scroll + this->mBox.hitbox[3]) return false;
+	if (point[1] < this->mBox.hitbox[1] + scroll) return false;
+
+	return true;
+}
+
 
 
 /******************************************************************************************/
 /*** Container																		   ****/
 /******************************************************************************************/
 Container::Container(int x, int y, int w, int h)
-	: Control(ControlTypes::Container, x, y, w, h), mPadding(4)
+	: Control(ControlTypes::Container, x, y, w, h), mPadding(4), mChildHeight(0), mScroll(0)
 {
 }
 
@@ -327,16 +330,38 @@ Container::~Container()
 
 void Container::render()
 {
+	float scrollbarWidth = 0;
 	this->renderBox(false);
+
+	// Render scrollbar
+	if (this->mChildHeight > this->height())
+	{
+		float h = fmax(this->mChildHeight, this->height());
+		float sbh = this->height() / h;
+
+		glColor3f(47.0f / 255.0f, 47.0f / 255.0f, 47.0f / 255.0f);
+		glBegin(GL_QUADS);
+		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-10, this->mBox.hitbox[1]+this->mBox.hitbox[3] - 4 - (this->mScroll*sbh));
+		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-4, this->mBox.hitbox[1]+this->mBox.hitbox[3] - 4 - (this->mScroll*sbh));
+		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-4, this->mBox.hitbox[1]+this->mBox.hitbox[3] - ((this->mBox.hitbox[3] + this->mScroll)*sbh));
+		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2]-10, this->mBox.hitbox[1]+this->mBox.hitbox[3] - ((this->mBox.hitbox[3] + this->mScroll)*sbh));
+		glEnd();
+		scrollbarWidth = 7;
+	}
+
 	float hitbox[4] = {
 			this->mBox.hitbox[0]+3,
 			this->mBox.hitbox[1]+3,
-			this->mBox.hitbox[2]-6,
+			this->mBox.hitbox[2]-6 - scrollbarWidth,
 			this->mBox.hitbox[3]-6
 	};
 	Clipper c(hitbox);
+
+	glPushMatrix();
+	glTranslatef(0, this->mScroll, 0);
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 		(*itr)->renderControl();
+	glPopMatrix();
 }
 
 void Container::addControl(Control* ctr)
@@ -369,17 +394,60 @@ void Container::setPadding(float padding)
 	this->mPadding = padding;
 }
 
+void Container::scrollUp()
+{
+	if (this->mChildHeight > this->height())
+	{
+		this->mScroll += 5.0f;
+		float diff = this->mChildHeight - this->height();
+		if (this->mScroll > diff)
+			this->mScroll = diff;
+	}
+	else if (this->mParent != 0)
+	{
+		this->mParent->scrollUp();
+	}
+}
+
+void Container::scrollDown()
+{
+	if (this->mChildHeight > this->height())
+	{
+		this->mScroll -= 5.0f;
+		if (this->mScroll < 0)
+			this->mScroll = 0;
+	}
+	else if (this->mParent != 0)
+	{
+		this->mParent->scrollDown();
+	}
+}
+
+float Container::getScroll()
+{
+	if (this->mParent != 0)
+		return this->mParent->getScroll() + this->mScroll;
+	return this->mScroll;
+}
+
 void Container::updateChildControls()
 {
+	float scrollbarWidth = 0;
 	float x = this->mBox.hitbox[0];
 	float y = this->mBox.hitbox[1] + this->mBox.hitbox[3];
 
+	this->mChildHeight = this->mPadding;
+	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
+		this->mChildHeight += (*itr)->height() + this->mPadding;
+
+	if (this->mChildHeight > this->height())
+		scrollbarWidth = 7;
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 	{
 		Control* c = *itr;
 		c->mBox.hitbox[0] = x + this->mPadding;
 		c->mBox.hitbox[1] = y - this->mPadding - c->height();
-		c->mBox.hitbox[2] = this->width() - (this->mPadding * 2);
+		c->mBox.hitbox[2] = this->width() - (this->mPadding * 2) - scrollbarWidth;
 		c->updateBox();
 		y -= c->height() + this->mPadding;
 		Container* cc = dynamic_cast<Container*> (c);

@@ -43,6 +43,9 @@ private:
 	void addControl(Control* ctr);
 	void removeControl(Control* ctr);
 
+	Container* getRoot();
+	void setRoot(Container* root);
+
 	Control* getTopControlAt(float point[2], Container* container = 0);
 private:
 	static Font* sDefaultFont;

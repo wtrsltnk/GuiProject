@@ -8,6 +8,7 @@
 #include "GuiManager.h"
 #include "MainWindow.h"
 #include "Font.h"
+#include "Controls.h"
 #include <GL/freeglut.h>
 
 namespace ui
@@ -153,24 +154,44 @@ Control* GuiManager::getTopControlAt(float point[2], Container* container)
 	if (container != 0)
 	{
 		controls = &container->getControls();
-	}
-
-	for (std::vector<Control*>::iterator itr = controls->begin(); itr != controls->end(); ++itr)
-	{
-		Control* c = (*itr);
-		if (c->mBox.isPointInBox(point))
+		for (std::vector<Control*>::iterator itr = controls->begin(); itr != controls->end(); ++itr)
 		{
-			result = c;
-
-			Container* cc = dynamic_cast<Container*>(c);
-			if (cc != 0)
+			Control* c = (*itr);
+			if (c->isPointInBox(point))
 			{
-				Control* tmp = getTopControlAt(point, cc);
-				if (tmp != 0)
-					result = tmp;
-			}
+				result = c;
 
-			break;
+				Container* cc = dynamic_cast<Container*>(c);
+				if (cc != 0)
+				{
+					Control* tmp = getTopControlAt(point, cc);
+					if (tmp != 0)
+						result = tmp;
+				}
+
+				break;
+			}
+		}
+	}
+	else
+	{
+		for (std::vector<Control*>::iterator itr = controls->begin(); itr != controls->end(); ++itr)
+		{
+			Control* c = (*itr);
+			if (c->mParent == 0 && c->isPointInBox(point))
+			{
+				result = c;
+
+				Container* cc = dynamic_cast<Container*>(c);
+				if (cc != 0)
+				{
+					Control* tmp = getTopControlAt(point, cc);
+					if (tmp != 0)
+						result = tmp;
+				}
+
+				break;
+			}
 		}
 	}
 
@@ -285,7 +306,7 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 
 	if (control != 0)
 	{
-		if (state == 0)
+		if (button == 0 && state == 0)
 		{
 			GuiManager::sInstance->mFocus = control;
 			control->mBox.state = BoxState::Pressed;
@@ -303,7 +324,21 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 		}
 		else
 		{
-			control->mBox.state = BoxState::Hovered;
+			Container* cc = 0;
+			if (control->getType() == ControlTypes::Container)
+				cc = (Container*)control;
+			else
+				cc = control->mParent;
+
+			if (cc != 0)
+			{
+				if (button == 4)
+					cc->scrollUp();
+				else if (button == 3)
+					cc->scrollDown();
+			}
+			else
+				control->mBox.state = BoxState::Hovered;
 		}
 	}
 }

@@ -53,7 +53,6 @@ struct box_t
 	int aligmentHorizontal;
 	int aligmentVertical;
 
-	bool isPointInBox(float point[2]);
 };
 
 namespace ControlTypes
@@ -97,6 +96,7 @@ public:
 
 	virtual void updateBox();
 
+	bool isPointInBox(float point[2]);
 protected:
 	box_t mBox;
 	Container* mParent;
@@ -127,11 +127,17 @@ public:
 	float padding();
 	void setPadding(float padding);
 
+	void scrollUp();
+	void scrollDown();
+	float getScroll();
+
 	ControlList& getControls() { return this->mControls; }
 
 private:
 	ControlList mControls;
 	float mPadding;
+	float mChildHeight;
+	float mScroll;
 
 	void updateChildControls();
 
