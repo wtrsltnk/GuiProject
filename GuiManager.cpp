@@ -195,28 +195,28 @@ void GuiManager::render()
 	glPushMatrix();
 	glLoadIdentity();
 
+	glEnable(GL_STENCIL_TEST);
+	glClear(GL_STENCIL_BUFFER_BIT);
+
+	// First make everything writable!
+	glStencilFunc(GL_ALWAYS, 0, 0xFF);
+	glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+	glColorMask(0, 0, 0, 0);
+	glStencilMask(0xFF);
+	glBegin(GL_QUADS);
+	glVertex2f(0, 0);
+	glVertex2f(this->mViewSize[0], 0);
+	glVertex2f(this->mViewSize[0], this->mViewSize[1]);
+	glVertex2f(0, this->mViewSize[1]);
+	glEnd();
+
 	for (std::vector<Control*>::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 	{
 		if ((*itr)->mParent == 0)
 			(*itr)->renderControl();
 	}
 
-	if (this->mFocus != 0)
-	{
-		float transx = this->mFocus->mBox.boxPosition[0];
-		float transy = this->mFocus->mBox.boxPosition[1];
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		glBegin(GL_QUADS);
-		glColor4f(0.0f, 0.6f, 1.0f, 0.1f);
-		glVertex2f(transx+1, transy+1);
-		glVertex2f(transx + this->mFocus->mBox.boxSize[0]-2, transy+1);
-		glVertex2f(transx + this->mFocus->mBox.boxSize[0]-2, transy + this->mFocus->mBox.boxSize[1]-2);
-		glVertex2f(transx+1, transy + this->mFocus->mBox.boxSize[1]-2);
-		glEnd();
-		glDisable(GL_BLEND);
-	}
+	glDisable(GL_STENCIL_TEST);
 
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
@@ -323,5 +323,4 @@ void GuiManager::glutMouseMove(int x, int y)
 
 	lastHovered = control;
 }
-
 #endif

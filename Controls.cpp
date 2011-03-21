@@ -14,6 +14,65 @@
 
 using namespace ui;
 
+class Clipper
+{
+public:
+	Clipper(float hitbox[4])
+	{
+		for (int i = 0; i < 4; i++)
+			this->hitbox[i] = hitbox[i];
+		glStencilFunc(GL_EQUAL, Clipper::stack, 0xFF);
+		glStencilOp(GL_KEEP, GL_INCR, GL_INCR);
+		Clipper::stack++;
+		// only draw to stencil buffer
+		glColorMask(0, 0, 0, 0);
+		glStencilMask(0xFF);
+		glBegin(GL_QUADS);
+		glVertex2f(this->hitbox[0], this->hitbox[1]);
+		glVertex2f(this->hitbox[0]+this->hitbox[2], this->hitbox[1]);
+		glVertex2f(this->hitbox[0]+this->hitbox[2], this->hitbox[1]+this->hitbox[3]);
+		glVertex2f(this->hitbox[0], this->hitbox[1]+this->hitbox[3]);
+		glEnd();
+
+		// Stencil clipper drawn,
+		glColorMask(1, 1, 1, 1);
+		glStencilMask(0);
+		// now only draw stuff that's that has the right clipper value
+		glStencilFunc(GL_EQUAL, Clipper::stack, 0xFF);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	}
+
+	virtual ~Clipper()
+	{
+		// Decrement anything we previously incremented
+		glStencilFunc(GL_EQUAL, Clipper::stack, 0xFF);
+		glStencilOp(GL_KEEP, GL_DECR, GL_DECR);
+		Clipper::stack--;
+		// Only draw to stencil buffer
+		glColorMask(0, 0, 0, 0);
+		glStencilMask(0xFF);
+		glBegin(GL_QUADS);
+		glVertex2f(this->hitbox[0], this->hitbox[1]);
+		glVertex2f(this->hitbox[0]+this->hitbox[2], this->hitbox[1]);
+		glVertex2f(this->hitbox[0]+this->hitbox[2], this->hitbox[1]+this->hitbox[3]);
+		glVertex2f(this->hitbox[0], this->hitbox[1]+this->hitbox[3]);
+		glEnd();
+
+		// now draw on regular color buffer again,
+		// stencil buffer should be the same as before constructor call
+		glColorMask(1, 1, 1, 1);
+		glStencilMask(0);
+		glStencilFunc(GL_EQUAL, Clipper::stack, 0xFF);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+
+	}
+
+private:
+	float hitbox[4];
+	static int stack;
+};
+
+int Clipper::stack = 0;
 
 /******************************************************************************************/
 /*** box_t																			   ****/
@@ -60,31 +119,24 @@ Control::~Control()
 
 void Control::renderControl()
 {
-	glClearStencil(0);
-	glClear(GL_STENCIL_BUFFER_BIT);
-	glEnable(GL_STENCIL_TEST);
-
-	glStencilFunc(GL_ALWAYS, 1, 1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glColor4f(0, 0, 0, 0);
-	glBegin(GL_QUADS);
-	glVertex2f(this->mBox.hitbox[0], this->mBox.hitbox[1]);
-	glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2], this->mBox.hitbox[1]);
-	glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2], this->mBox.hitbox[1]+this->mBox.hitbox[3]);
-	glVertex2f(this->mBox.hitbox[0], this->mBox.hitbox[1]+this->mBox.hitbox[3]);
-	glEnd();
-	glDisable(GL_BLEND);
-
-	glStencilFunc(GL_EQUAL, 1, 1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	Clipper c(this->mBox.hitbox);
 
 	this->render();
 
-	glClear(GL_STENCIL_BUFFER_BIT);
-	glDisable(GL_STENCIL_TEST);
+	if (this == GuiManager::instance()->mFocus)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+		glBegin(GL_QUADS);
+		glColor4f(0.0f, 0.6f, 1.0f, 0.1f);
+		glBegin(GL_QUADS);
+		glVertex2f(this->mBox.boxPosition[0], this->mBox.boxPosition[1]);
+		glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0], this->mBox.boxPosition[1]);
+		glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0], this->mBox.boxPosition[1]+this->mBox.boxSize[1]);
+		glVertex2f(this->mBox.boxPosition[0], this->mBox.boxPosition[1]+this->mBox.boxSize[1]);
+		glEnd();
+		glDisable(GL_BLEND);
+	}
 }
 
 void Control::position(float pos[2])
@@ -276,10 +328,15 @@ Container::~Container()
 void Container::render()
 {
 	this->renderBox(false);
+	float hitbox[4] = {
+			this->mBox.hitbox[0]+3,
+			this->mBox.hitbox[1]+3,
+			this->mBox.hitbox[2]-6,
+			this->mBox.hitbox[3]-6
+	};
+	Clipper c(hitbox);
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
-	{
 		(*itr)->renderControl();
-	}
 }
 
 void Container::addControl(Control* ctr)
@@ -491,21 +548,21 @@ void Textbox::render()
 	this->renderBox(false);
 	float height = this->mBox.font->getTextHeight(this->mText);
 
-	glClearStencil(0);
-	glClear(GL_STENCIL_BUFFER_BIT);
-	glStencilFunc(GL_ALWAYS, 1, 1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	float hitbox[4] = {
+			this->mBox.hitbox[0]+2,
+			this->mBox.hitbox[1]+2,
+			this->mBox.hitbox[2]-4,
+			this->mBox.hitbox[3]-4
+	};
+	Clipper c(hitbox);
 
 	glColor3f(0.3f, 0.7f, 1.0f);
 	glBegin(GL_QUADS);
-	glVertex2f(this->mBox.boxPosition[0]+this->mPadding, this->mBox.boxPosition[1]+this->mPadding);
-	glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0]-this->mPadding, this->mBox.boxPosition[1]+this->mPadding);
-	glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0]-this->mPadding, this->mBox.boxPosition[1]+this->mBox.boxSize[1]-this->mPadding);
-	glVertex2f(this->mBox.boxPosition[0]+this->mPadding, this->mBox.boxPosition[1]+this->mBox.boxSize[1]-this->mPadding);
+	glVertex2f(hitbox[0], hitbox[1]);
+	glVertex2f(hitbox[0]+hitbox[2], hitbox[1]);
+	glVertex2f(hitbox[0]+hitbox[2], hitbox[1]+hitbox[3]);
+	glVertex2f(hitbox[0], hitbox[1]+hitbox[3]);
 	glEnd();
-
-	glStencilFunc(GL_EQUAL, 1, 1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
 
 	Control::renderText(
 			this->mBox.boxPosition[0] + this->mPadding + this->mScroll,
@@ -519,7 +576,6 @@ void Textbox::render()
 	glVertex2f(this->mBox.boxPosition[0] + this->mCursorPosition + 4 + 2 + this->mScroll, this->mBox.boxPosition[1]+this->mBox.boxSize[1] - 20);
 	glVertex2f(this->mBox.boxPosition[0] + this->mCursorPosition + 4 + this->mScroll, this->mBox.boxPosition[1]+this->mBox.boxSize[1] - 20);
 	glEnd();
-
 }
 
 void Textbox::setText(const char* text)
