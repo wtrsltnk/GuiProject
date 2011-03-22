@@ -8,7 +8,7 @@
 #ifndef EVENTS_H_
 #define EVENTS_H_
 
-#include <vector>
+#include <list>
 
 namespace event
 {
@@ -25,71 +25,49 @@ public:
 	virtual ~EventArgs() { }
 };
 
-typedef void (EventHandler::*EventFunctionPtr)(void* sender, EventArgs*);
-
-template <class T>
-class EventManager
-{
-protected:
-	static EventManager* sInstance;	// This static member needs to be defined outside this header
-
-public:
-	static EventManager* instance() { return EventManager::sInstance; }
-	virtual ~EventManager() { }
-
-	virtual void initialize(const char* fontpath) = 0;
-	virtual void addEventHandler(EventHandler* handler, EventFunctionPtr method, T* box, int eventType) = 0;
-	virtual void removeEventHandler(EventHandler* handler, EventFunctionPtr method, T* box) = 0;
-	virtual void initiateEvent(T* box, int eventType, EventArgs* e) = 0;
-
-protected:
-	class ProtectedHandler
-	{
-	public:
-		ProtectedHandler(EventHandler* handler, EventFunctionPtr eventFn, T* control, int type) : mHandler(handler), mEventFn(eventFn), mControl(control), mEventType(type) { }
-
-		EventHandler* mHandler;
-		EventFunctionPtr mEventFn;
-		T* mControl;
-		int mEventType;
-	};
-	std::vector<ProtectedHandler*> mHandlers;
-
-};
-
-template <class T, class E, int t>
+template <class S, class E>
 class Event
 {
 public:
+typedef void (EventHandler::*FunctionPtr)(S* sender, EventArgs*);
+
 	class Handler
 	{
 	public:
-		Handler(EventHandler* handler, EventFunctionPtr method) : mHandler(handler), mMethod(method), mEventType(t) { }
+		Handler(EventHandler* handler, FunctionPtr method) : mHandler(handler), mMethod(method) { }
 
-		inline void operator () (T* ctr, E* e)
-		{ ((this->mHandler)->*this->mMethod)(ctr, e); }
+		inline void operator () (S* sender, E* e) { ((this->mHandler)->*this->mMethod)(sender, e); }
 
 	private:
 		EventHandler* mHandler;
-		EventFunctionPtr mMethod;
-		int mEventType;
+		FunctionPtr mMethod;
 
 		friend class Event;
 	};
 
 public:
-	Event(T* ctr) : mControl(ctr) { }
+	Event(S* sender) : mSender(sender) { }
 
 	inline void operator += (Handler handler)
-			{ EventManager<T>::instance()->addEventHandler(handler.mHandler, handler.mMethod, this->mControl, handler.mEventType); }
+	{
+		this->mHandlers.push_back(handler);
+	}
 
 	inline void operator -= (Handler handler)
-			{ EventManager<T>::instance()->removeEventHandler(handler.mHandler, handler.mMethod, this->mControl); }
+	{
+		this->mHandlers.remove(handler);
+	}
 
 	inline void operator () (E* e)
-			{ EventManager<T>::instance()->initiateEvent(this->mControl, t, e); }
+	{
+		typename std::list<Handler>::iterator itr;
+		for (itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
+			(*itr)(this->mSender, e);
+	}
+
 private:
-	T* mControl;
+	S* mSender;
+	typename std::list<Handler> mHandlers;
 
 };
 

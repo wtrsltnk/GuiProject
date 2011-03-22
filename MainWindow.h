@@ -18,9 +18,9 @@ public:
 	MainWindow();
 	virtual ~MainWindow();
 
-	virtual void anderenaam(void* sender, event::EventArgs* e);
-	virtual void anderenaam2(void* sender, event::EventArgs* e);
-	virtual void anderenaam3(void* sender, event::EventArgs* e);
+	virtual void anderenaam(ui::Control* sender, event::EventArgs* e);
+	virtual void anderenaam2(ui::Control* sender, event::EventArgs* e);
+	virtual void anderenaam3(ui::Control* sender, event::EventArgs* e);
 
 	virtual bool initialize();
 	virtual void resize(int w, int h);

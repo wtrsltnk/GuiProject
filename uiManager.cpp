@@ -8,10 +8,8 @@
 #include "uiManager.h"
 #include "uiFont.h"
 #include "uiControls.h"
+#include "MainWindow.h"
 #include <GL/freeglut.h>
-
-template <class T>
-event::EventManager<T>* event::EventManager<T>::sInstance = 0;
 
 namespace ui
 {
@@ -21,40 +19,34 @@ Manager::Manager()
 {
 }
 
+Manager* Manager::sInstance = 0;
 Font* Manager::sDefaultFont = 0;
 
 Manager* Manager::createInstance(const char* fontpath)
 {
-	if (event::EventManager<Control>::sInstance != 0)
-		delete event::EventManager<Control>::sInstance;
+	if (Manager::sInstance != 0)
+		delete Manager::sInstance;
 
-	event::EventManager<Control>::sInstance = new Manager();
-	event::EventManager<Control>::sInstance->initialize(fontpath);
+	Manager::sInstance = new Manager();
+	Manager::sInstance->initialize(fontpath);
 
-	return (Manager*)event::EventManager<Control>::sInstance;
+	return (Manager*)Manager::sInstance;
 }
 
 Manager* Manager::instance()
 {
-	return (Manager*)event::EventManager<Control>::sInstance;
+	return Manager::sInstance;
 }
 
 void Manager::destroyInstance()
 {
-	if (event::EventManager<Control>::sInstance != 0)
-		delete event::EventManager<Control>::sInstance;
-	event::EventManager<Control>::sInstance = 0;
+	if (Manager::sInstance != 0)
+		delete Manager::sInstance;
+	Manager::sInstance = 0;
 }
 
 Manager::~Manager()
 {
-	while (this->mHandlers.empty() == false)
-	{
-		ProtectedHandler* h = this->mHandlers.back();
-		this->mHandlers.pop_back();
-		delete h;
-	}
-
 	while (this->mControls.empty() == false)
 	{
 		// Only delete the, since deleting automatically removes them from the GuiManager
@@ -87,39 +79,6 @@ void Manager::initialize(const char* fontpath)
 #endif
 }
 
-void Manager::addEventHandler(event::EventHandler* handler, event::EventFunctionPtr method, Control* box, int eventType)
-{
-	this->mHandlers.push_back(new ProtectedHandler(handler, method, box, eventType));
-}
-
-void Manager::removeEventHandler(event::EventHandler* handler, event::EventFunctionPtr method, Control* box)
-{
-	for (std::vector<ProtectedHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
-	{
-		ProtectedHandler* h = *itr;
-		if (h->mControl == box && h->mEventFn == method && h->mHandler == handler)
-		{
-			this->mHandlers.erase(itr);
-			delete h;
-			break;
-		}
-	}
-}
-
-void Manager::initiateEvent(Control* box, int eventType, event::EventArgs* e)
-{
-	for (std::vector<ProtectedHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
-	{
-		if ((*itr)->mEventType == eventType)
-		{
-			if ((*itr)->mControl == box)
-			{
-				((*(*itr)->mHandler).*(*itr)->mEventFn)(box, e);
-			}
-		}
-	}
-}
-
 void Manager::addControl(Control* ctr)
 {
 	ctr->updateBox();
@@ -136,13 +95,6 @@ void Manager::removeControl(Control* ctr)
 		{
 			this->mControls.erase(itr);
 			break;
-		}
-	}
-	for (std::vector<ProtectedHandler*>::iterator itr = this->mHandlers.begin(); itr != this->mHandlers.end(); ++itr)
-	{
-		if ((*itr)->mControl == ctr)
-		{
-			this->mHandlers.erase(itr);
 		}
 	}
 }

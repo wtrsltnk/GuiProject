@@ -20,18 +20,18 @@ MainWindow::~MainWindow()
 	ui::Manager::destroyInstance();
 }
 
-void MainWindow::anderenaam(void* sender, event::EventArgs* e)
+void MainWindow::anderenaam(ui::Control* sender, event::EventArgs* e)
 {
 	if (cb != 0)
 		cb->setSize(cb->width(), cb->height()+4);
 }
 
-void MainWindow::anderenaam2(void* sender, event::EventArgs* e)
+void MainWindow::anderenaam2(ui::Control* sender, event::EventArgs* e)
 {
 	printf("hellow world\n");
 }
 
-void MainWindow::anderenaam3(void* sender, event::EventArgs* e)
+void MainWindow::anderenaam3(ui::Control* sender, event::EventArgs* e)
 {
 	ui::Textbox* tb = (ui::Textbox*)sender;
 	lbl->setText(tb->text());
@@ -62,9 +62,9 @@ bool MainWindow::initialize()
 	cnt5->addControl(cnt4);
 
 	// Voorbeeld van het toevoegen van events
-	b->Click += ui::ClickEventHandler(this, (event::EventFunctionPtr)&MainWindow::anderenaam);
-	cb->StateChanged += ui::StateChangedEventHandler(this, (event::EventFunctionPtr)&MainWindow::anderenaam2);
-	tb->TextChanged += ui::TextChangedEventHandler(this, (event::EventFunctionPtr)&MainWindow::anderenaam3);
+	b->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::anderenaam);
+	cb->StateChanged += ui::StateChangedEventHandler(this, (ui::StateChangedEvent::FunctionPtr)&MainWindow::anderenaam2);
+	tb->TextChanged += ui::TextChangedEventHandler(this, (ui::TextChangedEvent::FunctionPtr)&MainWindow::anderenaam3);
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 

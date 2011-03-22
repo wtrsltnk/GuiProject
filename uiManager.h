@@ -18,9 +18,10 @@ class Control;
 class VerticalContainer;
 class Font;
 
-class Manager : public event::EventManager<Control>
+class Manager
 {
 	Manager();
+	static Manager* sInstance;
 public:
 	static Manager* createInstance(const char* fontpath);
 	static Manager* instance();
@@ -39,9 +40,6 @@ public:
 
 private:
 	virtual void initialize(const char* fontpath);
-	virtual void addEventHandler(event::EventHandler* handler, event::EventFunctionPtr method, Control* box, int eventType);
-	virtual void removeEventHandler(event::EventHandler* handler, event::EventFunctionPtr method, Control* box);
-	virtual void initiateEvent(Control* box, int eventType, event::EventArgs* e);
 
 private:
 	void addControl(Control* ctr);

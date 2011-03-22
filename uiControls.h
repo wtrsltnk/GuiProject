@@ -200,7 +200,7 @@ protected:
 
 };
 
-typedef event::Event<Control, event::EventArgs, EventType::Click> ClickEvent;
+typedef event::Event<Control, event::EventArgs> ClickEvent;
 typedef ClickEvent::Handler ClickEventHandler;
 
 class Button : public Label
@@ -216,7 +216,7 @@ public:
 
 };
 
-typedef event::Event<Control, event::EventArgs, EventType::StateChanged> StateChangedEvent;
+typedef event::Event<Control, event::EventArgs> StateChangedEvent;
 typedef StateChangedEvent::Handler StateChangedEventHandler;
 
 class Checkbox : public Label
@@ -241,7 +241,7 @@ private:
 
 };
 
-typedef event::Event<Control, event::EventArgs, EventType::TextChanged> TextChangedEvent;
+typedef event::Event<Control, event::EventArgs> TextChangedEvent;
 typedef TextChangedEvent::Handler TextChangedEventHandler;
 
 class Textbox : public Label
@@ -289,7 +289,7 @@ private:
 
 };
 
-typedef event::Event<Control, ValueChangedEventArgs, EventType::ValueChanged> ValueChangedEvent;
+typedef event::Event<Control, ValueChangedEventArgs> ValueChangedEvent;
 typedef ValueChangedEvent::Handler ValueChangedEventHandler;
 
 class Valuebox : public Control
