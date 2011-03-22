@@ -80,19 +80,6 @@ enum
 };
 }
 
-class GuiEventArgs : public EventArgs
-{
-public:
-	GuiEventArgs(Control* ctr);
-	virtual ~GuiEventArgs();
-
-	Control* control();
-
-private:
-	Control* mControl;
-
-};
-
 class Container;
 
 class Control
@@ -103,6 +90,14 @@ public:
 	virtual ~Control();
 
 	virtual void renderControl();
+	virtual void mouseIn();
+	virtual void mouseDown(int button);
+	virtual void mouseUp(int button);
+	virtual void mouseOut();
+	virtual void keyDown(int key);
+	virtual void keyUp(int key);
+	virtual void charDown(char c);
+	virtual void charUp(char c);
 
 	box_t& box() { return this->mBox; }
 	Container* parent() { return this->mParent; }
@@ -130,7 +125,7 @@ protected:
 
 	void renderBox(bool ignoreState = false);
 	void renderText(float x, float y, const char *text, unsigned int color);
-	
+
 private:
 	int mType;
 
@@ -215,6 +210,7 @@ public:
 	virtual ~Button();
 
 	virtual void render();
+	virtual void mouseDown(int button);
 
 	ClickEvent Click;
 
@@ -230,6 +226,7 @@ public:
 	virtual ~Checkbox();
 
 	virtual void render();
+	virtual void mouseDown(int button);
 
 	bool checked();
 	void setChecked(bool state);
@@ -254,6 +251,8 @@ public:
 	virtual ~Textbox();
 
 	virtual void render();
+	virtual void keyDown(int key);
+	virtual void charDown(char c);
 
 	void setText(const char* text);
 	void addChar(char c);
@@ -300,6 +299,8 @@ public:
 	virtual ~Valuebox();
 
 	virtual void render();
+	virtual void keyDown(int key);
+	virtual void charDown(char c);
 
 	float value();
 	void setValue(float value);

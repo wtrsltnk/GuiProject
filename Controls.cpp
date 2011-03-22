@@ -76,24 +76,6 @@ int Clipper::stack = 0;
 
 
 /******************************************************************************************/
-/*** GuiEventArgs																	   ****/
-/******************************************************************************************/
-GuiEventArgs::GuiEventArgs(Control* ctr)
-	: mControl(ctr)
-{
-}
-
-GuiEventArgs::~GuiEventArgs()
-{
-}
-
-Control* GuiEventArgs::control()
-{
-	return this->mControl;
-}
-
-
-/******************************************************************************************/
 /*** Control																		   ****/
 /******************************************************************************************/
 Control::Control(int type)
@@ -140,6 +122,44 @@ void Control::renderControl()
 		glEnd();
 		glDisable(GL_BLEND);
 	}
+}
+
+void Control::mouseIn()
+{
+	this->box().state = BoxState::Hovered;
+}
+
+void Control::mouseDown(int button)
+{
+	if (button == 0)
+		this->box().state = BoxState::Pressed;
+}
+
+void Control::mouseUp(int button)
+{
+	if (button == 0)
+		this->box().state = BoxState::Hovered;
+}
+
+void Control::mouseOut()
+{
+	this->box().state = BoxState::None;
+}
+
+void Control::keyDown(int key)
+{
+}
+
+void Control::keyUp(int key)
+{
+}
+
+void Control::charDown(char c)
+{
+}
+
+void Control::charUp(char c)
+{
 }
 
 float Control::x()
@@ -556,6 +576,16 @@ void Button::render()
 			this->mText, RGBA(255, 255, 255, 255));
 }
 
+void Button::mouseDown(int button)
+{
+	if (button == 0)
+	{
+		EventArgs e;
+		this->Click(&e);
+	}
+	Control::mouseDown(button);
+}
+
 
 
 /******************************************************************************************/
@@ -589,6 +619,13 @@ void Checkbox::render()
 			this->mBox.boxPosition[0] + (this->mBox.boxSize[0]) + 2.0f,
 			this->mBox.boxPosition[1] + (this->mBox.boxSize[1]/2.0f) - 5.0f,
 			this->mText, RGBA(255, 255, 255, 255));
+}
+
+void Checkbox::mouseDown(int button)
+{
+	if (button == 0)
+		this->toggleChecked();
+	Control::mouseDown(button);
 }
 
 bool Checkbox::checked()
@@ -626,10 +663,7 @@ void Checkbox::updateBox()
 Textbox::Textbox(int x, int y, int w, int h, const char* text)
 	: Label(text, x, y, w, h, ControlTypes::Textbox), TextChanged(TextChangedEvent(this)), mTextLength(0), mCursorIndex(0), mCursorPosition(0), mScroll(0), mPadding(4)
 {
-	while (text[this->mTextLength] != 0)
-		this->mTextLength++;
-	this->mBufferLength = this->mTextLength;
-	this->setCursorIndex(this->mTextLength);
+	this->setText(text);
 }
 
 Textbox::~Textbox()
@@ -669,6 +703,30 @@ void Textbox::render()
 	glVertex2f(this->mBox.boxPosition[0] + this->mCursorPosition + 4 + 2 + this->mScroll, this->mBox.boxPosition[1]+this->mBox.boxSize[1] - 20);
 	glVertex2f(this->mBox.boxPosition[0] + this->mCursorPosition + 4 + this->mScroll, this->mBox.boxPosition[1]+this->mBox.boxSize[1] - 20);
 	glEnd();
+}
+
+void Textbox::keyDown(int key)
+{
+	if (key == 0x0064)//GLUT_KEY_LEFT)
+		this->moveCursor(-1);
+	else if (key == 0x0066)//GLUT_KEY_RIGHT)
+		this->moveCursor(1);
+}
+
+void Textbox::charDown(char c)
+{
+	if (c == 8)
+	{
+		this->removeChar();
+		EventArgs e;
+		this->TextChanged(&e);
+	}
+	else if (c >= 32 && c < 128)
+	{
+		this->addChar(c);
+		EventArgs e;
+		this->TextChanged(&e);
+	}
 }
 
 void Textbox::setText(const char* text)
@@ -787,6 +845,24 @@ void Valuebox::render()
 	Control::renderText(this->mBox.boxPosition[0]+this->mBox.boxSize[0]/2.0f - float(length)/2.0f,
 			this->mBox.boxPosition[1]+this->mBox.boxSize[1]/2.0f - float(height) / 4.0f-4,
 			str, RGBA(255, 255, 255, 255));
+}
+
+void Valuebox::keyDown(int key)
+{
+	float diff = (this->maxValue() - this->minValue()) / 10.0f;
+//	if (key == GLUT_KEY_LEFT || key == GLUT_KEY_DOWN)
+	if (key == 0x0064 || key == 0x0067)
+		this->setValue(this->value() - diff);
+//	else if (key == GLUT_KEY_RIGHT || key == GLUT_KEY_UP)
+	else if (key == 0x0066 || key == 0x0065)
+		this->setValue(this->value() + diff);
+	Control::keyDown(key);
+}
+
+void Valuebox::charDown(char c)
+{
+	this->addInput(c);
+	Control::charDown(c);
 }
 
 float Valuebox::value()

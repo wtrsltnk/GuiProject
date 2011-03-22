@@ -89,8 +89,10 @@ void GuiManager::initialize(const char* fontpath)
 	GuiManager::instance()->mRoot = new ui::VerticalContainer(20, 20, 10, 10);
 
 #ifndef SKIP_GLUT
-	glutKeyboardFunc(&GuiManager::glutKeyboard);
-	glutSpecialFunc(&GuiManager::glutSpecialKeyboard);
+	glutKeyboardFunc(&GuiManager::glutKeyboardDown);
+	glutKeyboardUpFunc(&GuiManager::glutKeyboardUp);
+	glutSpecialFunc(&GuiManager::glutSpecialKeyboardDown);
+	glutSpecialUpFunc(&GuiManager::glutSpecialKeyboardUp);
 	glutMouseFunc(&GuiManager::glutMouseClick);
 	glutMotionFunc(&GuiManager::glutMouseMove);
 	glutPassiveMotionFunc(&GuiManager::glutMouseMove);
@@ -241,55 +243,34 @@ void GuiManager::render()
 }
 
 #ifndef SKIP_GLUT
-void GuiManager::glutKeyboard(unsigned char key, int x, int y)
+void GuiManager::glutKeyboardDown(unsigned char key, int x, int y)
 {
 	if (GuiManager::instance()->mFocus != 0)
 	{
-		if (GuiManager::instance()->mFocus->controlType() == ControlTypes::Textbox)
-		{
-			Textbox* tb = (Textbox*)GuiManager::instance()->mFocus;
-			if (key == 8)
-			{
-				tb->removeChar();
-				GuiEventArgs e(tb);
-				tb->TextChanged(&e);
-			}
-			else if (key >= 32 && key < 128)
-			{
-				tb->addChar(key);
-				GuiEventArgs e(tb);
-				tb->TextChanged(&e);
-			}
-		}
-		else if (GuiManager::instance()->mFocus->controlType() == ControlTypes::Valuebox)
-		{
-			Valuebox* vb = (Valuebox*)GuiManager::instance()->mFocus;
-			vb->addInput(key);
-		}
+		GuiManager::instance()->mFocus->charDown(key);
+	}
+}
+void GuiManager::glutKeyboardUp(unsigned char key, int x, int y)
+{
+	if (GuiManager::instance()->mFocus != 0)
+	{
+		GuiManager::instance()->mFocus->charUp(key);
 	}
 }
 
-void GuiManager::glutSpecialKeyboard(int key, int x, int y)
+void GuiManager::glutSpecialKeyboardDown(int key, int x, int y)
 {
 	if (GuiManager::instance()->mFocus != 0)
 	{
-		if (GuiManager::instance()->mFocus->controlType() == ControlTypes::Textbox)
-		{
-			Textbox* tb = (Textbox*)GuiManager::instance()->mFocus;
-			if (key == GLUT_KEY_LEFT)
-				tb->moveCursor(-1);
-			else if (key == GLUT_KEY_RIGHT)
-				tb->moveCursor(1);
-		}
-		else if (GuiManager::instance()->mFocus->controlType() == ControlTypes::Valuebox)
-		{
-			Valuebox* vb = (Valuebox*)GuiManager::instance()->mFocus;
-			float diff = (vb->maxValue() - vb->minValue()) / 10.0f;
-			if (key == GLUT_KEY_LEFT || key == GLUT_KEY_DOWN)
-				vb->setValue(vb->value() - diff);
-			else if (key == GLUT_KEY_RIGHT || key == GLUT_KEY_UP)
-				vb->setValue(vb->value() + diff);
-		}
+		GuiManager::instance()->mFocus->keyDown(key);
+	}
+}
+
+void GuiManager::glutSpecialKeyboardUp(int key, int x, int y)
+{
+	if (GuiManager::instance()->mFocus != 0)
+	{
+		GuiManager::instance()->mFocus->keyUp(key);
 	}
 }
 
@@ -301,31 +282,18 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 
 	if (control != 0)
 	{
-		if (button == 0 && state == 0)
+		Container* cc = 0;
+		if (control->controlType() == ControlTypes::Container)
+			cc = (Container*)control;
+		else
+			cc = control->parent();
+
+		if (state == 0)
 		{
 			if (control->controlType() != ControlTypes::Container)
 				GuiManager::instance()->mFocus = control;
 
-			control->box().state = BoxState::Pressed;
-			if (control->controlType() == ControlTypes::Checkbox)
-			{
-				Checkbox* c = (Checkbox*)control;
-				c->toggleChecked();
-			}
-			else if (control->controlType() == ControlTypes::Button)
-			{
-				Button* b = (Button*)control;
-				GuiEventArgs e(b);
-				b->Click(&e);
-			}
-		}
-		else
-		{
-			VerticalContainer* cc = 0;
-			if (control->controlType() == ControlTypes::Container)
-				cc = (VerticalContainer*)control;
-			else
-				cc = (VerticalContainer*)control->parent();
+			control->mouseDown(button);
 
 			if (cc != 0)
 			{
@@ -334,8 +302,18 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 				else if (button == 3)
 					cc->scrollDown();
 			}
-			else
-				control->box().state = BoxState::Hovered;
+		}
+		else if (state == 1)
+		{
+			control->mouseUp(button);
+
+			if (cc != 0)
+			{
+				if (button == 4)
+					cc->scrollUp();
+				else if (button == 3)
+					cc->scrollDown();
+			}
 		}
 	}
 }
@@ -347,11 +325,10 @@ void GuiManager::glutMouseMove(int x, int y)
 	static Control* lastHovered = 0;
 	Control* control = GuiManager::instance()->getTopControlAt(point);
 
-	if (lastHovered != 0)
-		lastHovered->box().state = BoxState::None;
-
-	if (control != 0 && control->controlType() != ControlTypes::Container)
-		control->box().state = BoxState::Hovered;
+	if (control != lastHovered && lastHovered != 0)
+		lastHovered->mouseOut();
+	if (control != 0)
+		control->mouseIn();
 
 	lastHovered = control;
 }

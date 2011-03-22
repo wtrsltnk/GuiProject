@@ -56,8 +56,10 @@ private:
 
 #ifndef SKIP_GLUT
 public:
-	static void glutKeyboard(unsigned char key, int x, int y);
-	static void glutSpecialKeyboard(int key, int x, int y);
+	static void glutKeyboardDown(unsigned char key, int x, int y);
+	static void glutKeyboardUp(unsigned char key, int x, int y);
+	static void glutSpecialKeyboardDown(int key, int x, int y);
+	static void glutSpecialKeyboardUp(int key, int x, int y);
 	static void glutMouseClick(int button, int state, int x, int y);
 	static void glutMouseMove(int x, int y);
 #endif
