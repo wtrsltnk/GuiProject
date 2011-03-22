@@ -23,7 +23,10 @@ MainWindow::~MainWindow()
 void MainWindow::anderenaam(ui::Control* sender, event::EventArgs* e)
 {
 	if (cb != 0)
+	{
 		cb->setSize(cb->width(), cb->height()+4);
+		cb->StateChanged -= ui::StateChangedEventHandler(this, (ui::StateChangedEvent::FunctionPtr)&MainWindow::anderenaam2);
+	}
 }
 
 void MainWindow::anderenaam2(ui::Control* sender, event::EventArgs* e)
