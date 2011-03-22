@@ -17,21 +17,21 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow()
 {
-	ui::GuiManager::destroyInstance();
+	ui::Manager::destroyInstance();
 }
 
-void MainWindow::anderenaam(void* sender, EventArgs* e)
+void MainWindow::anderenaam(void* sender, event::EventArgs* e)
 {
 	if (cb != 0)
 		cb->setSize(cb->width(), cb->height()+4);
 }
 
-void MainWindow::anderenaam2(void* sender, EventArgs* e)
+void MainWindow::anderenaam2(void* sender, event::EventArgs* e)
 {
 	printf("hellow world\n");
 }
 
-void MainWindow::anderenaam3(void* sender, EventArgs* e)
+void MainWindow::anderenaam3(void* sender, event::EventArgs* e)
 {
 	ui::Textbox* tb = (ui::Textbox*)sender;
 	lbl->setText(tb->text());
@@ -39,7 +39,7 @@ void MainWindow::anderenaam3(void* sender, EventArgs* e)
 
 bool MainWindow::initialize()
 {
-	ui::GuiManager::createInstance("Ubuntu-R.ttf");
+	ui::Manager::createInstance("Ubuntu-R.ttf");
 
 	ui::Button* b = new ui::Button(10, 10, 64, 24, (const char*)"FDfgsdf");
 	this->cb = new ui::Checkbox(10, 80, 64, 54, (const char*)"asdfsd sdfasdfa dsfasdasd");
@@ -62,9 +62,9 @@ bool MainWindow::initialize()
 	cnt5->addControl(cnt4);
 
 	// Voorbeeld van het toevoegen van events
-	b->Click += ui::ClickEventHandler(this, (eventFn)&MainWindow::anderenaam);
-	cb->StateChanged += ui::StateChangedEventHandler(this, (eventFn)&MainWindow::anderenaam2);
-	tb->TextChanged += ui::TextChangedEventHandler(this, (eventFn)&MainWindow::anderenaam3);
+	b->Click += ui::ClickEventHandler(this, (event::EventFunctionPtr)&MainWindow::anderenaam);
+	cb->StateChanged += ui::StateChangedEventHandler(this, (event::EventFunctionPtr)&MainWindow::anderenaam2);
+	tb->TextChanged += ui::TextChangedEventHandler(this, (event::EventFunctionPtr)&MainWindow::anderenaam3);
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 
@@ -77,7 +77,7 @@ void MainWindow::resize(int w, int h)
 {
 	this->width = w;
 	glViewport(0, 0, w, h);
-	ui::GuiManager::instance()->setupSize(w, h);
+	ui::Manager::instance()->setupSize(w, h);
 }
 
 void MainWindow::render()
@@ -88,5 +88,5 @@ void MainWindow::render()
 //		this->video.nextFrame();
 //	this->video.render();
 
-	ui::GuiManager::instance()->render();
+	ui::Manager::instance()->render();
 }

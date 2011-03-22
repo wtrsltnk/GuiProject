@@ -1,12 +1,12 @@
 /*
- * Font.h
+ * uiFont.h
  *
  *  Created on: Mar 12, 2011
  *      Author: wouter
  */
 
-#ifndef FONT_H_
-#define FONT_H_
+#ifndef UIFONT_H_
+#define UIFONT_H_
 
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
@@ -33,6 +33,7 @@ public:
 	void drawText(float x, float y, const char *text, unsigned int col);
 	void getBakedQuad(int pw, int ph, int char_index, float *xpos, float *ypos, stbtt_aligned_quad *q);
 
+protected:
 	stbtt_bakedchar mCharData[96]; // ASCII 32..126 is 95 glyphs
 	GLuint mTextureId;
 
@@ -40,4 +41,4 @@ public:
 
 }
 
-#endif /* FONT_H_ */
+#endif /* UIFONT_H_ */

@@ -1,18 +1,19 @@
 /*
- * Controls
+ * uiControls
  *
  *  Created on: Mar 14, 2011
  *      Author: wouter
  */
 
-#include "Controls.h"
-#include "Font.h"
+#include "uiControls.h"
+#include "uiFont.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <GL/gl.h>
 
-using namespace ui;
+namespace ui
+{
 
 class Clipper
 {
@@ -84,8 +85,8 @@ Control::Control(int type)
 	this->setPosition(0, 0);
 	this->setSize(64, 24);
 
-	GuiManager::instance()->addControl(this);
-	this->mBox.font = GuiManager::instance()->sDefaultFont;
+	Manager::instance()->addControl(this);
+	this->mBox.font = Manager::instance()->sDefaultFont;
 }
 
 Control::Control(int type, int x, int y, int w, int h)
@@ -94,13 +95,13 @@ Control::Control(int type, int x, int y, int w, int h)
 	this->setPosition(x, y);
 	this->setSize(w, h);
 
-	GuiManager::instance()->addControl(this);
-	this->mBox.font = GuiManager::instance()->sDefaultFont;
+	Manager::instance()->addControl(this);
+	this->mBox.font = Manager::instance()->sDefaultFont;
 }
 
 Control::~Control()
 {
-	GuiManager::instance()->removeControl(this);
+	Manager::instance()->removeControl(this);
 }
 
 void Control::renderControl()
@@ -108,7 +109,7 @@ void Control::renderControl()
 	Clipper c(this->mBox.hitbox);
 	this->render();
 
-	if (this == GuiManager::instance()->mFocus)
+	if (this == Manager::instance()->mFocus)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -580,7 +581,7 @@ void Button::mouseDown(int button)
 {
 	if (button == 0)
 	{
-		EventArgs e;
+		event::EventArgs e;
 		this->Click(&e);
 	}
 	Control::mouseDown(button);
@@ -636,7 +637,7 @@ bool Checkbox::checked()
 void Checkbox::setChecked(bool state)
 {
 	this->mChecked = state;
-	EventArgs e;
+	event::EventArgs e;
 	this->StateChanged(&e);
 }
 
@@ -718,13 +719,13 @@ void Textbox::charDown(char c)
 	if (c == 8)
 	{
 		this->removeChar();
-		EventArgs e;
+		event::EventArgs e;
 		this->TextChanged(&e);
 	}
 	else if (c >= 32 && c < 128)
 	{
 		this->addChar(c);
-		EventArgs e;
+		event::EventArgs e;
 		this->TextChanged(&e);
 	}
 }
@@ -954,4 +955,6 @@ void Listbox::removeItem(int index)
 //			break;
 //		}
 	}
+}
+
 }

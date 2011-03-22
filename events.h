@@ -10,10 +10,8 @@
 
 #include <vector>
 
-namespace ui
+namespace event
 {
-class Control;
-}
 
 class EventHandler
 {
@@ -27,7 +25,7 @@ public:
 	virtual ~EventArgs() { }
 };
 
-typedef void (EventHandler::*eventFn)(void* sender, EventArgs*);
+typedef void (EventHandler::*EventFunctionPtr)(void* sender, EventArgs*);
 
 template <class T>
 class EventManager
@@ -40,13 +38,22 @@ public:
 	virtual ~EventManager() { }
 
 	virtual void initialize(const char* fontpath) = 0;
-	virtual void addEventHandler(EventHandler* handler, eventFn method, T* box, int eventType) = 0;
-	virtual void removeEventHandler(EventHandler* handler, eventFn method, T* box) = 0;
+	virtual void addEventHandler(EventHandler* handler, EventFunctionPtr method, T* box, int eventType) = 0;
+	virtual void removeEventHandler(EventHandler* handler, EventFunctionPtr method, T* box) = 0;
 	virtual void initiateEvent(T* box, int eventType, EventArgs* e) = 0;
 
 protected:
-	class PrivateHandler;
-	std::vector<PrivateHandler*> mHandlers;
+	class ProtectedHandler
+	{
+	public:
+		ProtectedHandler(EventHandler* handler, EventFunctionPtr eventFn, T* control, int type) : mHandler(handler), mEventFn(eventFn), mControl(control), mEventType(type) { }
+
+		EventHandler* mHandler;
+		EventFunctionPtr mEventFn;
+		T* mControl;
+		int mEventType;
+	};
+	std::vector<ProtectedHandler*> mHandlers;
 
 };
 
@@ -57,14 +64,14 @@ public:
 	class Handler
 	{
 	public:
-		Handler(EventHandler* handler, eventFn method) : mHandler(handler), mMethod(method), mEventType(t) { }
+		Handler(EventHandler* handler, EventFunctionPtr method) : mHandler(handler), mMethod(method), mEventType(t) { }
 
 		inline void operator () (T* ctr, E* e)
 		{ ((this->mHandler)->*this->mMethod)(ctr, e); }
 
 	private:
 		EventHandler* mHandler;
-		eventFn mMethod;
+		EventFunctionPtr mMethod;
 		int mEventType;
 
 		friend class Event;
@@ -85,5 +92,7 @@ private:
 	T* mControl;
 
 };
+
+}
 
 #endif /* EVENTS_H_ */

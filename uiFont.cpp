@@ -1,14 +1,15 @@
 /*
- * Font.cpp
+ * uiFont.cpp
  *
  *  Created on: Mar 12, 2011
  *      Author: wouter
  */
 
-#include "Font.h"
+#include "uiFont.h"
 #include <stdio.h>
 
-using namespace ui;
+namespace ui
+{
 
 Font::Font()
 	: mTextureId(0)
@@ -183,4 +184,6 @@ void Font::getBakedQuad(int pw, int ph, int char_index, float *xpos, float *ypos
 	q->t1 = b->y1 / (float)ph;
 
 	*xpos += b->xadvance;
+}
+
 }

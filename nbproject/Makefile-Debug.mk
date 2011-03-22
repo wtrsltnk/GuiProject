@@ -34,11 +34,11 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/MainWindow.o \
-	${OBJECTDIR}/GuiManager.o \
-	${OBJECTDIR}/Controls.o \
+	${OBJECTDIR}/uiFont.o \
+	${OBJECTDIR}/uiControls.o \
 	${OBJECTDIR}/stb_truetype.o \
-	${OBJECTDIR}/Font.o \
-	${OBJECTDIR}/GlutApplication.o
+	${OBJECTDIR}/GlutApplication.o \
+	${OBJECTDIR}/uiManager.o
 
 
 # C Compiler Flags
@@ -70,30 +70,30 @@ ${OBJECTDIR}/MainWindow.o: MainWindow.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/MainWindow.o MainWindow.cpp
 
-${OBJECTDIR}/GuiManager.o: GuiManager.cpp 
+${OBJECTDIR}/uiFont.o: uiFont.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/GuiManager.o GuiManager.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiFont.o uiFont.cpp
 
-${OBJECTDIR}/Controls.o: Controls.cpp 
+${OBJECTDIR}/uiControls.o: uiControls.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/Controls.o Controls.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiControls.o uiControls.cpp
 
 ${OBJECTDIR}/stb_truetype.o: stb_truetype.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/stb_truetype.o stb_truetype.cpp
 
-${OBJECTDIR}/Font.o: Font.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/Font.o Font.cpp
-
 ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/GlutApplication.o GlutApplication.cpp
+
+${OBJECTDIR}/uiManager.o: uiManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiManager.o uiManager.cpp
 
 # Subprojects
 .build-subprojects:

@@ -9,20 +9,18 @@
 #define MAINWINDOW_H_
 
 #include "GlutApplication.h"
-#include "Font.h"
-#include "GuiManager.h"
-#include "Controls.h"
+#include "uiControls.h"
 //#include "Video.h"
 
-class MainWindow : public GlutApplication, public EventHandler
+class MainWindow : public GlutApplication, public event::EventHandler
 {
 public:
 	MainWindow();
 	virtual ~MainWindow();
 
-	virtual void anderenaam(void* sender, EventArgs* e);
-	virtual void anderenaam2(void* sender, EventArgs* e);
-	virtual void anderenaam3(void* sender, EventArgs* e);
+	virtual void anderenaam(void* sender, event::EventArgs* e);
+	virtual void anderenaam2(void* sender, event::EventArgs* e);
+	virtual void anderenaam3(void* sender, event::EventArgs* e);
 
 	virtual bool initialize();
 	virtual void resize(int w, int h);

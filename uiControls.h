@@ -1,5 +1,5 @@
 /*
- * Controls.h
+ * uiControls.h
  *
  *  Created on: Mar 14, 2011
  *      Author: wouter
@@ -8,7 +8,7 @@
 #ifndef CONTROLS_H
 #define CONTROLS_H
 
-#include "GuiManager.h"
+#include "uiManager.h"
 
 namespace ui
 {
@@ -200,7 +200,7 @@ protected:
 
 };
 
-typedef Event<Control, EventArgs, EventType::Click> ClickEvent;
+typedef event::Event<Control, event::EventArgs, EventType::Click> ClickEvent;
 typedef ClickEvent::Handler ClickEventHandler;
 
 class Button : public Label
@@ -216,7 +216,7 @@ public:
 
 };
 
-typedef Event<Control, EventArgs, EventType::StateChanged> StateChangedEvent;
+typedef event::Event<Control, event::EventArgs, EventType::StateChanged> StateChangedEvent;
 typedef StateChangedEvent::Handler StateChangedEventHandler;
 
 class Checkbox : public Label
@@ -241,7 +241,7 @@ private:
 
 };
 
-typedef Event<Control, EventArgs, EventType::TextChanged> TextChangedEvent;
+typedef event::Event<Control, event::EventArgs, EventType::TextChanged> TextChangedEvent;
 typedef TextChangedEvent::Handler TextChangedEventHandler;
 
 class Textbox : public Label
@@ -274,7 +274,7 @@ private:
 	void setCursorIndex(int index);
 };
 
-class ValueChangedEventArgs : public EventArgs
+class ValueChangedEventArgs : public event::EventArgs
 {
 public:
 	ValueChangedEventArgs(float originalValue, float newValue) : mOriginalValue(originalValue), mNewValue(newValue) { }
@@ -289,7 +289,7 @@ private:
 
 };
 
-typedef Event<Control, ValueChangedEventArgs, EventType::ValueChanged> ValueChangedEvent;
+typedef event::Event<Control, ValueChangedEventArgs, EventType::ValueChanged> ValueChangedEvent;
 typedef ValueChangedEvent::Handler ValueChangedEventHandler;
 
 class Valuebox : public Control
