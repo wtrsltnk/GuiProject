@@ -134,7 +134,7 @@ void GuiManager::addControl(Control* ctr)
 {
 	ctr->updateBox();
 	this->mControls.push_back(ctr);
-	if (ctr->mParent == 0 && this->mRoot != 0)
+	if (ctr->parent() == 0 && this->mRoot != 0)
 		this->mRoot->addControl(ctr);
 }
 
@@ -171,7 +171,7 @@ Control* GuiManager::getTopControlAt(float point[2], VerticalContainer* containe
 
 	if (container != 0)
 	{
-		for (std::vector<Control*>::iterator itr = container->getControls().begin(); itr != container->getControls().end(); ++itr)
+		for (std::vector<Control*>::iterator itr = container->controls().begin(); itr != container->controls().end(); ++itr)
 		{
 			Control* c = (*itr);
 			if (c->isPointInBox(point))
@@ -245,7 +245,7 @@ void GuiManager::glutKeyboard(unsigned char key, int x, int y)
 {
 	if (GuiManager::instance()->mFocus != 0)
 	{
-		if (GuiManager::instance()->mFocus->getType() == ControlTypes::Textbox)
+		if (GuiManager::instance()->mFocus->controlType() == ControlTypes::Textbox)
 		{
 			Textbox* tb = (Textbox*)GuiManager::instance()->mFocus;
 			if (key == 8)
@@ -261,7 +261,7 @@ void GuiManager::glutKeyboard(unsigned char key, int x, int y)
 				tb->TextChanged(&e);
 			}
 		}
-		else if (GuiManager::instance()->mFocus->getType() == ControlTypes::Valuebox)
+		else if (GuiManager::instance()->mFocus->controlType() == ControlTypes::Valuebox)
 		{
 			Valuebox* vb = (Valuebox*)GuiManager::instance()->mFocus;
 			vb->addInput(key);
@@ -273,7 +273,7 @@ void GuiManager::glutSpecialKeyboard(int key, int x, int y)
 {
 	if (GuiManager::instance()->mFocus != 0)
 	{
-		if (GuiManager::instance()->mFocus->getType() == ControlTypes::Textbox)
+		if (GuiManager::instance()->mFocus->controlType() == ControlTypes::Textbox)
 		{
 			Textbox* tb = (Textbox*)GuiManager::instance()->mFocus;
 			if (key == GLUT_KEY_LEFT)
@@ -281,7 +281,7 @@ void GuiManager::glutSpecialKeyboard(int key, int x, int y)
 			else if (key == GLUT_KEY_RIGHT)
 				tb->moveCursor(1);
 		}
-		else if (GuiManager::instance()->mFocus->getType() == ControlTypes::Valuebox)
+		else if (GuiManager::instance()->mFocus->controlType() == ControlTypes::Valuebox)
 		{
 			Valuebox* vb = (Valuebox*)GuiManager::instance()->mFocus;
 			float diff = (vb->maxValue() - vb->minValue()) / 10.0f;
@@ -303,16 +303,16 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 	{
 		if (button == 0 && state == 0)
 		{
-			if (control->getType() != ControlTypes::Container)
+			if (control->controlType() != ControlTypes::Container)
 				GuiManager::instance()->mFocus = control;
 
-			control->mBox.state = BoxState::Pressed;
-			if (control->getType() == ControlTypes::Checkbox)
+			control->box().state = BoxState::Pressed;
+			if (control->controlType() == ControlTypes::Checkbox)
 			{
 				Checkbox* c = (Checkbox*)control;
 				c->toggleChecked();
 			}
-			else if (control->getType() == ControlTypes::Button)
+			else if (control->controlType() == ControlTypes::Button)
 			{
 				Button* b = (Button*)control;
 				GuiEventArgs e(b);
@@ -322,10 +322,10 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 		else
 		{
 			VerticalContainer* cc = 0;
-			if (control->getType() == ControlTypes::Container)
+			if (control->controlType() == ControlTypes::Container)
 				cc = (VerticalContainer*)control;
 			else
-				cc = control->mParent;
+				cc = (VerticalContainer*)control->parent();
 
 			if (cc != 0)
 			{
@@ -335,7 +335,7 @@ void GuiManager::glutMouseClick(int button, int state, int x, int y)
 					cc->scrollDown();
 			}
 			else
-				control->mBox.state = BoxState::Hovered;
+				control->box().state = BoxState::Hovered;
 		}
 	}
 }
@@ -348,10 +348,10 @@ void GuiManager::glutMouseMove(int x, int y)
 	Control* control = GuiManager::instance()->getTopControlAt(point);
 
 	if (lastHovered != 0)
-		lastHovered->mBox.state = BoxState::None;
+		lastHovered->box().state = BoxState::None;
 
-	if (control != 0 && control->getType() != ControlTypes::Container)
-		control->mBox.state = BoxState::Hovered;
+	if (control != 0 && control->controlType() != ControlTypes::Container)
+		control->box().state = BoxState::Hovered;
 
 	lastHovered = control;
 }

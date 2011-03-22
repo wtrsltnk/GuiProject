@@ -23,12 +23,7 @@ MainWindow::~MainWindow()
 void MainWindow::anderenaam(void* sender, EventArgs* e)
 {
 	if (cb != 0)
-	{
-		float pos[2];
-		cb->size(pos);
-		pos[1] += 4;
-		cb->setSize(pos);
-	}
+		cb->setSize(cb->width(), cb->height()+4);
 }
 
 void MainWindow::anderenaam2(void* sender, EventArgs* e)

@@ -142,12 +142,6 @@ void Control::renderControl()
 	}
 }
 
-void Control::position(float pos[2])
-{
-	pos[0] = this->mBox.hitbox[0];
-	pos[1] = this->mBox.hitbox[1];
-}
-
 float Control::x()
 {
 	return this->mBox.hitbox[0];
@@ -174,12 +168,6 @@ void Control::setPosition(float x, float y)
 		this->mBox.hitbox[0] = x;
 		this->mBox.hitbox[1] = y;
 	}
-}
-
-void Control::size(float size[2])
-{
-	size[0] = this->mBox.hitbox[2];
-	size[1] = this->mBox.hitbox[3];
 }
 
 float Control::width()
@@ -307,7 +295,7 @@ void Control::renderText(float x, float y, const char *text, unsigned int color)
 bool Control::isPointInBox(float point[2])
 {
 	float scroll = 0;
-	if (this->mParent != 0)
+	if (this->mParent != 0 && dynamic_cast<VerticalContainer*>(this->mParent) != 0)
 		scroll = this->mParent->getScroll();
 
 	if (point[0] < this->mBox.hitbox[0]) return false;
@@ -324,21 +312,17 @@ bool Control::isPointInBox(float point[2])
 /******************************************************************************************/
 /*** Container																		   ****/
 /******************************************************************************************/
-VerticalContainer::VerticalContainer(int x, int y, int w, int h)
-	: Control(ControlTypes::Container, x, y, w, h), mPadding(4), mChildHeight(0), mScroll(0)
+Container::Container(int x, int y, int w, int h)
+	: Control(ControlTypes::Container, x, y, w, h), mScroll(0), mChildHeight(0), mPadding(4)
 {
 }
 
-VerticalContainer::~VerticalContainer()
+Container::~Container()
 {
 }
 
-void VerticalContainer::render()
+void Container::renderScrollbar(float& scrollbarWidth)
 {
-	float scrollbarWidth = 0;
-	this->renderBox(false);
-
-	// Render scrollbar
 	if (this->mChildHeight > this->height())
 	{
 		float h = fmax(this->mChildHeight, this->height());
@@ -353,32 +337,20 @@ void VerticalContainer::render()
 		glEnd();
 		scrollbarWidth = 7;
 	}
-
-	float hitbox[4] = {
-			this->mBox.hitbox[0]+3,
-			this->mBox.hitbox[1]+3,
-			this->mBox.hitbox[2]-6 - scrollbarWidth,
-			this->mBox.hitbox[3]-6
-	};
-	Clipper c(hitbox);
-
-	glPushMatrix();
-	glTranslatef(0, this->mScroll, 0);
-	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
-		(*itr)->renderControl();
-	glPopMatrix();
+	else
+		scrollbarWidth = 0;
 }
 
-void VerticalContainer::addControl(Control* ctr)
+void Container::addControl(Control* ctr)
 {
-	if (ctr->mParent != 0)
-		ctr->mParent->removeControl(ctr);
+	if (ctr->parent() != 0)
+		ctr->parent()->removeControl(ctr);
 	this->mControls.push_back(ctr);
 	this->updateChildControls();
 	ctr->mParent = this;
 }
 
-void VerticalContainer::removeControl(Control* ctr)
+void Container::removeControl(Control* ctr)
 {
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 	{
@@ -391,17 +363,7 @@ void VerticalContainer::removeControl(Control* ctr)
 	}
 }
 
-float VerticalContainer::padding()
-{
-	return this->mPadding;
-}
-
-void VerticalContainer::setPadding(float padding)
-{
-	this->mPadding = padding;
-}
-
-void VerticalContainer::scrollUp()
+void Container::scrollUp()
 {
 	if (this->mChildHeight > this->height())
 	{
@@ -416,7 +378,7 @@ void VerticalContainer::scrollUp()
 	}
 }
 
-void VerticalContainer::scrollDown()
+void Container::scrollDown()
 {
 	if (this->mChildHeight > this->height())
 	{
@@ -430,11 +392,63 @@ void VerticalContainer::scrollDown()
 	}
 }
 
-float VerticalContainer::getScroll()
+float Container::getScroll()
 {
 	if (this->mParent != 0)
 		return this->mParent->getScroll() + this->mScroll;
 	return this->mScroll;
+}
+
+void Container::setSize(float w, float h)
+{
+	Control::setSize(w, h);
+	this->updateChildControls();
+}
+
+float Container::padding()
+{
+	return this->mPadding;
+}
+
+void Container::setPadding(float padding)
+{
+	this->mPadding = padding;
+}
+
+
+
+/******************************************************************************************/
+/*** VerticalContainer																		   ****/
+/******************************************************************************************/
+VerticalContainer::VerticalContainer(int x, int y, int w, int h)
+	: Container(x, y, w, h)
+{
+}
+
+VerticalContainer::~VerticalContainer()
+{
+}
+
+void VerticalContainer::render()
+{
+	float scrollbarWidth = 0;
+	this->renderBox(false);
+
+	this->renderScrollbar(scrollbarWidth);
+	
+	float hitbox[4] = {
+			this->mBox.hitbox[0]+3,
+			this->mBox.hitbox[1]+3,
+			this->mBox.hitbox[2]-6 - scrollbarWidth,
+			this->mBox.hitbox[3]-6
+	};
+	Clipper c(hitbox);
+
+	glPushMatrix();
+	glTranslatef(0, this->mScroll, 0);
+	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
+		(*itr)->renderControl();
+	glPopMatrix();
 }
 
 void VerticalContainer::updateChildControls()
@@ -453,9 +467,9 @@ void VerticalContainer::updateChildControls()
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 	{
 		Control* c = *itr;
-		c->mBox.hitbox[0] = x + this->mPadding;
-		c->mBox.hitbox[1] = y - this->mPadding - c->height();
-		c->mBox.hitbox[2] = this->width() - (this->mPadding * 2) - scrollbarWidth;
+		c->box().hitbox[0] = x + this->mPadding;
+		c->box().hitbox[1] = y - this->mPadding - c->height();
+		c->box().hitbox[2] = this->width() - (this->mPadding * 2) - scrollbarWidth;
 		c->updateBox();
 		y -= c->height() + this->mPadding;
 		VerticalContainer* cc = dynamic_cast<VerticalContainer*> (c);
@@ -464,17 +478,11 @@ void VerticalContainer::updateChildControls()
 	}
 }
 
-void VerticalContainer::setSize(float w, float h)
-{
-	Control::setSize(w, h);
-	this->updateChildControls();
-}
-
 
 
 
 /******************************************************************************************/
-/*** Text Control																	   ****/
+/*** Label Control																	   ****/
 /******************************************************************************************/
 Label::Label(const char* text, int type)
 	: Control(type), mText(0)

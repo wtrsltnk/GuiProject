@@ -93,7 +93,7 @@ private:
 
 };
 
-class VerticalContainer;
+class Container;
 
 class Control
 {
@@ -104,15 +104,15 @@ public:
 
 	virtual void renderControl();
 
-	int getType() { return this->mType; }
+	box_t& box() { return this->mBox; }
+	Container* parent() { return this->mParent; }
+	int controlType() { return this->mType; }
 
-	virtual void position(float pos[2]);
 	virtual float x();
 	virtual float y();
 	virtual void setPosition(float pos[2]);
 	virtual void setPosition(float x, float y);
 
-	virtual void size(float size[2]);
 	virtual float width();
 	virtual float height();
 	virtual void setSize(float size[2]);
@@ -121,23 +121,59 @@ public:
 	virtual void updateBox();
 
 	bool isPointInBox(float point[2]);
+	
 protected:
 	box_t mBox;
-	VerticalContainer* mParent;
+	Container* mParent;
 
 	virtual void render() = 0;
 
 	void renderBox(bool ignoreState = false);
 	void renderText(float x, float y, const char *text, unsigned int color);
+	
 private:
 	int mType;
-	friend class GuiManager;
-	friend class VerticalContainer;
+
+	friend class Container;
 };
 
 typedef std::vector<Control*> ControlList;
 
-class VerticalContainer : public Control
+class Container : public Control
+{
+public:
+	Container(int x, int y, int w, int h);
+	virtual ~Container();
+
+	void addControl(Control* ctr);
+	void removeControl(Control* ctr);
+
+	void scrollUp();
+	void scrollDown();
+	float getScroll();
+
+	virtual void setSize(float w, float h);
+
+	float padding();
+	void setPadding(float padding);
+
+	ControlList& controls() { return this->mControls; }
+
+protected:
+	virtual void renderScrollbar(float& scrollbarWidth);
+
+protected:
+	ControlList mControls;
+	float mScroll;
+	float mChildHeight;
+	float mPadding;
+
+	virtual void updateChildControls() = 0;
+
+	friend class Control;
+};
+
+class VerticalContainer : public Container
 {
 public:
 	VerticalContainer(int x, int y, int w, int h);
@@ -145,26 +181,9 @@ public:
 
 	virtual void render();
 
-	void addControl(Control* ctr);
-	void removeControl(Control* ctr);
-
-	float padding();
-	void setPadding(float padding);
-
-	void scrollUp();
-	void scrollDown();
-	float getScroll();
-
-	ControlList& getControls() { return this->mControls; }
-
-	virtual void setSize(float w, float h);
 private:
-	ControlList mControls;
-	float mPadding;
-	float mChildHeight;
-	float mScroll;
 
-	void updateChildControls();
+	virtual void updateChildControls();
 
 	friend class Control;
 };
@@ -256,7 +275,22 @@ private:
 	void setCursorIndex(int index);
 };
 
-typedef Event<Control, EventArgs, EventType::ValueChanged> ValueChangedEvent;
+class ValueChangedEventArgs : public EventArgs
+{
+public:
+	ValueChangedEventArgs(float originalValue, float newValue) : mOriginalValue(originalValue), mNewValue(newValue) { }
+	virtual ~ValueChangedEventArgs() { }
+
+	float originalValue() {return this->mOriginalValue; }
+	float newValue() { return this->mNewValue; }
+
+private:
+	float mOriginalValue;
+	float mNewValue;
+
+};
+
+typedef Event<Control, ValueChangedEventArgs, EventType::ValueChanged> ValueChangedEvent;
 typedef ValueChangedEvent::Handler ValueChangedEventHandler;
 
 class Valuebox : public Control
