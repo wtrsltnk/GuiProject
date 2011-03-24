@@ -140,6 +140,11 @@ public:
 	Container(int x, int y, int w, int h);
 	virtual ~Container();
 
+	virtual void mouseIn() { }
+	virtual void mouseDown(int button) { }
+	virtual void mouseUp(int button) { }
+	virtual void mouseOut() { }
+
 	void addControl(Control* ctr);
 	void removeControl(Control* ctr);
 

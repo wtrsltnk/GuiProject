@@ -49,20 +49,14 @@ bool MainWindow::initialize()
 	tb = new ui::Textbox(10, 110, 164, 54, (const char*)"Wouter Saaltink");
 	vb = new ui::Valuebox(10, 180, 64, 24, 5.8346, 0, 10000);
 	lbl = new ui::Label("test", 10, 440, 164, 24);
-	ui::VerticalContainer* cnt = new ui::VerticalContainer(120, 50, 72, 100);
-	ui::VerticalContainer* cnt2 = new ui::VerticalContainer(210, 50, 200, 150);
-	ui::VerticalContainer* cnt3 = new ui::VerticalContainer(210, 50, 200, 500);
-	ui::VerticalContainer* cnt4 = new ui::VerticalContainer(210, 50, 200, 250);
-	ui::VerticalContainer* cnt5 = new ui::VerticalContainer(210, 50, 200, 300);
+	ui::VerticalContainer* cnt = new ui::VerticalContainer(120, 50, 72, 300);
+	ui::VerticalContainer* cnt2 = new ui::VerticalContainer(210, 50, 200, 350);
 	cnt->addControl(cb);
 	cnt->addControl(tb);
 	cnt->addControl(b);
 	cnt->addControl(lbl);
 	cnt->addControl(vb);
 	cnt2->addControl(cnt);
-	cnt3->addControl(cnt2);
-	cnt4->addControl(cnt3);
-	cnt5->addControl(cnt4);
 
 	// Voorbeeld van het toevoegen van events
 	b->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::anderenaam);

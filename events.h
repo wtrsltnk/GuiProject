@@ -33,7 +33,7 @@ class Event
 {
 public:
 	// Type definition for the Member Function Pointer
-	typedef void (EventHandler::*FunctionPtr)(S* sender, EventArgs*);
+	typedef void (EventHandler::*FunctionPtr)(S* sender, E*);
 
 public:
 	// This Handler class holds the data for an event call.
