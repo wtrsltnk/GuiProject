@@ -222,15 +222,14 @@ void Manager::glutMouseClick(int button, int state, int x, int y)
 
 	if (control != 0)
 	{
-		Container* cc = 0;
-		if (control->controlType() == ControlTypes::Container)
-			cc = (Container*)control;
-		else
+		Container* cc = dynamic_cast<Container*>(control);
+		if (cc == 0)
 			cc = control->parent();
 
 		if (state == 0)
 		{
-			if (control->controlType() != ControlTypes::Container)
+			// Only non-containers can get focus
+			if (dynamic_cast<Container*>(control) == 0)
 				Manager::instance()->mFocus = control;
 
 			control->mouseDown(button);
@@ -238,9 +237,9 @@ void Manager::glutMouseClick(int button, int state, int x, int y)
 			if (cc != 0)
 			{
 				if (button == 4)
-					cc->scrollUp();
+					cc->scrollbar.scrollUp();
 				else if (button == 3)
-					cc->scrollDown();
+					cc->scrollbar.scrollDown();
 			}
 		}
 		else if (state == 1)
@@ -250,9 +249,9 @@ void Manager::glutMouseClick(int button, int state, int x, int y)
 			if (cc != 0)
 			{
 				if (button == 4)
-					cc->scrollUp();
+					cc->scrollbar.scrollUp();
 				else if (button == 3)
-					cc->scrollDown();
+					cc->scrollbar.scrollDown();
 			}
 		}
 	}

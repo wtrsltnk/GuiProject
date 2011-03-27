@@ -21,12 +21,22 @@
     <logicalFolder name="f1" displayName="ui" projectFiles="true">
       <itemPath>stb_truetype.cpp</itemPath>
       <itemPath>stb_truetype.h</itemPath>
-      <itemPath>uiControls.cpp</itemPath>
+      <itemPath>uiButton.cpp</itemPath>
+      <itemPath>uiCheckbox.cpp</itemPath>
+      <itemPath>uiClipper.cpp</itemPath>
+      <itemPath>uiClipper.h</itemPath>
+      <itemPath>uiContainer.cpp</itemPath>
+      <itemPath>uiControl.cpp</itemPath>
       <itemPath>uiControls.h</itemPath>
       <itemPath>uiFont.cpp</itemPath>
       <itemPath>uiFont.h</itemPath>
+      <itemPath>uiLabel.cpp</itemPath>
+      <itemPath>uiListbox.cpp</itemPath>
       <itemPath>uiManager.cpp</itemPath>
       <itemPath>uiManager.h</itemPath>
+      <itemPath>uiTextbox.cpp</itemPath>
+      <itemPath>uiValuebox.cpp</itemPath>
+      <itemPath>uiVerticalContainer.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"

@@ -59,13 +59,14 @@ namespace ControlTypes
 {
 enum
 {
-	Container = 1,
+	VerticalContainer = 1,
 	Label = 101,
 	Button = 102,
 	Checkbox = 103,
 	Textbox = 104,
 	Valuebox = 105,
 	Listbox = 106,
+	ListboxItem = 107,
 };
 }
 
@@ -110,6 +111,7 @@ public:
 
 	virtual float width();
 	virtual float height();
+	virtual float clientHeight();
 	virtual void setSize(float size[2]);
 	virtual void setSize(float w, float h);
 
@@ -132,12 +134,49 @@ private:
 	friend class Container;
 };
 
+class Label : public Control
+{
+public:
+	Label(const char* text, int type = ControlTypes::Label);
+	Label(const char* text, int x, int y, int w, int h, int type = ControlTypes::Label);
+	virtual ~Label();
+
+	virtual void render();
+
+	virtual const char* text() const;
+	virtual void setText(const char* text);
+
+protected:
+	char* mText;
+
+};
+
+class Scrollbar
+{
+public:
+	Scrollbar(Control* container);
+	virtual ~Scrollbar();
+
+	void scrollUp();
+	void scrollDown();
+	float scroll();
+	float width();
+
+	virtual void renderScrollbar();
+
+private:
+	Control* mControl;
+	float mScroll;
+	float mWidth;
+
+};
+
 typedef std::vector<Control*> ControlList;
 
 class Container : public Control
 {
 public:
-	Container(int x, int y, int w, int h);
+	Container(int type, int x, int y, int w, int h);
 	virtual ~Container();
 
 	virtual void mouseIn() { }
@@ -145,12 +184,10 @@ public:
 	virtual void mouseUp(int button) { }
 	virtual void mouseOut() { }
 
+	virtual float clientHeight();
+
 	void addControl(Control* ctr);
 	void removeControl(Control* ctr);
-
-	void scrollUp();
-	void scrollDown();
-	float getScroll();
 
 	virtual void setSize(float w, float h);
 
@@ -159,16 +196,13 @@ public:
 
 	ControlList& controls() { return this->mControls; }
 
-protected:
-	virtual void renderScrollbar(float& scrollbarWidth);
-
-protected:
-	ControlList mControls;
-	float mScroll;
-	float mChildHeight;
-	float mPadding;
+	Scrollbar scrollbar;
 
 	virtual void updateChildControls() = 0;
+	
+protected:
+	ControlList mControls;
+	float mPadding;
 
 	friend class Control;
 };
@@ -188,20 +222,32 @@ private:
 	friend class Control;
 };
 
-class Label : public Control
+class Listbox : public Control
 {
 public:
-	Label(const char* text, int type = ControlTypes::Label);
-	Label(const char* text, int x, int y, int w, int h, int type = ControlTypes::Label);
-	virtual ~Label();
+	Listbox(int x, int y, int w, int h);
+	virtual ~Listbox();
 
 	virtual void render();
 
-	virtual const char* text() const;
-	virtual void setText(const char* text);
+	virtual float clientHeight();
 
-protected:
-	char* mText;
+	void addItem(const char* text, void* data = 0);
+
+	Scrollbar scrollbar;
+	
+private:
+	class ListboxItem
+	{
+	public:
+		ListboxItem(const char* text, void* data);
+
+		const char* mText;
+		void* mData;
+	};
+
+	std::vector<ListboxItem> mItems;
+	float mPadding;
 
 };
 
@@ -321,31 +367,6 @@ protected:
 	float mMinValue;
 	float mMaxValue;
 	char mInput[32];
-
-};
-
-class Listbox : public Control
-{
-public:
-	Listbox(int x, int y, int w, int h);
-	virtual ~Listbox();
-
-	virtual void render();
-
-	int addItem(const char* text, void* data);
-	void removeItem(int index);
-
-private:
-	class ListboxItem
-	{
-	public:
-		ListboxItem(const char* text, void* data) : mText(text), mData(data) { }
-
-		const char* mText;
-		void* mData;
-	};
-
-	std::vector<ListboxItem> mItems;
 
 };
 
