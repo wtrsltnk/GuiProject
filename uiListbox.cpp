@@ -6,7 +6,7 @@ namespace ui
 {
 
 Listbox::Listbox(int x, int y, int w, int h)
-	: Control(ControlTypes::Listbox, x, y, w, h), scrollbar(Scrollbar(this)), mPadding(4), mSelectedIndex(0)
+	: Control(ControlTypes::Listbox, x, y, w, h), scrollbar(Scrollbar(this)), SelectedIndexChanged(SelectedIndexChangedEvent(this)), mPadding(4), mSelectedIndex(-1)
 {
 }
 
@@ -28,19 +28,34 @@ void Listbox::render()
 	};
 	Clipper c(hitbox);
 
+	glColor3f(0.3f, 0.7f, 1.0f);
+	glBegin(GL_QUADS);
+	glVertex2f(hitbox[0], hitbox[1]);
+	glVertex2f(hitbox[0]+hitbox[2], hitbox[1]);
+	glVertex2f(hitbox[0]+hitbox[2], hitbox[1]+hitbox[3]);
+	glVertex2f(hitbox[0], hitbox[1]+hitbox[3]);
+	glEnd();
+
 	float y = 20;
 	glPushMatrix();
 	glTranslatef(0, this->scrollbar.scroll(), 0);
 	int i = 0;
 	for (std::vector<ListboxItem>::iterator itr = this->mItems.begin(); itr != this->mItems.end(); ++itr)
 	{
-		unsigned int color = RGBA(255, 255, 255, 255);
+		unsigned int color = RGBA(0, 0, 0, 255);
 		if (this->mSelectedIndex == i++)
 			color = RGBA(255, 255, 0, 255);
 		Control::renderText(
 				this->mBox.hitbox[0] + this->mPadding,
 				this->mBox.hitbox[1] + this->mBox.hitbox[3] - y,
 				(*itr).mText, color);
+
+		glColor3f(0.1f, 0.5f, 0.8f);
+		glBegin(GL_LINES);
+		glVertex2f(this->mBox.hitbox[0], this->mBox.hitbox[1] + this->mBox.hitbox[3] - y - this->mPadding);
+		glVertex2f(this->mBox.hitbox[0]+this->mBox.hitbox[2], this->mBox.hitbox[1] + this->mBox.hitbox[3] - y - this->mPadding);
+		glEnd();
+
 		y += 20 + this->mPadding;
 	}
 	glPopMatrix();
@@ -55,7 +70,7 @@ void Listbox::mouseDown(int button, int x, int y)
 	else if (button == 0)
 	{
 		int localY = -int(y + this->mPadding - this->scrollbar.scroll() - (this->mBox.hitbox[1]+this->mBox.hitbox[3]));
-		this->mSelectedIndex = localY / (20+int(this->mPadding));
+		this->setSelectedIndex(localY / (20+int(this->mPadding)));
 	}
 }
 
@@ -82,14 +97,19 @@ int Listbox::selectedIndex() const
 
 void Listbox::setSelectedIndex(int index)
 {
-	this->mSelectedIndex = index;
+	if (this->mSelectedIndex != index)
+	{
+		SelectedIndexChangedEventArgs e(this->mSelectedIndex, index);
+		this->mSelectedIndex = index;
+		this->SelectedIndexChanged(&e);
+	}
 }
 
-const Listbox::ListboxItem* Listbox::selectedItem() const
+Listbox::ListboxItem Listbox::selectedItem() const
 {
 	if (this->mSelectedIndex >= 0 && this->mSelectedIndex < int(this->mItems.size()))
-		return &this->mItems[this->mSelectedIndex];
-	return 0;
+		return this->mItems[this->mSelectedIndex];
+	return Listbox::ListboxItem("", 0);
 }
 
 Listbox::ListboxItem::ListboxItem(const char* text, void* data)
@@ -97,9 +117,23 @@ Listbox::ListboxItem::ListboxItem(const char* text, void* data)
 {
 }
 
-Listbox::ListboxItem::ListboxItem(const ListboxItem& item)
-	: mText(item.mText), mData(item.mData)
+SelectedIndexChangedEventArgs::SelectedIndexChangedEventArgs(int previousIndex, int newIndex)
+	: mPreviousIndex(previousIndex), mNewIndex(newIndex)
 {
+}
+
+SelectedIndexChangedEventArgs::~SelectedIndexChangedEventArgs()
+{
+}
+
+int SelectedIndexChangedEventArgs::previousIndex() const
+{
+	return this->mPreviousIndex;
+}
+
+int SelectedIndexChangedEventArgs::newIndex() const
+{
+	return this->mNewIndex;
 }
 
 }

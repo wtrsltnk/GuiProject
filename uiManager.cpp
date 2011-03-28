@@ -225,7 +225,7 @@ void Manager::glutMouseClick(int button, int state, int x, int y)
 		if (state == 0)
 		{
 			// Only non-containers can get focus
-			if (dynamic_cast<Container*>(control) == 0)
+			if (dynamic_cast<Container*>(control) == 0 &&  button == 0)
 				Manager::instance()->mFocus = control;
 
 			control->mouseDown(button, point[0], point[1]);

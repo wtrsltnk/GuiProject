@@ -21,6 +21,7 @@ public:
 	virtual void anderenaam(ui::Control* sender, event::EventArgs* e);
 	virtual void anderenaam2(ui::Control* sender, event::EventArgs* e);
 	virtual void anderenaam3(ui::Control* sender, event::EventArgs* e);
+	virtual void anderenaam4(ui::Control* sender, ui::SelectedIndexChangedEventArgs* e);
 
 	virtual bool initialize();
 	virtual void resize(int w, int h);

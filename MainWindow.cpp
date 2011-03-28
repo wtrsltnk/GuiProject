@@ -38,6 +38,12 @@ void MainWindow::anderenaam3(ui::Control* sender, event::EventArgs* e)
 {
 	ui::Textbox* tb = (ui::Textbox*)sender;
 	lbl->setText(tb->text());
+
+}
+
+void MainWindow::anderenaam4(ui::Control* sender, ui::SelectedIndexChangedEventArgs* e)
+{
+	printf("%d %d %s\n", e->previousIndex(), e->newIndex(), ((ui::Listbox*)sender)->selectedItem().text());
 }
 
 bool MainWindow::initialize()
@@ -60,6 +66,7 @@ bool MainWindow::initialize()
 	lb->addItem("Heel");
 	lb->addItem("Handig");
 	lb->addItem("Met c++");
+	lb->SelectedIndexChanged += ui::SelectedIndexChangedEventHandler(this, (ui::SelectedIndexChangedEvent::FunctionPtr)&MainWindow::anderenaam4);
 	ui::VerticalContainer* cnt = new ui::VerticalContainer(120, 50, 72, 300);
 	ui::VerticalContainer* cnt2 = new ui::VerticalContainer(210, 50, 200, 350);
 	cnt->addControl(cb);

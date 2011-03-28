@@ -222,6 +222,23 @@ private:
 	friend class Control;
 };
 
+class SelectedIndexChangedEventArgs : public event::EventArgs
+{
+public:
+	SelectedIndexChangedEventArgs(int previousIndex, int newIndex);
+	virtual ~SelectedIndexChangedEventArgs();
+
+	int previousIndex() const;
+	int newIndex() const;
+
+private:
+	int mPreviousIndex;
+	int mNewIndex;
+};
+
+typedef event::Event<Control, SelectedIndexChangedEventArgs> SelectedIndexChangedEvent;
+typedef SelectedIndexChangedEvent::Handler SelectedIndexChangedEventHandler;
+
 class Listbox : public Control
 {
 public:
@@ -229,7 +246,6 @@ public:
 	{
 		ListboxItem(const char* text, void* data);
 	public:
-		ListboxItem(const ListboxItem& item);
 		
 		const char* text() { return this->mText; }
 		void* data() { return this->mData; }
@@ -253,9 +269,10 @@ public:
 	void addItem(const char* text, void* data = 0);
 	int selectedIndex() const;
 	void setSelectedIndex(int index);
-	const ListboxItem* selectedItem() const;
+	ListboxItem selectedItem() const;
 
 	Scrollbar scrollbar;
+	SelectedIndexChangedEvent SelectedIndexChanged;
 	
 private:
 	std::vector<ListboxItem> mItems;
