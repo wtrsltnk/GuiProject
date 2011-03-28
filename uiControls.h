@@ -180,7 +180,7 @@ public:
 	virtual ~Container();
 
 	virtual void mouseIn() { }
-	virtual void mouseDown(int button) { }
+	virtual void mouseDown(int button);
 	virtual void mouseUp(int button) { }
 	virtual void mouseOut() { }
 
@@ -229,6 +229,7 @@ public:
 	virtual ~Listbox();
 
 	virtual void render();
+	virtual void mouseDown(int button);
 
 	virtual float clientHeight();
 

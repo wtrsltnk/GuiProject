@@ -71,12 +71,18 @@ void Control::mouseDown(int button)
 {
 	if (button == 0)
 		this->box().state = BoxState::Pressed;
+
+	if (this->parent() != 0)
+		this->parent()->mouseDown(button);
 }
 
 void Control::mouseUp(int button)
 {
 	if (button == 0)
 		this->box().state = BoxState::Hovered;
+
+	if (this->parent() != 0)
+		this->parent()->mouseUp(button);
 }
 
 void Control::mouseOut()

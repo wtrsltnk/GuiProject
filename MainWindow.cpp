@@ -49,7 +49,7 @@ bool MainWindow::initialize()
 	tb = new ui::Textbox(10, 110, 164, 54, (const char*)"Wouter Saaltink");
 	vb = new ui::Valuebox(10, 180, 64, 24, 5.8346, 0, 10000);
 	lbl = new ui::Label("test", 10, 440, 164, 24);
-	ui::Listbox* lb = new ui::Listbox(200, 64, 20, 200);
+	ui::Listbox* lb = new ui::Listbox(200, 64, 20, 100);
 	lb->addItem("Wouter");
 	lb->addItem("Is");
 	lb->addItem("Heel");

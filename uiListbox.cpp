@@ -28,21 +28,26 @@ void Listbox::render()
 	};
 	Clipper c(hitbox);
 
-	glPushMatrix();
-	//glTranslatef(0, this->scrollbar.scroll(), 0);
 	float y = 0;
+	glPushMatrix();
+	glTranslatef(0, this->scrollbar.scroll(), 0);
 	for (std::vector<ListboxItem>::iterator itr = this->mItems.begin(); itr != this->mItems.end(); ++itr)
 	{
-		float length = this->mBox.font->getTextLength((*itr).mText);
-		float height = this->mBox.font->getTextHeight((*itr).mText);
-
 		Control::renderText(
 				this->mBox.hitbox[0] + this->mPadding,
-				this->mBox.hitbox[1] + this->mBox.hitbox[3] - height - y,
+				this->mBox.hitbox[1] + this->mBox.hitbox[3] + this->scrollbar.scroll() - 20 - y,
 				(*itr).mText, RGBA(255, 255, 255, 255));
-		y+=height;
+		y += 20;
 	}
 	glPopMatrix();
+}
+
+void Listbox::mouseDown(int button)
+{
+	if (button == 4)
+		this->scrollbar.scrollUp();
+	else if (button == 3)
+		this->scrollbar.scrollDown();
 }
 
 float Listbox::clientHeight()

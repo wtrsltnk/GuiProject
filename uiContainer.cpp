@@ -14,6 +14,14 @@ Container::~Container()
 {
 }
 
+void Container::mouseDown(int button)
+{
+	if (button == 4)
+		this->scrollbar.scrollUp();
+	else if (button == 3)
+		this->scrollbar.scrollDown();
+}
+
 float Container::clientHeight()
 {
 	float childHeight = this->padding();
@@ -105,7 +113,7 @@ void Scrollbar::renderScrollbar()
 
 void Scrollbar::scrollUp()
 {
-	float clientHeight = mControl->clientHeight();
+	float clientHeight = this->mControl->clientHeight();
 	if (clientHeight > this->mControl->height())
 	{
 		this->mScroll += 5.0f;
@@ -135,8 +143,9 @@ void Scrollbar::scrollDown()
 
 float Scrollbar::scroll()
 {
-	if (this->mControl->parent() != 0)
-		return this->mControl->parent()->scrollbar.scroll() + this->mScroll;
+//	Dit is niet echt nodig, want de scroll wordt al meegenomen bij het renderen van child controls
+//	if (this->mControl->parent() != 0)
+//		return this->mControl->parent()->scrollbar.scroll() + this->mScroll;
 	return this->mScroll;
 }
 
