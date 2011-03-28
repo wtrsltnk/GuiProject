@@ -44,7 +44,7 @@ void Listbox::render()
 	{
 		unsigned int color = RGBA(0, 0, 0, 255);
 		if (this->mSelectedIndex == i++)
-			color = RGBA(255, 255, 0, 255);
+			color = RGBA(200, 0, 0, 255);
 		Control::renderText(
 				this->mBox.hitbox[0] + this->mPadding,
 				this->mBox.hitbox[1] + this->mBox.hitbox[3] - y,

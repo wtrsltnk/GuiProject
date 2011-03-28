@@ -15,7 +15,7 @@ namespace ui
 {
 
 class Control;
-class VerticalContainer;
+class Container;
 class Font;
 
 class Manager
@@ -35,8 +35,8 @@ public:
 	void onMouseMove(int x, int y);
 	void render();
 
-	VerticalContainer* getRoot();
-	Control* getTopControlAt(float point[2], VerticalContainer* container = 0);
+	Container* getRoot();
+	Control* getTopControlAt(float point[2], Container* container = 0);
 
 private:
 	virtual void initialize(const char* fontpath);
@@ -51,7 +51,7 @@ private:
 	int mViewSize[2];
 	std::vector<Control*> mControls;
 	Control* mFocus;
-	VerticalContainer* mRoot;
+	Container* mRoot;
 
 #ifndef SKIP_GLUT
 public:

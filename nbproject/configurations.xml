@@ -30,6 +30,7 @@
       <itemPath>uiControls.h</itemPath>
       <itemPath>uiFont.cpp</itemPath>
       <itemPath>uiFont.h</itemPath>
+      <itemPath>uiFreeContainer.cpp</itemPath>
       <itemPath>uiLabel.cpp</itemPath>
       <itemPath>uiListbox.cpp</itemPath>
       <itemPath>uiManager.cpp</itemPath>

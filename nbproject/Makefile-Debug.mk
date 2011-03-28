@@ -35,6 +35,7 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/uiClipper.o \
 	${OBJECTDIR}/MainWindow.o \
+	${OBJECTDIR}/uiFreeContainer.o \
 	${OBJECTDIR}/uiTextbox.o \
 	${OBJECTDIR}/uiLabel.o \
 	${OBJECTDIR}/uiContainer.o \
@@ -83,6 +84,11 @@ ${OBJECTDIR}/MainWindow.o: MainWindow.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/MainWindow.o MainWindow.cpp
+
+${OBJECTDIR}/uiFreeContainer.o: uiFreeContainer.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiFreeContainer.o uiFreeContainer.cpp
 
 ${OBJECTDIR}/uiTextbox.o: uiTextbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}

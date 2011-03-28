@@ -60,6 +60,7 @@ namespace ControlTypes
 enum
 {
 	VerticalContainer = 1,
+	FreeContainer = 2,
 	Label = 101,
 	Button = 102,
 	Checkbox = 103,
@@ -117,7 +118,7 @@ public:
 
 	virtual void updateBox();
 
-	bool isPointInBox(float point[2]);
+	virtual bool isPointInBox(float point[2], float scroll = 0);
 	
 protected:
 	box_t mBox;
@@ -160,6 +161,7 @@ public:
 	void scrollUp();
 	void scrollDown();
 	float scroll();
+	float globalScroll();
 	float width();
 
 	virtual void renderScrollbar();
@@ -218,8 +220,19 @@ public:
 private:
 
 	virtual void updateChildControls();
+};
 
-	friend class Control;
+class FreeContainer : public Container
+{
+public:
+	FreeContainer(int x, int y, int w, int h);
+	virtual ~FreeContainer();
+
+	virtual void render();
+
+private:
+
+	virtual void updateChildControls();
 };
 
 class SelectedIndexChangedEventArgs : public event::EventArgs

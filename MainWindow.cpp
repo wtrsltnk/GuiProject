@@ -67,15 +67,14 @@ bool MainWindow::initialize()
 	lb->addItem("Handig");
 	lb->addItem("Met c++");
 	lb->SelectedIndexChanged += ui::SelectedIndexChangedEventHandler(this, (ui::SelectedIndexChangedEvent::FunctionPtr)&MainWindow::anderenaam4);
-	ui::VerticalContainer* cnt = new ui::VerticalContainer(120, 50, 72, 300);
-	ui::VerticalContainer* cnt2 = new ui::VerticalContainer(210, 50, 200, 350);
+	ui::Container* cnt = new ui::VerticalContainer(120, 50, 100, 200);
 	cnt->addControl(cb);
 	cnt->addControl(tb);
 	cnt->addControl(lb);
 	cnt->addControl(b);
 	cnt->addControl(lbl);
 	cnt->addControl(vb);
-	cnt2->addControl(cnt);
+	//cnt2->addControl(cnt);
 
 	// Voorbeeld van het toevoegen van events
 	b->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::anderenaam);

@@ -66,7 +66,7 @@ void Manager::initialize(const char* fontpath)
 	Manager::sDefaultFont = new Font();
 	Manager::sDefaultFont->initializeFont(fontpath);
 
-	Manager::instance()->mRoot = new VerticalContainer(20, 20, 10, 10);
+	Manager::instance()->mRoot = new FreeContainer(20, 20, 10, 10);
 
 #ifndef SKIP_GLUT
 	glutKeyboardFunc(&Manager::glutKeyboardDown);
@@ -99,12 +99,12 @@ void Manager::removeControl(Control* ctr)
 	}
 }
 
-VerticalContainer* Manager::getRoot()
+Container* Manager::getRoot()
 {
 	return this->mRoot;
 }
 
-Control* Manager::getTopControlAt(float point[2], VerticalContainer* container)
+Control* Manager::getTopControlAt(float point[2], Container* container)
 {
 	Control* result = 0;
 
@@ -120,7 +120,7 @@ Control* Manager::getTopControlAt(float point[2], VerticalContainer* container)
 			{
 				result = c;
 
-				VerticalContainer* cc = dynamic_cast<VerticalContainer*>(c);
+				Container* cc = dynamic_cast<Container*>(c);
 				if (cc != 0)
 				{
 					Control* tmp = getTopControlAt(point, cc);

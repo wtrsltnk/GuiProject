@@ -261,11 +261,10 @@ void Control::renderText(float x, float y, const char *text, unsigned int color)
 	glDisable(GL_TEXTURE_2D);
 }
 
-bool Control::isPointInBox(float point[2])
+bool Control::isPointInBox(float point[2], float scroll)
 {
-	float scroll = 0;
 	if (this->mParent != 0 && dynamic_cast<VerticalContainer*>(this->mParent) != 0)
-		scroll = this->mParent->scrollbar.scroll();
+		scroll += this->mParent->scrollbar.globalScroll();
 
 	if (point[0] < this->mBox.hitbox[0]) return false;
 	if (point[0] > this->mBox.hitbox[0] + this->mBox.hitbox[2]) return false;

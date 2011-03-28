@@ -143,9 +143,13 @@ void Scrollbar::scrollDown()
 
 float Scrollbar::scroll()
 {
-//	Dit is niet echt nodig, want de scroll wordt al meegenomen bij het renderen van child controls
-//	if (this->mControl->parent() != 0)
-//		return this->mControl->parent()->scrollbar.scroll() + this->mScroll;
+	return this->mScroll;
+}
+
+float Scrollbar::globalScroll()
+{
+	if (this->mControl->parent() != 0)
+		return this->mControl->parent()->scrollbar.globalScroll() + this->mScroll;
 	return this->mScroll;
 }
 
