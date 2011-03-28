@@ -92,8 +92,8 @@ public:
 
 	virtual void renderControl();
 	virtual void mouseIn();
-	virtual void mouseDown(int button);
-	virtual void mouseUp(int button);
+	virtual void mouseDown(int button, int x, int y);
+	virtual void mouseUp(int button, int x, int y);
 	virtual void mouseOut();
 	virtual void keyDown(int key);
 	virtual void keyUp(int key);
@@ -180,8 +180,8 @@ public:
 	virtual ~Container();
 
 	virtual void mouseIn() { }
-	virtual void mouseDown(int button);
-	virtual void mouseUp(int button) { }
+	virtual void mouseDown(int button, int x, int y);
+	virtual void mouseUp(int button, int x, int y) { }
 	virtual void mouseOut() { }
 
 	virtual float clientHeight();
@@ -225,30 +225,42 @@ private:
 class Listbox : public Control
 {
 public:
+	class ListboxItem
+	{
+		ListboxItem(const char* text, void* data);
+	public:
+		ListboxItem(const ListboxItem& item);
+		
+		const char* text() { return this->mText; }
+		void* data() { return this->mData; }
+
+	private:
+		const char* mText;
+		void* mData;
+
+		friend class Listbox;
+	};
+
+public:
 	Listbox(int x, int y, int w, int h);
 	virtual ~Listbox();
 
 	virtual void render();
-	virtual void mouseDown(int button);
+	virtual void mouseDown(int button, int x, int y);
 
 	virtual float clientHeight();
 
 	void addItem(const char* text, void* data = 0);
+	int selectedIndex() const;
+	void setSelectedIndex(int index);
+	const ListboxItem* selectedItem() const;
 
 	Scrollbar scrollbar;
 	
 private:
-	class ListboxItem
-	{
-	public:
-		ListboxItem(const char* text, void* data);
-
-		const char* mText;
-		void* mData;
-	};
-
 	std::vector<ListboxItem> mItems;
 	float mPadding;
+	int mSelectedIndex;
 
 };
 
@@ -262,7 +274,7 @@ public:
 	virtual ~Button();
 
 	virtual void render();
-	virtual void mouseDown(int button);
+	virtual void mouseDown(int button, int x, int y);
 
 	ClickEvent Click;
 
@@ -278,7 +290,7 @@ public:
 	virtual ~Checkbox();
 
 	virtual void render();
-	virtual void mouseDown(int button);
+	virtual void mouseDown(int button, int x, int y);
 
 	bool checked();
 	void setChecked(bool state);

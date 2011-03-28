@@ -228,11 +228,11 @@ void Manager::glutMouseClick(int button, int state, int x, int y)
 			if (dynamic_cast<Container*>(control) == 0)
 				Manager::instance()->mFocus = control;
 
-			control->mouseDown(button);
+			control->mouseDown(button, point[0], point[1]);
 		}
 		else if (state == 1)
 		{
-			control->mouseUp(button);
+			control->mouseUp(button, point[0], point[1]);
 		}
 	}
 }

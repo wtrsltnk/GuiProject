@@ -34,11 +34,11 @@ void Checkbox::render()
 			this->mText, RGBA(255, 255, 255, 255));
 }
 
-void Checkbox::mouseDown(int button)
+void Checkbox::mouseDown(int button, int x, int y)
 {
 	if (button == 0)
 		this->toggleChecked();
-	Control::mouseDown(button);
+	Control::mouseDown(button, x, y);
 }
 
 bool Checkbox::checked()

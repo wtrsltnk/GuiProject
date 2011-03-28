@@ -6,7 +6,7 @@ namespace ui
 {
 
 Listbox::Listbox(int x, int y, int w, int h)
-	: Control(ControlTypes::Listbox, x, y, w, h), scrollbar(Scrollbar(this)), mPadding(4)
+	: Control(ControlTypes::Listbox, x, y, w, h), scrollbar(Scrollbar(this)), mPadding(4), mSelectedIndex(0)
 {
 }
 
@@ -28,26 +28,35 @@ void Listbox::render()
 	};
 	Clipper c(hitbox);
 
-	float y = 0;
+	float y = 20;
 	glPushMatrix();
 	glTranslatef(0, this->scrollbar.scroll(), 0);
+	int i = 0;
 	for (std::vector<ListboxItem>::iterator itr = this->mItems.begin(); itr != this->mItems.end(); ++itr)
 	{
+		unsigned int color = RGBA(255, 255, 255, 255);
+		if (this->mSelectedIndex == i++)
+			color = RGBA(255, 255, 0, 255);
 		Control::renderText(
 				this->mBox.hitbox[0] + this->mPadding,
-				this->mBox.hitbox[1] + this->mBox.hitbox[3] + this->scrollbar.scroll() - 20 - y,
-				(*itr).mText, RGBA(255, 255, 255, 255));
-		y += 20;
+				this->mBox.hitbox[1] + this->mBox.hitbox[3] - y,
+				(*itr).mText, color);
+		y += 20 + this->mPadding;
 	}
 	glPopMatrix();
 }
 
-void Listbox::mouseDown(int button)
+void Listbox::mouseDown(int button, int x, int y)
 {
 	if (button == 4)
 		this->scrollbar.scrollUp();
 	else if (button == 3)
 		this->scrollbar.scrollDown();
+	else if (button == 0)
+	{
+		int localY = -int(y + this->mPadding - this->scrollbar.scroll() - (this->mBox.hitbox[1]+this->mBox.hitbox[3]));
+		this->mSelectedIndex = localY / (20+int(this->mPadding));
+	}
 }
 
 float Listbox::clientHeight()
@@ -55,7 +64,7 @@ float Listbox::clientHeight()
 	float clientHeight = this->mPadding;
 	for (std::vector<ListboxItem>::iterator itr = this->mItems.begin(); itr != this->mItems.end(); ++itr)
 	{
-		clientHeight += this->mBox.font->getTextHeight((*itr).mText);
+		clientHeight += 20;
 		clientHeight += this->mPadding;
 	}
 	return clientHeight;
@@ -66,8 +75,30 @@ void Listbox::addItem(const char* text, void* data)
 	this->mItems.push_back(ListboxItem(text, data));
 }
 
+int Listbox::selectedIndex() const
+{
+	return this->mSelectedIndex;
+}
+
+void Listbox::setSelectedIndex(int index)
+{
+	this->mSelectedIndex = index;
+}
+
+const Listbox::ListboxItem* Listbox::selectedItem() const
+{
+	if (this->mSelectedIndex >= 0 && this->mSelectedIndex < int(this->mItems.size()))
+		return &this->mItems[this->mSelectedIndex];
+	return 0;
+}
+
 Listbox::ListboxItem::ListboxItem(const char* text, void* data)
 	: mText(text), mData(data)
+{
+}
+
+Listbox::ListboxItem::ListboxItem(const ListboxItem& item)
+	: mText(item.mText), mData(item.mData)
 {
 }
 

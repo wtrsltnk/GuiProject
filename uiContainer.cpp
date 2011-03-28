@@ -14,7 +14,7 @@ Container::~Container()
 {
 }
 
-void Container::mouseDown(int button)
+void Container::mouseDown(int button, int x, int y)
 {
 	if (button == 4)
 		this->scrollbar.scrollUp();
