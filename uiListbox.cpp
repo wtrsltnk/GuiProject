@@ -69,7 +69,7 @@ void Listbox::mouseDown(int button, int x, int y)
 		this->scrollbar.scrollDown();
 	else if (button == 0)
 	{
-		int localY = -int(y + this->mPadding - this->scrollbar.scroll() - (this->mBox.hitbox[1]+this->mBox.hitbox[3]));
+		int localY = -int(y + this->mPadding - this->scrollbar.globalScroll() - (this->mBox.hitbox[1]+this->mBox.hitbox[3]));
 		this->setSelectedIndex(localY / (20+int(this->mPadding)));
 	}
 }
