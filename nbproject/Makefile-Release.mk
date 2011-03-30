@@ -35,8 +35,8 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/uiClipper.o \
 	${OBJECTDIR}/MainWindow.o \
-	${OBJECTDIR}/uiFreeContainer.o \
 	${OBJECTDIR}/uiTextbox.o \
+	${OBJECTDIR}/uiFreeContainer.o \
 	${OBJECTDIR}/uiLabel.o \
 	${OBJECTDIR}/uiContainer.o \
 	${OBJECTDIR}/uiListbox.o \
@@ -85,15 +85,15 @@ ${OBJECTDIR}/MainWindow.o: MainWindow.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/MainWindow.o MainWindow.cpp
 
-${OBJECTDIR}/uiFreeContainer.o: uiFreeContainer.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiFreeContainer.o uiFreeContainer.cpp
-
 ${OBJECTDIR}/uiTextbox.o: uiTextbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiTextbox.o uiTextbox.cpp
+
+${OBJECTDIR}/uiFreeContainer.o: uiFreeContainer.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiFreeContainer.o uiFreeContainer.cpp
 
 ${OBJECTDIR}/uiLabel.o: uiLabel.cpp 
 	${MKDIR} -p ${OBJECTDIR}
