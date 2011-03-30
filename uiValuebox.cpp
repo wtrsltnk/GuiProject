@@ -33,7 +33,7 @@ void Valuebox::render()
 			str, RGBA(255, 255, 255, 255));
 }
 
-void Valuebox::keyDown(int key)
+void Valuebox::keyDown(Key::Code key)
 {
 	float diff = (this->maxValue() - this->minValue()) / 10.0f;
 //	if (key == GLUT_KEY_LEFT || key == GLUT_KEY_DOWN)
@@ -42,13 +42,10 @@ void Valuebox::keyDown(int key)
 //	else if (key == GLUT_KEY_RIGHT || key == GLUT_KEY_UP)
 	else if (key == 0x0066 || key == 0x0065)
 		this->setValue(this->value() + diff);
-	Control::keyDown(key);
-}
 
-void Valuebox::charDown(char c)
-{
-	this->addInput(c);
-	Control::charDown(c);
+	this->addInput('a' + (key - Key::A));
+	Control::keyDown(key);
+
 }
 
 float Valuebox::value()

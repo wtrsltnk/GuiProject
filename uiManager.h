@@ -9,6 +9,7 @@
 #define UIMANAGER_H_
 
 #include "events.h"
+#include "uiUserInput.h"
 #include <vector>
 
 namespace ui
@@ -61,6 +62,10 @@ public:
 	static void glutSpecialKeyboardUp(int key, int x, int y);
 	static void glutMouseClick(int button, int state, int x, int y);
 	static void glutMouseMove(int x, int y);
+
+	static Mouse::Button sButtonmap[];
+	static Key::Code sKeymap[];
+	static Key::Code sSpecialKeymap[];
 #endif
 };
 

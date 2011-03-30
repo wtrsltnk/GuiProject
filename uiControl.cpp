@@ -67,22 +67,22 @@ void Control::mouseIn()
 	this->box().state = BoxState::Hovered;
 }
 
-void Control::mouseDown(int button, int x, int y)
+void Control::mouseDown(Mouse::Button button)
 {
 	if (button == 0)
 		this->box().state = BoxState::Pressed;
 
 	if (this->parent() != 0)
-		this->parent()->mouseDown(button, x, y);
+		this->parent()->mouseDown(button);
 }
 
-void Control::mouseUp(int button, int x, int y)
+void Control::mouseUp(Mouse::Button button)
 {
 	if (button == 0)
 		this->box().state = BoxState::Hovered;
 
 	if (this->parent() != 0)
-		this->parent()->mouseUp(button, x, y);
+		this->parent()->mouseUp(button);
 }
 
 void Control::mouseOut()
@@ -90,19 +90,11 @@ void Control::mouseOut()
 	this->box().state = BoxState::None;
 }
 
-void Control::keyDown(int key)
+void Control::keyDown(Key::Code key)
 {
 }
 
-void Control::keyUp(int key)
-{
-}
-
-void Control::charDown(char c)
-{
-}
-
-void Control::charUp(char c)
+void Control::keyUp(Key::Code key)
 {
 }
 

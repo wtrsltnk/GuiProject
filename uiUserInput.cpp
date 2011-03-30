@@ -1,5 +1,8 @@
 #include "uiUserInput.h"
 
+namespace ui
+{
+
 /**************************************************************/
 /** Mouse State												 **/
 /**************************************************************/
@@ -78,3 +81,4 @@ bool KeyboardState::isKeyPressed(Key::Code key)
 	return this->mKeys[key];
 }
 
+}

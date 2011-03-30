@@ -50,25 +50,28 @@ void Textbox::render()
 	glEnd();
 }
 
-void Textbox::keyDown(int key)
+void Textbox::keyDown(Key::Code key)
 {
-	if (key == 0x0064)//GLUT_KEY_LEFT)
+	if (key == Key::Left)//GLUT_KEY_LEFT)
 		this->moveCursor(-1);
-	else if (key == 0x0066)//GLUT_KEY_RIGHT)
+	else if (key == Key::Right)//GLUT_KEY_RIGHT)
 		this->moveCursor(1);
-}
 
-void Textbox::charDown(char c)
-{
-	if (c == 8)
+	if (key == Key::Back)
 	{
 		this->removeChar();
 		event::EventArgs e;
 		this->TextChanged(&e);
 	}
-	else if (c >= 32 && c < 128)
+	else if (key >= Key::a && key <= Key::z)
 	{
-		this->addChar(c);
+		this->addChar('a' + (key - Key::a));
+		event::EventArgs e;
+		this->TextChanged(&e);
+	}
+	else if (key >= Key::A && key <= Key::Z)
+	{
+		this->addChar('A' + (key - Key::A));
 		event::EventArgs e;
 		this->TextChanged(&e);
 	}

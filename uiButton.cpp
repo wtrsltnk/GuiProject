@@ -25,14 +25,14 @@ void Button::render()
 			this->mText, RGBA(255, 255, 255, 255));
 }
 
-void Button::mouseDown(int button, int x, int y)
+void Button::mouseDown(Mouse::Button button)
 {
 	if (button == 0)
 	{
 		event::EventArgs e;
 		this->Click(&e);
 	}
-	Control::mouseDown(button, x, y);
+	Control::mouseDown(button);
 }
 
 }

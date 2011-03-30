@@ -9,6 +9,7 @@
 #define CONTROLS_H
 
 #include "uiManager.h"
+#include "uiUserInput.h"
 
 namespace ui
 {
@@ -93,13 +94,11 @@ public:
 
 	virtual void renderControl();
 	virtual void mouseIn();
-	virtual void mouseDown(int button, int x, int y);
-	virtual void mouseUp(int button, int x, int y);
+	virtual void mouseDown(Mouse::Button button);
+	virtual void mouseUp(Mouse::Button button);
 	virtual void mouseOut();
-	virtual void keyDown(int key);
-	virtual void keyUp(int key);
-	virtual void charDown(char c);
-	virtual void charUp(char c);
+	virtual void keyDown(Key::Code key);
+	virtual void keyUp(Key::Code key);
 
 	box_t& box() { return this->mBox; }
 	Container* parent() { return this->mParent; }
@@ -182,8 +181,8 @@ public:
 	virtual ~Container();
 
 	virtual void mouseIn() { }
-	virtual void mouseDown(int button, int x, int y);
-	virtual void mouseUp(int button, int x, int y) { }
+	virtual void mouseDown(Mouse::Button button);
+	virtual void mouseUp(Mouse::Button button) { }
 	virtual void mouseOut() { }
 
 	virtual float clientHeight();
@@ -275,7 +274,7 @@ public:
 	virtual ~Listbox();
 
 	virtual void render();
-	virtual void mouseDown(int button, int x, int y);
+	virtual void mouseDown(Mouse::Button button);
 
 	virtual float clientHeight();
 
@@ -304,7 +303,7 @@ public:
 	virtual ~Button();
 
 	virtual void render();
-	virtual void mouseDown(int button, int x, int y);
+	virtual void mouseDown(Mouse::Button button);
 
 	ClickEvent Click;
 
@@ -320,7 +319,7 @@ public:
 	virtual ~Checkbox();
 
 	virtual void render();
-	virtual void mouseDown(int button, int x, int y);
+	virtual void mouseDown(Mouse::Button button);
 
 	bool checked();
 	void setChecked(bool state);
@@ -345,8 +344,7 @@ public:
 	virtual ~Textbox();
 
 	virtual void render();
-	virtual void keyDown(int key);
-	virtual void charDown(char c);
+	virtual void keyDown(Key::Code key);
 
 	void setText(const char* text);
 	void addChar(char c);
@@ -393,8 +391,7 @@ public:
 	virtual ~Valuebox();
 
 	virtual void render();
-	virtual void keyDown(int key);
-	virtual void charDown(char c);
+	virtual void keyDown(Key::Code key);
 
 	float value();
 	void setValue(float value);

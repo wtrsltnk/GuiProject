@@ -8,37 +8,66 @@
 #ifndef _USERINPUT_H
 #define	_USERINPUT_H
 
+namespace ui
+{
+
 /// Definitions for the keys on a keyboard
 namespace Key
 {
     enum Code
     {
-        A = 'a',
-        B = 'b',
-        C = 'c',
-        D = 'd',
-        E = 'e',
-        F = 'f',
-        G = 'g',
-        H = 'h',
-        I = 'i',
-        J = 'j',
-        K = 'k',
-        L = 'l',
-        M = 'm',
-        N = 'n',
-        O = 'o',
-        P = 'p',
-        Q = 'q',
-        R = 'r',
-        S = 's',
-        T = 't',
-        U = 'u',
-        V = 'v',
-        W = 'w',
-        X = 'x',
-        Y = 'y',
-        Z = 'z',
+        a = 'a',
+        b = 'b',
+        c = 'c',
+        d = 'd',
+        e = 'e',
+        f = 'f',
+        g = 'g',
+        h = 'h',
+        i = 'i',
+        j = 'j',
+        k = 'k',
+        l = 'l',
+        m = 'm',
+        n = 'n',
+        o = 'o',
+        p = 'p',
+        q = 'q',
+        r = 'r',
+        s = 's',
+        t = 't',
+        u = 'u',
+        v = 'v',
+        w = 'w',
+        x = 'x',
+        y = 'y',
+        z = 'z',
+        A = 'A',
+        B = 'B',
+        C = 'C',
+        D = 'D',
+        E = 'E',
+        F = 'F',
+        G = 'G',
+        H = 'H',
+        I = 'I',
+        J = 'J',
+        K = 'K',
+        L = 'L',
+        M = 'M',
+        N = 'N',
+        O = 'O',
+        P = 'P',
+        Q = 'Q',
+        R = 'R',
+        S = 'S',
+        T = 'T',
+        U = 'U',
+        V = 'V',
+        W = 'W',
+        X = 'X',
+        Y = 'Y',
+        Z = 'Z',
         Num0 = '0',
         Num1 = '1',
         Num2 = '2',
@@ -49,6 +78,21 @@ namespace Key
         Num7 = '7',
         Num8 = '8',
         Num9 = '9',
+        LBracket,     ///< [
+        RBracket,     ///< ]
+        SemiColon,    ///< ;
+        Comma,        ///< ,
+        Period,       ///< .
+        Quote,        ///< '
+        Slash,        ///< /
+        BackSlash,
+        Tilde,        ///< ~
+        Equal,        ///< =
+        Dash,         ///< -
+        Add,          ///< +
+        Subtract,     ///< -
+        Multiply,     ///< *
+        Divide,       ///< /
         Escape = 256,
         LControl,
         LShift,
@@ -62,17 +106,6 @@ namespace Key
 		Capslock,
 		Scrollock,
 		Numlock,
-        LBracket,     ///< [
-        RBracket,     ///< ]
-        SemiColon,    ///< ;
-        Comma,        ///< ,
-        Period,       ///< .
-        Quote,        ///< '
-        Slash,        ///< /
-        BackSlash,
-        Tilde,        ///< ~
-        Equal,        ///< =
-        Dash,         ///< -
         Space,
         Return,
         Back,
@@ -83,10 +116,6 @@ namespace Key
         Home,
         Insert,
         Delete,
-        Add,          ///< +
-        Subtract,     ///< -
-        Multiply,     ///< *
-        Divide,       ///< /
         Left,         ///< Left arrow
         Right,        ///< Right arrow
         Up,           ///< Up arrow
@@ -137,7 +166,7 @@ public:
 private:
 	bool mKeys[Key::Count];
 
-//	friend class OpenGLImpl;
+	friend class Manager;
 };
 
 /// Definitions for the Mouse buttons
@@ -173,7 +202,9 @@ private:
 	bool mMouseButton[Mouse::Count];
 	int mMouseX, mMouseY;
 
-//	friend class OpenGLImpl;
+	friend class Manager;
 };
+
+}
 
 #endif	/* _USERINPUT_H */
