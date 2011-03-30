@@ -200,7 +200,6 @@ void Manager::glutKeyboardUp(unsigned char key, int x, int y)
 
 void Manager::glutSpecialKeyboardDown(int key, int x, int y)
 {
-	printf("SpecialKey %d\n", key);
 	if (Manager::instance()->mFocus != 0)
 	{
 		Manager::instance()->mFocus->keyDown(Manager::sSpecialKeymap[key]);
