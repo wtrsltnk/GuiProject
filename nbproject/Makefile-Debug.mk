@@ -42,6 +42,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/uiListbox.o \
 	${OBJECTDIR}/uiFont.o \
 	${OBJECTDIR}/stb_truetype.o \
+	${OBJECTDIR}/uiUserInput.o \
 	${OBJECTDIR}/uiButton.o \
 	${OBJECTDIR}/uiCheckbox.o \
 	${OBJECTDIR}/uiValuebox.o \
@@ -119,6 +120,11 @@ ${OBJECTDIR}/stb_truetype.o: stb_truetype.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/stb_truetype.o stb_truetype.cpp
+
+${OBJECTDIR}/uiUserInput.o: uiUserInput.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiUserInput.o uiUserInput.cpp
 
 ${OBJECTDIR}/uiButton.o: uiButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}

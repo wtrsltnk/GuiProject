@@ -36,6 +36,8 @@
       <itemPath>uiManager.cpp</itemPath>
       <itemPath>uiManager.h</itemPath>
       <itemPath>uiTextbox.cpp</itemPath>
+      <itemPath>uiUserInput.cpp</itemPath>
+      <itemPath>uiUserInput.h</itemPath>
       <itemPath>uiValuebox.cpp</itemPath>
       <itemPath>uiVerticalContainer.cpp</itemPath>
     </logicalFolder>
