@@ -55,7 +55,7 @@ bool MainWindow::initialize()
 	ui::Button* b3 = new ui::Button(10, 10, 64, 24, (const char*)"up");
 	ui::Button* b4 = new ui::Button(10, 10, 64, 24, (const char*)"down");
 	vb = new ui::Valuebox(10, 180, 64, 24, 5, 0, 10000);
-	ui::Container* cnt = new ui::VerticalContainer(120, 50, 100, 200);
+	ui::Container* cnt = new ui::VerticalContainer(30, 30, 100, 500);
 	cnt->addControl(b1);
 	cnt->addControl(b2);
 	cnt->addControl(b3);
