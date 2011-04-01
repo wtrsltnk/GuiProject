@@ -33,23 +33,24 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
-	${OBJECTDIR}/uiClipper.o \
+	${OBJECTDIR}/ui/uiFreeContainer.o \
 	${OBJECTDIR}/MainWindow.o \
-	${OBJECTDIR}/uiTextbox.o \
-	${OBJECTDIR}/uiFreeContainer.o \
-	${OBJECTDIR}/uiLabel.o \
-	${OBJECTDIR}/uiContainer.o \
-	${OBJECTDIR}/uiListbox.o \
-	${OBJECTDIR}/uiFont.o \
-	${OBJECTDIR}/stb_truetype.o \
-	${OBJECTDIR}/uiUserInput.o \
-	${OBJECTDIR}/uiButton.o \
-	${OBJECTDIR}/uiCheckbox.o \
-	${OBJECTDIR}/uiValuebox.o \
-	${OBJECTDIR}/uiControl.o \
-	${OBJECTDIR}/GlutApplication.o \
-	${OBJECTDIR}/uiManager.o \
-	${OBJECTDIR}/uiVerticalContainer.o
+	${OBJECTDIR}/geo/Brush.o \
+	${OBJECTDIR}/ui/uiCheckbox.o \
+	${OBJECTDIR}/ui/stb_truetype.o \
+	${OBJECTDIR}/ui/uiFont.o \
+	${OBJECTDIR}/ui/uiVerticalContainer.o \
+	${OBJECTDIR}/ui/uiValuebox.o \
+	${OBJECTDIR}/ui/uiClipper.o \
+	${OBJECTDIR}/ui/uiContainer.o \
+	${OBJECTDIR}/ui/uiTextbox.o \
+	${OBJECTDIR}/ui/uiUserInput.o \
+	${OBJECTDIR}/ui/uiListbox.o \
+	${OBJECTDIR}/ui/uiControl.o \
+	${OBJECTDIR}/ui/uiManager.o \
+	${OBJECTDIR}/ui/uiButton.o \
+	${OBJECTDIR}/ui/uiLabel.o \
+	${OBJECTDIR}/GlutApplication.o
 
 
 # C Compiler Flags
@@ -76,90 +77,95 @@ dist/Release/GNU-Linux-x86/guiproject: ${OBJECTFILES}
 	${MKDIR} -p dist/Release/GNU-Linux-x86
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/guiproject ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
-${OBJECTDIR}/uiClipper.o: uiClipper.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiFreeContainer.o: ui/uiFreeContainer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiClipper.o uiClipper.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiFreeContainer.o ui/uiFreeContainer.cpp
 
 ${OBJECTDIR}/MainWindow.o: MainWindow.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/MainWindow.o MainWindow.cpp
 
-${OBJECTDIR}/uiTextbox.o: uiTextbox.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/geo/Brush.o: geo/Brush.cpp 
+	${MKDIR} -p ${OBJECTDIR}/geo
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiTextbox.o uiTextbox.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Brush.o geo/Brush.cpp
 
-${OBJECTDIR}/uiFreeContainer.o: uiFreeContainer.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiCheckbox.o: ui/uiCheckbox.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiFreeContainer.o uiFreeContainer.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiCheckbox.o ui/uiCheckbox.cpp
 
-${OBJECTDIR}/uiLabel.o: uiLabel.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/stb_truetype.o: ui/stb_truetype.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiLabel.o uiLabel.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/stb_truetype.o ui/stb_truetype.cpp
 
-${OBJECTDIR}/uiContainer.o: uiContainer.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiFont.o: ui/uiFont.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiContainer.o uiContainer.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiFont.o ui/uiFont.cpp
 
-${OBJECTDIR}/uiListbox.o: uiListbox.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiVerticalContainer.o: ui/uiVerticalContainer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiListbox.o uiListbox.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiVerticalContainer.o ui/uiVerticalContainer.cpp
 
-${OBJECTDIR}/uiFont.o: uiFont.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiValuebox.o: ui/uiValuebox.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiFont.o uiFont.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiValuebox.o ui/uiValuebox.cpp
 
-${OBJECTDIR}/stb_truetype.o: stb_truetype.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiClipper.o: ui/uiClipper.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/stb_truetype.o stb_truetype.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiClipper.o ui/uiClipper.cpp
 
-${OBJECTDIR}/uiUserInput.o: uiUserInput.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiContainer.o: ui/uiContainer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiUserInput.o uiUserInput.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiContainer.o ui/uiContainer.cpp
 
-${OBJECTDIR}/uiButton.o: uiButton.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiTextbox.o: ui/uiTextbox.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiButton.o uiButton.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiTextbox.o ui/uiTextbox.cpp
 
-${OBJECTDIR}/uiCheckbox.o: uiCheckbox.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiUserInput.o: ui/uiUserInput.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiCheckbox.o uiCheckbox.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiUserInput.o ui/uiUserInput.cpp
 
-${OBJECTDIR}/uiValuebox.o: uiValuebox.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiListbox.o: ui/uiListbox.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiValuebox.o uiValuebox.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiListbox.o ui/uiListbox.cpp
 
-${OBJECTDIR}/uiControl.o: uiControl.cpp 
-	${MKDIR} -p ${OBJECTDIR}
+${OBJECTDIR}/ui/uiControl.o: ui/uiControl.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiControl.o uiControl.cpp
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiControl.o ui/uiControl.cpp
+
+${OBJECTDIR}/ui/uiManager.o: ui/uiManager.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiManager.o ui/uiManager.cpp
+
+${OBJECTDIR}/ui/uiButton.o: ui/uiButton.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiButton.o ui/uiButton.cpp
+
+${OBJECTDIR}/ui/uiLabel.o: ui/uiLabel.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiLabel.o ui/uiLabel.cpp
 
 ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/GlutApplication.o GlutApplication.cpp
-
-${OBJECTDIR}/uiManager.o: uiManager.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiManager.o uiManager.cpp
-
-${OBJECTDIR}/uiVerticalContainer.o: uiVerticalContainer.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/uiVerticalContainer.o uiVerticalContainer.cpp
 
 # Subprojects
 .build-subprojects:

@@ -9,7 +9,8 @@
 #define MAINWINDOW_H_
 
 #include "GlutApplication.h"
-#include "uiControls.h"
+#include "ui/uiControls.h"
+#include "geo/Brush.h"
 //#include "Video.h"
 
 class MainWindow : public GlutApplication, public event::EventHandler
@@ -18,7 +19,10 @@ public:
 	MainWindow();
 	virtual ~MainWindow();
 
-	virtual void anderenaam(ui::Control* sender, event::EventArgs* e);
+	virtual void rechtsomDraaien(ui::Control* sender, event::EventArgs* e);
+	virtual void linksomDraaien(ui::Control* sender, event::EventArgs* e);
+	virtual void omhoogDraaien(ui::Control* sender, event::EventArgs* e);
+	virtual void omlaagDraaien(ui::Control* sender, event::EventArgs* e);
 	virtual void anderenaam2(ui::Control* sender, event::EventArgs* e);
 	virtual void anderenaam3(ui::Control* sender, event::EventArgs* e);
 	virtual void anderenaam4(ui::Control* sender, ui::SelectedIndexChangedEventArgs* e);
@@ -35,6 +39,9 @@ public:
 	ui::Textbox* tb;
 	ui::Valuebox* vb;
 	ui::Label* lbl;
+	geo::Brush brush;
+	float rot;
+	float rot2;
 //	Video video;
 
 };

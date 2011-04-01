@@ -8,7 +8,7 @@
 #ifndef UIMANAGER_H_
 #define UIMANAGER_H_
 
-#include "events.h"
+#include "../events.h"
 #include "uiUserInput.h"
 #include <vector>
 

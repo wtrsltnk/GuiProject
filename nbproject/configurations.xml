@@ -4,6 +4,10 @@
     <logicalFolder name="f2" displayName="event" projectFiles="true">
       <itemPath>events.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="f3" displayName="geo" projectFiles="true">
+      <itemPath>Brush.cpp</itemPath>
+      <itemPath>geo/Brush.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true"
@@ -19,27 +23,27 @@
       <itemPath>MainWindow.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="ui" projectFiles="true">
-      <itemPath>stb_truetype.cpp</itemPath>
-      <itemPath>stb_truetype.h</itemPath>
-      <itemPath>uiButton.cpp</itemPath>
-      <itemPath>uiCheckbox.cpp</itemPath>
-      <itemPath>uiClipper.cpp</itemPath>
-      <itemPath>uiClipper.h</itemPath>
-      <itemPath>uiContainer.cpp</itemPath>
-      <itemPath>uiControl.cpp</itemPath>
-      <itemPath>uiControls.h</itemPath>
-      <itemPath>uiFont.cpp</itemPath>
-      <itemPath>uiFont.h</itemPath>
-      <itemPath>uiFreeContainer.cpp</itemPath>
-      <itemPath>uiLabel.cpp</itemPath>
-      <itemPath>uiListbox.cpp</itemPath>
-      <itemPath>uiManager.cpp</itemPath>
-      <itemPath>uiManager.h</itemPath>
-      <itemPath>uiTextbox.cpp</itemPath>
-      <itemPath>uiUserInput.cpp</itemPath>
-      <itemPath>uiUserInput.h</itemPath>
-      <itemPath>uiValuebox.cpp</itemPath>
-      <itemPath>uiVerticalContainer.cpp</itemPath>
+      <itemPath>ui/stb_truetype.cpp</itemPath>
+      <itemPath>ui/stb_truetype.h</itemPath>
+      <itemPath>ui/uiButton.cpp</itemPath>
+      <itemPath>ui/uiCheckbox.cpp</itemPath>
+      <itemPath>ui/uiClipper.cpp</itemPath>
+      <itemPath>ui/uiClipper.h</itemPath>
+      <itemPath>ui/uiContainer.cpp</itemPath>
+      <itemPath>ui/uiControl.cpp</itemPath>
+      <itemPath>ui/uiControls.h</itemPath>
+      <itemPath>ui/uiFont.cpp</itemPath>
+      <itemPath>ui/uiFont.h</itemPath>
+      <itemPath>ui/uiFreeContainer.cpp</itemPath>
+      <itemPath>ui/uiLabel.cpp</itemPath>
+      <itemPath>ui/uiListbox.cpp</itemPath>
+      <itemPath>ui/uiManager.cpp</itemPath>
+      <itemPath>ui/uiManager.h</itemPath>
+      <itemPath>ui/uiTextbox.cpp</itemPath>
+      <itemPath>ui/uiUserInput.cpp</itemPath>
+      <itemPath>ui/uiUserInput.h</itemPath>
+      <itemPath>ui/uiValuebox.cpp</itemPath>
+      <itemPath>ui/uiVerticalContainer.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"

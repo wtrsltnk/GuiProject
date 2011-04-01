@@ -8,7 +8,6 @@
 #include "uiManager.h"
 #include "uiFont.h"
 #include "uiControls.h"
-#include "MainWindow.h"
 #include <GL/freeglut.h>
 
 namespace ui
@@ -155,6 +154,12 @@ void Manager::render()
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
+	
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_CULL_FACE);
+	glLineWidth(1);
+	glPointSize(1);
 
 	glEnable(GL_STENCIL_TEST);
 	glClear(GL_STENCIL_BUFFER_BIT);
