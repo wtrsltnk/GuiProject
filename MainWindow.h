@@ -23,9 +23,6 @@ public:
 	virtual void linksomDraaien(ui::Control* sender, event::EventArgs* e);
 	virtual void omhoogDraaien(ui::Control* sender, event::EventArgs* e);
 	virtual void omlaagDraaien(ui::Control* sender, event::EventArgs* e);
-	virtual void anderenaam2(ui::Control* sender, event::EventArgs* e);
-	virtual void anderenaam3(ui::Control* sender, event::EventArgs* e);
-	virtual void anderenaam4(ui::Control* sender, ui::SelectedIndexChangedEventArgs* e);
 
 	virtual bool initialize();
 	virtual void resize(int w, int h);
@@ -35,10 +32,8 @@ public:
 	virtual void onMouseMove(int x, int y) { }
 	virtual void render();
 
-	ui::Checkbox* cb;
-	ui::Textbox* tb;
 	ui::Valuebox* vb;
-	ui::Label* lbl;
+
 	geo::Brush brush;
 	float rot;
 	float rot2;

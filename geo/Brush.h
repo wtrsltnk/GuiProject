@@ -20,7 +20,8 @@ public:
 	Vertex(float x, float y, float z);
 	virtual ~Vertex();
 
-	operator float* () { return this->mXyz; }
+	// A trick to be able to use an instance of this class as parameter for glVertex3fv();
+	operator const float* () const { return this->mXyz; }
 
 	//The position  of this vertex
 	float mXyz[3];
