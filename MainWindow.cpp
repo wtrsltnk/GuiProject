@@ -107,9 +107,6 @@ void MainWindow::render()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
 	glPushMatrix();
 	glTranslatef(0, 0, -10.0f);
 	glRotatef(rot, 0, 1, 0);
@@ -128,6 +125,9 @@ void MainWindow::render()
 
 void MainWindow::renderBrush(geo::Brush& brush)
 {
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
+
 	glColor3f(0.6f, 0.6f, 0.6f);
 	glCullFace(GL_FRONT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -151,7 +151,7 @@ void MainWindow::renderBrush(geo::Brush& brush)
 	}
 	glEnd();
 
-	glDisable(GL_DEPTH_TEST);
+//	glDisable(GL_DEPTH_TEST);
 	glColor3f(1, 1, 1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glBegin(GL_TRIANGLES);
