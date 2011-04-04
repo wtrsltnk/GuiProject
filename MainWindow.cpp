@@ -6,6 +6,7 @@
  */
 
 #include "MainWindow.h"
+#include "geo/MapLoader.h"
 #include <stdio.h>
 
 GlutApplication* gApplication = new MainWindow();
@@ -48,6 +49,10 @@ void MainWindow::omlaagDraaien(ui::Control* sender, event::EventArgs* e)
 
 bool MainWindow::initialize()
 {
+	geo::MapLoader loader;
+	if (loader.load("qtest.map", &this->scene) == false)
+		printf("Load failed\n");
+	
 	ui::Manager::createInstance("Ubuntu-R.ttf");
 
 	ui::Button* b1 = new ui::Button(10, 10, 64, 24, (const char*)"left");
@@ -105,10 +110,24 @@ void MainWindow::render()
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
 
+	glPushMatrix();
 	glTranslatef(0, 0, -10.0f);
 	glRotatef(rot, 0, 1, 0);
 	glRotatef(rot2, 1, 0, 0);
+	glScalef(0.01f, 0.01f, 0.01f);
 
+	for(std::vector<geo::Entity*>::iterator e = this->scene.mEntities.begin(); e != this->scene.mEntities.end(); ++e)
+	{
+		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
+		{
+			this->renderBrush(*(*b));
+		}
+	}
+	glPopMatrix();
+}
+
+void MainWindow::renderBrush(geo::Brush& brush)
+{
 	glColor3f(0.6f, 0.6f, 0.6f);
 	glCullFace(GL_FRONT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

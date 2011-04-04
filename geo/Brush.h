@@ -51,6 +51,8 @@ class Brush
 public:
 	Brush();
 	virtual ~Brush();
+	
+	void addPlane(Plane& plane);
 
 	// All the planes a brush is made of
 	std::vector<Plane> mPlanes;

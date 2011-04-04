@@ -11,6 +11,7 @@
 #include "GlutApplication.h"
 #include "ui/uiControls.h"
 #include "geo/Brush.h"
+#include "geo/Scene.h"
 //#include "Video.h"
 
 class MainWindow : public GlutApplication, public event::EventHandler
@@ -32,9 +33,11 @@ public:
 	virtual void onMouseMove(int x, int y) { }
 	virtual void render();
 
+	void renderBrush(geo::Brush& brush);
 	ui::Valuebox* vb;
 
 	geo::Brush brush;
+	geo::Scene scene;
 	float rot;
 	float rot2;
 //	Video video;

@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="69">
   <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="f4" displayName="common" projectFiles="true">
+      <itemPath>common/MemoryGuard.h</itemPath>
+      <itemPath>common/Tokenizer.cpp</itemPath>
+      <itemPath>common/Tokenizer.h</itemPath>
+    </logicalFolder>
     <logicalFolder name="f2" displayName="event" projectFiles="true">
       <itemPath>events.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f3" displayName="geo" projectFiles="true">
-      <itemPath>Brush.cpp</itemPath>
+      <itemPath>geo/Brush.cpp</itemPath>
       <itemPath>geo/Brush.h</itemPath>
+      <itemPath>geo/Entity.cpp</itemPath>
+      <itemPath>geo/Entity.h</itemPath>
+      <itemPath>geo/MapLoader.cpp</itemPath>
+      <itemPath>geo/MapLoader.h</itemPath>
+      <itemPath>geo/Scene.cpp</itemPath>
+      <itemPath>geo/Scene.h</itemPath>
     </logicalFolder>
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"

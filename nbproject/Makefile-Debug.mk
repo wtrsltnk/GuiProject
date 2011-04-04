@@ -40,12 +40,16 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/stb_truetype.o \
 	${OBJECTDIR}/ui/uiFont.o \
 	${OBJECTDIR}/ui/uiVerticalContainer.o \
+	${OBJECTDIR}/geo/MapLoader.o \
 	${OBJECTDIR}/ui/uiValuebox.o \
+	${OBJECTDIR}/geo/Entity.o \
 	${OBJECTDIR}/ui/uiClipper.o \
 	${OBJECTDIR}/ui/uiContainer.o \
+	${OBJECTDIR}/geo/Scene.o \
 	${OBJECTDIR}/ui/uiTextbox.o \
 	${OBJECTDIR}/ui/uiUserInput.o \
 	${OBJECTDIR}/ui/uiListbox.o \
+	${OBJECTDIR}/common/Tokenizer.o \
 	${OBJECTDIR}/ui/uiControl.o \
 	${OBJECTDIR}/ui/uiManager.o \
 	${OBJECTDIR}/ui/uiButton.o \
@@ -112,10 +116,20 @@ ${OBJECTDIR}/ui/uiVerticalContainer.o: ui/uiVerticalContainer.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiVerticalContainer.o ui/uiVerticalContainer.cpp
 
+${OBJECTDIR}/geo/MapLoader.o: geo/MapLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/geo
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/MapLoader.o geo/MapLoader.cpp
+
 ${OBJECTDIR}/ui/uiValuebox.o: ui/uiValuebox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiValuebox.o ui/uiValuebox.cpp
+
+${OBJECTDIR}/geo/Entity.o: geo/Entity.cpp 
+	${MKDIR} -p ${OBJECTDIR}/geo
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Entity.o geo/Entity.cpp
 
 ${OBJECTDIR}/ui/uiClipper.o: ui/uiClipper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -126,6 +140,11 @@ ${OBJECTDIR}/ui/uiContainer.o: ui/uiContainer.cpp
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiContainer.o ui/uiContainer.cpp
+
+${OBJECTDIR}/geo/Scene.o: geo/Scene.cpp 
+	${MKDIR} -p ${OBJECTDIR}/geo
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Scene.o geo/Scene.cpp
 
 ${OBJECTDIR}/ui/uiTextbox.o: ui/uiTextbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -141,6 +160,11 @@ ${OBJECTDIR}/ui/uiListbox.o: ui/uiListbox.cpp
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiListbox.o ui/uiListbox.cpp
+
+${OBJECTDIR}/common/Tokenizer.o: common/Tokenizer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Tokenizer.o common/Tokenizer.cpp
 
 ${OBJECTDIR}/ui/uiControl.o: ui/uiControl.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui

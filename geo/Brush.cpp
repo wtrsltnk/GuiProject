@@ -57,6 +57,11 @@ Brush::~Brush()
 {
 }
 
+void Brush::addPlane(Plane& plane)
+{
+	this->mPlanes.push_back(plane);
+}
+
 void Brush::updateVertices()
 {
 }
