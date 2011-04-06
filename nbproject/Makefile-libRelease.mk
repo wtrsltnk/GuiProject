@@ -22,7 +22,7 @@ AS=as
 
 # Macros
 CND_PLATFORM=GNU-Linux-x86
-CND_CONF=Release
+CND_CONF=libRelease
 CND_DISTDIR=dist
 
 # Include project Makefile
@@ -75,11 +75,13 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-Release.mk dist/Release/GNU-Linux-x86/guiproject
+	"${MAKE}"  -f nbproject/Makefile-libRelease.mk dist/libRelease/GNU-Linux-x86/libguiproject.a
 
-dist/Release/GNU-Linux-x86/guiproject: ${OBJECTFILES}
-	${MKDIR} -p dist/Release/GNU-Linux-x86
-	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/guiproject ${OBJECTFILES} ${LDLIBSOPTIONS} 
+dist/libRelease/GNU-Linux-x86/libguiproject.a: ${OBJECTFILES}
+	${MKDIR} -p dist/libRelease/GNU-Linux-x86
+	${RM} dist/libRelease/GNU-Linux-x86/libguiproject.a
+	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a ${OBJECTFILES} 
+	$(RANLIB) dist/libRelease/GNU-Linux-x86/libguiproject.a
 
 ${OBJECTDIR}/ui/uiFreeContainer.o: ui/uiFreeContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -196,8 +198,8 @@ ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
-	${RM} -r build/Release
-	${RM} dist/Release/GNU-Linux-x86/guiproject
+	${RM} -r build/libRelease
+	${RM} dist/libRelease/GNU-Linux-x86/libguiproject.a
 
 # Subprojects
 .clean-subprojects:

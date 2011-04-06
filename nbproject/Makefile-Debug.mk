@@ -36,12 +36,12 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiFreeContainer.o \
 	${OBJECTDIR}/MainWindow.o \
 	${OBJECTDIR}/geo/Brush.o \
-	${OBJECTDIR}/ui/uiCheckbox.o \
 	${OBJECTDIR}/ui/stb_truetype.o \
+	${OBJECTDIR}/ui/uiCheckbox.o \
 	${OBJECTDIR}/ui/uiFont.o \
 	${OBJECTDIR}/ui/uiVerticalContainer.o \
-	${OBJECTDIR}/geo/MapLoader.o \
 	${OBJECTDIR}/ui/uiValuebox.o \
+	${OBJECTDIR}/geo/MapLoader.o \
 	${OBJECTDIR}/geo/Entity.o \
 	${OBJECTDIR}/ui/uiClipper.o \
 	${OBJECTDIR}/ui/uiContainer.o \
@@ -49,8 +49,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiTextbox.o \
 	${OBJECTDIR}/ui/uiUserInput.o \
 	${OBJECTDIR}/ui/uiListbox.o \
-	${OBJECTDIR}/common/Tokenizer.o \
 	${OBJECTDIR}/ui/uiControl.o \
+	${OBJECTDIR}/common/Tokenizer.o \
 	${OBJECTDIR}/ui/uiManager.o \
 	${OBJECTDIR}/ui/uiButton.o \
 	${OBJECTDIR}/ui/uiLabel.o \
@@ -96,15 +96,15 @@ ${OBJECTDIR}/geo/Brush.o: geo/Brush.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Brush.o geo/Brush.cpp
 
-${OBJECTDIR}/ui/uiCheckbox.o: ui/uiCheckbox.cpp 
-	${MKDIR} -p ${OBJECTDIR}/ui
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiCheckbox.o ui/uiCheckbox.cpp
-
 ${OBJECTDIR}/ui/stb_truetype.o: ui/stb_truetype.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/stb_truetype.o ui/stb_truetype.cpp
+
+${OBJECTDIR}/ui/uiCheckbox.o: ui/uiCheckbox.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiCheckbox.o ui/uiCheckbox.cpp
 
 ${OBJECTDIR}/ui/uiFont.o: ui/uiFont.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -116,15 +116,15 @@ ${OBJECTDIR}/ui/uiVerticalContainer.o: ui/uiVerticalContainer.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiVerticalContainer.o ui/uiVerticalContainer.cpp
 
-${OBJECTDIR}/geo/MapLoader.o: geo/MapLoader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/geo
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/MapLoader.o geo/MapLoader.cpp
-
 ${OBJECTDIR}/ui/uiValuebox.o: ui/uiValuebox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiValuebox.o ui/uiValuebox.cpp
+
+${OBJECTDIR}/geo/MapLoader.o: geo/MapLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/geo
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/MapLoader.o geo/MapLoader.cpp
 
 ${OBJECTDIR}/geo/Entity.o: geo/Entity.cpp 
 	${MKDIR} -p ${OBJECTDIR}/geo
@@ -161,15 +161,15 @@ ${OBJECTDIR}/ui/uiListbox.o: ui/uiListbox.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiListbox.o ui/uiListbox.cpp
 
-${OBJECTDIR}/common/Tokenizer.o: common/Tokenizer.cpp 
-	${MKDIR} -p ${OBJECTDIR}/common
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Tokenizer.o common/Tokenizer.cpp
-
 ${OBJECTDIR}/ui/uiControl.o: ui/uiControl.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiControl.o ui/uiControl.cpp
+
+${OBJECTDIR}/common/Tokenizer.o: common/Tokenizer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Tokenizer.o common/Tokenizer.cpp
 
 ${OBJECTDIR}/ui/uiManager.o: ui/uiManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui

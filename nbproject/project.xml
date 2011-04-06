@@ -16,6 +16,7 @@
             <confList>
                 <confElem>Debug</confElem>
                 <confElem>Release</confElem>
+                <confElem>libRelease</confElem>
             </confList>
         </data>
     </configuration>

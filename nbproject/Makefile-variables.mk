@@ -22,3 +22,11 @@ CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux-x86/guiproject
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux-x86/package
 CND_PACKAGE_NAME_Release=guiproject.tar
 CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux-x86/package/guiproject.tar
+# libRelease configuration
+CND_PLATFORM_libRelease=GNU-Linux-x86
+CND_ARTIFACT_DIR_libRelease=dist/libRelease/GNU-Linux-x86
+CND_ARTIFACT_NAME_libRelease=libguiproject.a
+CND_ARTIFACT_PATH_libRelease=dist/libRelease/GNU-Linux-x86/libguiproject.a
+CND_PACKAGE_DIR_libRelease=dist/libRelease/GNU-Linux-x86/package
+CND_PACKAGE_NAME_libRelease=GuiProject.tar
+CND_PACKAGE_PATH_libRelease=dist/libRelease/GNU-Linux-x86/package/GuiProject.tar
