@@ -38,6 +38,7 @@ int Plane::getIndexOf(int vertexIndex)
 	return -1;
 }
 
+// This is magic from Nemesis MapViewer. ToDo: create my own code for this
 bool Plane::getIntersection(const Plane& p1, const Plane& p2, const Plane& p3, Vector3& out)
 {
 	//float fDenom = p1.mNormal->Dot(p2.mNormal->Cross(p3.mNormal));
@@ -131,13 +132,6 @@ void Brush::addPlane(Plane& plane)
 	this->mPlanes.push_back(plane);
 }
 
-float calculateSignedAngle(const Vector3& v1, const Vector3& v2, const Vector3& normal)
-{
-	Vector3 c = v2.crossProduct(v1);
-	float angle = std::atan2(double((v2-v1).length()), double(v2.dotProduct(v1)));
-	return c.dotProduct(normal) < float(0) ? -angle : angle;
-}
-
 int Brush::getIndexOf(const Vector3& vertex)
 {
 	for (int i = 0; i < this->mVertices.size(); i++)
@@ -146,73 +140,99 @@ int Brush::getIndexOf(const Vector3& vertex)
 	return -1;
 }
 
+float calculateSignedAngle(const Vector3& v1, const Vector3& v2, const Vector3& normal)
+{
+	Vector3 c = v2.crossProduct(v1);
+	float angle = std::atan2(double((v2-v1).length()), double(v2.dotProduct(v1)));
+	return c.dotProduct(normal) < float(0) ? -angle : angle;
+}
+
 void Brush::updateVertices()
 {
+	// Loop through all the planes, and gather 3 different planes to create a vertex from
 	for(int i = 0; i < this->mPlanes.size() - 2; i++)
 	{
 		for(int j = 0; j < this->mPlanes.size() - 1; j++)
 		{
 			for(int k = 0; k < this->mPlanes.size(); k++)
 			{
+				// Only different planes!
 				if(i != j && i != k && j != k)
 				{
 					Vector3 intersection;
-					if (Plane::getIntersection(this->mPlanes[i], this->mPlanes[j], this->mPlanes[k], intersection) && Brush::pointInWorld(intersection))
+					// Determine the intersection point of these three Planes
+					if (Plane::getIntersection(this->mPlanes[i], this->mPlanes[j], this->mPlanes[k], intersection))
 					{
-						bool bLegal = true;
-
-						for(int l = 0; l < this->mPlanes.size(); l++)
+						// Make sure the intersection lies in this world
+						if (Brush::pointInWorld(intersection))
 						{
-							if(l != i && l != j && l != k)
+							bool bLegal = true;
+
+							// Check every other plane if the intersection is legal.
+							for(int l = 0; l < this->mPlanes.size(); l++)
 							{
-								float dist = this->mPlanes[l].mNormal.dotProduct(intersection) - this->mPlanes[l].mDistance;
-								if(dist < EPSILON)
+								if(l != i && l != j && l != k)
 								{
-									bLegal = false;
-									break;
+									// Only when the intersection is on the correct side of all other planes
+									float dist = this->mPlanes[l].mNormal.dotProduct(intersection) - this->mPlanes[l].mDistance;
+									if(dist < EPSILON)
+									{
+										bLegal = false;
+										break;
+									}
 								}
 							}
-						}
 
-						if (bLegal)
-						{
-							int index = this->getIndexOf(intersection);
-							if (index == -1)
+							if (bLegal)
 							{
-								index = this->mVertices.size();
-								this->mVertices.push_back(intersection);
+								// Check if we need to add the point, of can index an existing point from the brush
+								int index = this->getIndexOf(intersection);
+								if (index == -1)
+								{
+									index = this->mVertices.size();
+									this->mVertices.push_back(intersection);
+								}
+
+								// Only add the point when it is not yet in the index list
+								if (this->mPlanes[i].getIndexOf(index) == -1) this->mPlanes[i].mIndices.push_back(index);
+								if (this->mPlanes[j].getIndexOf(index) == -1) this->mPlanes[j].mIndices.push_back(index);
+								if (this->mPlanes[k].getIndexOf(index) == -1) this->mPlanes[k].mIndices.push_back(index);
 							}
-							if (this->mPlanes[i].getIndexOf(index) == -1) this->mPlanes[i].mIndices.push_back(index);
-							if (this->mPlanes[j].getIndexOf(index) == -1) this->mPlanes[j].mIndices.push_back(index);
-							if (this->mPlanes[k].getIndexOf(index) == -1) this->mPlanes[k].mIndices.push_back(index);
 						}
 					}
 				}
 			}
 		}
 	}
+
+	// Now we need to make sure all vertices of the planes are ordered CCW
 	for(int i = 0; i < this->mPlanes.size(); i++)
 	{
 		std::map<float, int> indices;
-		
+
+		// Determine an avarage over all points in this face
 		for(int j = 0; j < this->mPlanes[i].mIndices.size(); j++)
 			this->mPlanes[i].average += this->mVertices[this->mPlanes[i].mIndices[j]];
 		this->mPlanes[i].average *= (1.0f / this->mPlanes[i].mIndices.size());
 
+		// Do we have at least one point?
 		if (this->mPlanes[i].mIndices.size() > 0)
 		{
 			Vector3 start = this->mVertices[this->mPlanes[i].mIndices[0]];
 			indices.insert(std::make_pair(0, this->mPlanes[i].mIndices[0]));
 			for (int j = 1; j < this->mPlanes[i].mIndices.size(); j++)
 			{
+				// Calculate the angle around our average and save it in a map. This map will sort these angles
 				float angle = calculateSignedAngle(start-this->mPlanes[i].average, this->mVertices[this->mPlanes[i].mIndices[j]]-this->mPlanes[i].average, this->mPlanes[i].mNormal);
 				indices.insert(std::make_pair(angle, this->mPlanes[i].mIndices[j]));
 			}
+
+			// Clear the original indices array
 			this->mPlanes[i].mIndices.clear();
+
+			// Add the correct order of the indices from the map into the indices array
 			for (std::map<float, int>::iterator itr = indices.begin(); itr != indices.end(); ++itr)
-			{
 				this->mPlanes[i].mIndices.push_back(itr->second);
-			}
 		}
 	}
 }
