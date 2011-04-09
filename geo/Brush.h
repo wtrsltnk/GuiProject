@@ -61,8 +61,6 @@ public:
 
 	// Updates all the vertices of this brush
 	void updateVertices();
-	Vector3 calculateOrigin();
-
 
 	static bool pointInWorld(const Vector3& point)
 	{
