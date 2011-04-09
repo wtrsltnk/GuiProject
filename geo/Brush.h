@@ -9,41 +9,31 @@
 #define	BRUSH_H
 
 #include <vector>
+#include "../common/vector3.h"
 
 namespace geo
 {
 
-class Vertex
-{
-public:
-	Vertex();
-	Vertex(float x, float y, float z);
-	virtual ~Vertex();
-
-	// A trick to be able to use an instance of this class as parameter for glVertex3fv();
-	operator const float* () const { return this->mXyz; }
-
-	//The position  of this vertex
-	float mXyz[3];
-
-};
+#define EPSILON 0.01
 
 class Plane
 {
 public:
 	Plane();
-	Plane(const Vertex& v1, const Vertex& v2, const Vertex& v3);
+	Plane(const Vector3& normal, float distance);
 	virtual ~Plane();
 
-	// The three vertices defining the base of this plane
-	Vertex mBase[3];
+	Vector3 mNormal;
+	float mDistance;
 
 	// Indices into the Brush vertex array. These vertices describe the face for this plane
 	std::vector<int> mIndices;
+	Vector3 average;
+	
+	int getIndexOf(int vertexIndex);
 
-	// The color of this plane
-	float mColor[4];
-
+	static bool getIntersection(const Plane& p1, const Plane& p2, const Plane& p3, Vector3& out);
+	static Plane fromVertices(const Vector3& v1, const Vector3& v2, const Vector3& v3);
 };
 
 class Brush
@@ -61,10 +51,16 @@ public:
 	Plane* mSelectedPlane;
 
 	// All the vertices of this brush
-	std::vector<Vertex> mVertices;
+	std::vector<Vector3> mVertices;
+
+	// The color of this plane
+	float mColor[4];
+	
+	int getIndexOf(const Vector3& vertex);
 
 	// Updates all the vertices of this brush
 	void updateVertices();
+	Vector3 calculateOrigin();
 
 };
 

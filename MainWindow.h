@@ -28,16 +28,20 @@ public:
 	virtual bool initialize();
 	virtual void resize(int w, int h);
 	virtual void onKeyboard(unsigned char key, int x, int y) { }
-	virtual void onSpecialKeyboard(int key, int x, int y) { }
+	virtual void onSpecialKeyboard(int key, int x, int y);
 	virtual void onMouseClick(int button, int state, int x, int y) { }
 	virtual void onMouseMove(int x, int y) { }
 	virtual void render();
 
-	void renderBrush(geo::Brush& brush);
+	void renderBrushVertices(geo::Brush& brush);
 	ui::Valuebox* vb;
+	ui::Valuebox* vbx;
+	ui::Valuebox* vby;
+	ui::Label* lbl;
 
 	geo::Brush brush;
 	geo::Scene scene;
+	int index1, index2;
 	float rot;
 	float rot2;
 //	Video video;

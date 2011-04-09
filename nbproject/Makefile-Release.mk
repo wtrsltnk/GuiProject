@@ -40,6 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiCheckbox.o \
 	${OBJECTDIR}/ui/uiFont.o \
 	${OBJECTDIR}/ui/uiVerticalContainer.o \
+	${OBJECTDIR}/common/vector3.o \
 	${OBJECTDIR}/ui/uiValuebox.o \
 	${OBJECTDIR}/geo/MapLoader.o \
 	${OBJECTDIR}/geo/Entity.o \
@@ -115,6 +116,11 @@ ${OBJECTDIR}/ui/uiVerticalContainer.o: ui/uiVerticalContainer.cpp
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiVerticalContainer.o ui/uiVerticalContainer.cpp
+
+${OBJECTDIR}/common/vector3.o: common/vector3.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/vector3.o common/vector3.cpp
 
 ${OBJECTDIR}/ui/uiValuebox.o: ui/uiValuebox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui

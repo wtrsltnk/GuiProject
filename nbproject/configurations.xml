@@ -5,6 +5,8 @@
       <itemPath>common/MemoryGuard.h</itemPath>
       <itemPath>common/Tokenizer.cpp</itemPath>
       <itemPath>common/Tokenizer.h</itemPath>
+      <itemPath>common/vector3.cpp</itemPath>
+      <itemPath>common/vector3.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="event" projectFiles="true">
       <itemPath>events.h</itemPath>

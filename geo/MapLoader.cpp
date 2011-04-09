@@ -25,7 +25,6 @@ MapLoader::~MapLoader()
 
 bool MapLoader::load(const char* filename, Scene* scene)
 {
-	printf("load\n");
 	MemoryGuard<char> data;
 	FILE* file = fopen(filename, "rb");
 	if (file != false)
@@ -61,7 +60,6 @@ bool MapLoader::load(const char* filename, Scene* scene)
 
 bool MapLoader::loadEntity(common::Tokenizer& tok, Scene* scene)
 {
-	printf("loadEntity\n");
 	MemoryGuard<Entity> e;
 	e.data = new Entity();
 
@@ -90,41 +88,42 @@ bool MapLoader::loadEntity(common::Tokenizer& tok, Scene* scene)
 
 bool MapLoader::loadBrush(common::Tokenizer& tok, Entity* entity)
 {
-	printf("loadBrush\n");
 	MemoryGuard<Brush> b;
 	b.data = new Brush();
 
 	while (tok.nextToken() && strcmp(tok.getToken(), "}") != 0)
 	{
-		Plane p;
+		Vector3 v1, v2, v3;
 		if (tok.nextToken() == false) return false;	// Skip the "("
-		p.mBase[0].mXyz[0] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
-		p.mBase[0].mXyz[1] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
-		p.mBase[0].mXyz[2] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
+		v1.x(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
+		v1.y(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
+		v1.z(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
 		if (tok.nextToken() == false) return false;	// Skip the ")"
 
 		if (tok.nextToken() == false) return false;	// Skip the "("
-		p.mBase[1].mXyz[0] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
-		p.mBase[1].mXyz[1] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
-		p.mBase[1].mXyz[2] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
+		v2.x(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
+		v2.y(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
+		v2.z(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
 		if (tok.nextToken() == false) return false;	// Skip the ")"
 
 		if (tok.nextToken() == false) return false;	// Skip the "("
-		p.mBase[2].mXyz[0] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
-		p.mBase[2].mXyz[1] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
-		p.mBase[2].mXyz[2] = atoi(tok.getToken()); if (tok.nextToken() == false) return false;
+		v3.x(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
+		v3.y(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
+		v3.z(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
 		if (tok.nextToken() == false) return false;	// Skip the ")"
 
-		 if (tok.nextToken() == false) return false;	// Texture name
-		 if (tok.nextToken() == false) return false;	// x_off     - Texture x-offset (must be multiple of 16)
-		 if (tok.nextToken() == false) return false;	// y_off     - Texture y-offset (must be multiple of 16)
-		 if (tok.nextToken() == false) return false;	// rot_angle - floating point value indicating texture rotation
-		 if (tok.nextToken() == false) return false;	// x_scale   - scales x-dimension of texture (negative value to flip)Te
-//		 if (tok.nextToken() == false) return false;	// y_scale   - scales y-dimension of texture (negative value to flip)
+		if (tok.nextToken() == false) return false;	// Texture name
+		if (tok.nextToken() == false) return false;	// x_off     - Texture x-offset (must be multiple of 16)
+		if (tok.nextToken() == false) return false;	// y_off     - Texture y-offset (must be multiple of 16)
+		if (tok.nextToken() == false) return false;	// rot_angle - floating point value indicating texture rotation
+		if (tok.nextToken() == false) return false;	// x_scale   - scales x-dimension of texture (negative value to flip)Te
+//		if (tok.nextToken() == false) return false;	// y_scale   - scales y-dimension of texture (negative value to flip)
 
+		Plane p = Plane::fromVertices(v1, v2, v3);
 		b.data->addPlane(p);
 	}
-	
+
+	b.data->updateVertices();
 	entity->addBrush(b.data);
 	b.data = 0;
 	

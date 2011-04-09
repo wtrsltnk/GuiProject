@@ -12,14 +12,14 @@
 GlutApplication* gApplication = new MainWindow();
 
 MainWindow::MainWindow()
-	: GlutApplication("GuiProject"), rot(0), rot2(0)
+	: GlutApplication("GuiProject"), rot(0), rot2(0), index1(0), index2(0)
 {
-	this->brush.mPlanes.push_back(geo::Plane(geo::Vertex(1, 0, 0), geo::Vertex(0, 0, 0), geo::Vertex(0, 1, 0)));
-	this->brush.mPlanes.push_back(geo::Plane(geo::Vertex(1, 0, 0), geo::Vertex(0, 0, 1), geo::Vertex(0, 0, 0)));
-	this->brush.mPlanes.push_back(geo::Plane(geo::Vertex(0, 0, 1), geo::Vertex(0, 1, 0), geo::Vertex(0, 0, 0)));
-	this->brush.mPlanes.push_back(geo::Plane(geo::Vertex(0, 1, 1), geo::Vertex(1, 0, 1), geo::Vertex(1, 1, 1)));
-	this->brush.mPlanes.push_back(geo::Plane(geo::Vertex(0, 1, 1), geo::Vertex(1, 1, 1), geo::Vertex(1, 1, 0)));
-	this->brush.mPlanes.push_back(geo::Plane(geo::Vertex(1, 1, 0), geo::Vertex(1, 1, 1), geo::Vertex(1, 0, 1)));
+	this->brush.mPlanes.push_back(geo::Plane::fromVertices(Vector3(1, 0, 0), Vector3(0, 0, 0), Vector3(0, 1, 0)));
+	this->brush.mPlanes.push_back(geo::Plane::fromVertices(Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, 0)));
+	this->brush.mPlanes.push_back(geo::Plane::fromVertices(Vector3(0, 0, 1), Vector3(0, 1, 0), Vector3(0, 0, 0)));
+	this->brush.mPlanes.push_back(geo::Plane::fromVertices(Vector3(0, 1, 1), Vector3(1, 0, 1), Vector3(1, 1, 1)));
+	this->brush.mPlanes.push_back(geo::Plane::fromVertices(Vector3(0, 1, 1), Vector3(1, 1, 1), Vector3(1, 1, 0)));
+	this->brush.mPlanes.push_back(geo::Plane::fromVertices(Vector3(1, 1, 0), Vector3(1, 1, 1), Vector3(1, 0, 1)));
 }
 
 MainWindow::~MainWindow()
@@ -29,22 +29,40 @@ MainWindow::~MainWindow()
 
 void MainWindow::rechtsomDraaien(ui::Control* sender, event::EventArgs* e)
 {
-	rot += vb->value();
+	index1--;
+	if (index1 < 0) index1 = 0;
+	char str[256] = { 0 };
+	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
+	lbl->setText(str);
 }
 
 void MainWindow::linksomDraaien(ui::Control* sender, event::EventArgs* e)
 {
-	rot -= vb->value();
+	index1++;
+	char str[256] = { 0 };
+	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
+	lbl->setText(str);
 }
 
 void MainWindow::omhoogDraaien(ui::Control* sender, event::EventArgs* e)
 {
-	rot2 += vb->value();
+	index2++;
+	char str[256] = { 0 };
+	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
+	lbl->setText(str);
 }
 
 void MainWindow::omlaagDraaien(ui::Control* sender, event::EventArgs* e)
 {
-	rot2 -= vb->value();
+	index2--;
+	if (index2 < 0) index2 = 0;
+	char str[256] = { 0 };
+	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
+	lbl->setText(str);
+}
+
+void MainWindow::onSpecialKeyboard(int key, int x, int y)
+{
 }
 
 bool MainWindow::initialize()
@@ -55,17 +73,23 @@ bool MainWindow::initialize()
 	
 	ui::Manager::createInstance("Ubuntu-R.ttf");
 
-	ui::Button* b1 = new ui::Button(10, 10, 64, 24, (const char*)"left");
-	ui::Button* b2 = new ui::Button(10, 10, 64, 24, (const char*)"right");
-	ui::Button* b3 = new ui::Button(10, 10, 64, 24, (const char*)"up");
-	ui::Button* b4 = new ui::Button(10, 10, 64, 24, (const char*)"down");
+	ui::Button* b1 = new ui::Button(10, 10, 64, 24, (const char*)"Next Brush");
+	ui::Button* b2 = new ui::Button(10, 10, 64, 24, (const char*)"Prev Brush");
+	ui::Button* b3 = new ui::Button(10, 10, 64, 24, (const char*)"Next Plane");
+	ui::Button* b4 = new ui::Button(10, 10, 64, 24, (const char*)"Prev Plane");
 	vb = new ui::Valuebox(10, 180, 64, 24, 5, 0, 10000);
-	ui::Container* cnt = new ui::VerticalContainer(30, 30, 100, 500);
+	vbx = new ui::Valuebox(10, 180, 64, 24, 5, 0, 360);
+	vby = new ui::Valuebox(10, 180, 64, 24, 5, 0, 360);
+	lbl = new ui::Label("Brush : 0, Plane : 0", 0, 0, 200, 200);
+	ui::Container* cnt = new ui::VerticalContainer(30, 30, 200, 500);
 	cnt->addControl(b1);
 	cnt->addControl(b2);
 	cnt->addControl(b3);
 	cnt->addControl(b4);
 	cnt->addControl(vb);
+	cnt->addControl(vbx);
+	cnt->addControl(vby);
+	cnt->addControl(lbl);
 
 	// Voorbeeld van het toevoegen van events
 	b1->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::linksomDraaien);
@@ -108,70 +132,74 @@ void MainWindow::render()
 	glLoadIdentity();
 
 	glPushMatrix();
-	glTranslatef(0, 0, -10.0f);
-	glRotatef(rot, 0, 1, 0);
-	glRotatef(rot2, 1, 0, 0);
+	glTranslatef(0, 0, -20.0f);
+	glRotatef(this->vbx->value(), 0, 1, 0);
+	glRotatef(this->vby->value(), 1, 0, 0);
 	glScalef(0.01f, 0.01f, 0.01f);
+/*
+	if (this->index1 < this->scene.mEntities[0]->mBrushes.size())
+	{
+		geo::Brush* brush = this->scene.mEntities[0]->mBrushes[this->index1];
+		if (this->index2 < brush->mPlanes.size())
+		{
+			geo::Plane& plane = brush->mPlanes[this->index2];
 
+			glColor3fv(plane.mColor);
+			glBegin(GL_LINE_STRIP);
+			for(std::vector<int>::iterator itr = plane.mIndices.begin(); itr != plane.mIndices.end(); ++itr)
+			{
+				glVertex3f(brush->mVertices[(*itr)][0], brush->mVertices[(*itr)][1], brush->mVertices[(*itr)][2]);
+			}
+			glEnd();
+			glPointSize(4);
+			glColor3f(1, 0, 0);
+			glBegin(GL_POINTS);
+			glVertex3fv(brush->mVertices[plane.mIndices[0]]);
+			glVertex3fv(plane.average);
+			glEnd();
+		}
+	}
+/*/
 	for(std::vector<geo::Entity*>::iterator e = this->scene.mEntities.begin(); e != this->scene.mEntities.end(); ++e)
 	{
 		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
 		{
-			this->renderBrush(*(*b));
+			this->renderBrushVertices(*(*b));
 		}
 	}
+// */
 	glPopMatrix();
 }
 
-void MainWindow::renderBrush(geo::Brush& brush)
+void MainWindow::renderBrushVertices(geo::Brush& brush)
 {
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-
-	glColor3f(0.6f, 0.6f, 0.6f);
-	glCullFace(GL_FRONT);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glBegin(GL_TRIANGLES);
-	for(std::vector<geo::Plane>::iterator itr = brush.mPlanes.begin(); itr != brush.mPlanes.end(); ++itr)
+	glColor3fv(brush.mColor);
+	for(std::vector<geo::Plane>::iterator p = brush.mPlanes.begin(); p != brush.mPlanes.end(); ++p)
 	{
-		glVertex3fv((*itr).mBase[0]);
-		glVertex3fv((*itr).mBase[1]);
-		glVertex3fv((*itr).mBase[2]);
+		glBegin(GL_POLYGON);
+		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
+		{
+			glVertex3f(brush.mVertices[(*itr)][0], brush.mVertices[(*itr)][1], brush.mVertices[(*itr)][2]);
+		}
+		glEnd();
 	}
-	glEnd();
-
-	glColor3f(0.1f, 0.1f, 0.1f);
-	glCullFace(GL_BACK);
-	glBegin(GL_TRIANGLES);
-	for(std::vector<geo::Plane>::iterator itr = brush.mPlanes.begin(); itr != brush.mPlanes.end(); ++itr)
-	{
-		glVertex3fv((*itr).mBase[0]);
-		glVertex3fv((*itr).mBase[1]);
-		glVertex3fv((*itr).mBase[2]);
-	}
-	glEnd();
-
-//	glDisable(GL_DEPTH_TEST);
-	glColor3f(1, 1, 1);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glBegin(GL_TRIANGLES);
-	for(std::vector<geo::Plane>::iterator itr = brush.mPlanes.begin(); itr != brush.mPlanes.end(); ++itr)
+	glColor3f(1,1,1);
+	for(std::vector<geo::Plane>::iterator p = brush.mPlanes.begin(); p != brush.mPlanes.end(); ++p)
 	{
-		glVertex3fv((*itr).mBase[0]);
-		glVertex3fv((*itr).mBase[1]);
-		glVertex3fv((*itr).mBase[2]);
+		glBegin(GL_POLYGON);
+		for(std::vector<int>::iterator itr = (*p).mIndices.begin(); itr != (*p).mIndices.end(); ++itr)
+		{
+			glVertex3f(brush.mVertices[(*itr)][0], brush.mVertices[(*itr)][1], brush.mVertices[(*itr)][2]);
+		}
+		glEnd();
 	}
-	glEnd();
-
-	glPointSize(5);
-	glColor3f(0, 0.5f, 1);
-	glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+	glColor3f(1,0,0);
 	glBegin(GL_POINTS);
-	for(std::vector<geo::Plane>::iterator itr = brush.mPlanes.begin(); itr != brush.mPlanes.end(); ++itr)
+	for(std::vector<Vector3>::iterator itr = brush.mVertices.begin(); itr != brush.mVertices.end(); ++itr)
 	{
-		glVertex3fv((*itr).mBase[0]);
-		glVertex3fv((*itr).mBase[1]);
-		glVertex3fv((*itr).mBase[2]);
+		glVertex3fv((*itr));
 	}
 	glEnd();
 }
