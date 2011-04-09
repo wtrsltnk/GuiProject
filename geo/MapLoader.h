@@ -26,6 +26,7 @@ private:
 	bool loadEntity(common::Tokenizer& tok, Scene* scene);
 	bool loadBrush(common::Tokenizer& tok, Entity* entity);
 
+	int mVersion;
 };
 
 }

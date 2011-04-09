@@ -68,7 +68,7 @@ void MainWindow::onSpecialKeyboard(int key, int x, int y)
 bool MainWindow::initialize()
 {
 	geo::MapLoader loader;
-	if (loader.load("qtest.map", &this->scene) == false)
+	if (loader.load("dust_001.map", &this->scene) == false)
 		printf("Load failed\n");
 	
 	ui::Manager::createInstance("Ubuntu-R.ttf");
@@ -173,7 +173,7 @@ void MainWindow::render()
 
 void MainWindow::renderBrushVertices(geo::Brush& brush)
 {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3fv(brush.mColor);
 	for(std::vector<geo::Plane>::iterator p = brush.mPlanes.begin(); p != brush.mPlanes.end(); ++p)
 	{

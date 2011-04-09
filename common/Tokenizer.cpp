@@ -53,7 +53,7 @@ bool Tokenizer::nextToken()
 	this->token = 0;
 
 	// Trim to the token
-	while (Tokenizer::isSeperator(data[cursor]))
+	while (cursor < this->dataSize && Tokenizer::isSeperator(data[cursor]))
 		cursor++;
 
 	int c = 0;

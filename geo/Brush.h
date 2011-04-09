@@ -15,6 +15,7 @@ namespace geo
 {
 
 #define EPSILON 0.01
+#define WORLD 8192.0
 
 class Plane
 {
@@ -62,6 +63,20 @@ public:
 	void updateVertices();
 	Vector3 calculateOrigin();
 
+
+	static bool pointInWorld(const Vector3& point)
+	{
+		if(point.x() < -WORLD || point.x() > WORLD)
+			return false;
+
+		if(point.y() < -WORLD || point.y() > WORLD)
+			return false;
+
+		if(point.z() < -WORLD || point.z() > WORLD)
+			return false;
+
+		return true;
+	}
 };
 
 }

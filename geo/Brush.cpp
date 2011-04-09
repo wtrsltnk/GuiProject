@@ -157,7 +157,7 @@ void Brush::updateVertices()
 				if(i != j && i != k && j != k)
 				{
 					Vector3 intersection;
-					if (Plane::getIntersection(this->mPlanes[i], this->mPlanes[j], this->mPlanes[k], intersection))
+					if (Plane::getIntersection(this->mPlanes[i], this->mPlanes[j], this->mPlanes[k], intersection) && Brush::pointInWorld(intersection))
 					{
 						bool bLegal = true;
 
@@ -166,7 +166,7 @@ void Brush::updateVertices()
 							if(l != i && l != j && l != k)
 							{
 								float dist = this->mPlanes[l].mNormal.dotProduct(intersection) - this->mPlanes[l].mDistance;
-								if(fabs(dist) < EPSILON)
+								if(dist < EPSILON)
 								{
 									bLegal = false;
 									break;
@@ -199,17 +199,20 @@ void Brush::updateVertices()
 			this->mPlanes[i].average += this->mVertices[this->mPlanes[i].mIndices[j]];
 		this->mPlanes[i].average *= (1.0f / this->mPlanes[i].mIndices.size());
 
-		Vector3 start = this->mVertices[this->mPlanes[i].mIndices[0]];
-		indices.insert(std::make_pair(0, this->mPlanes[i].mIndices[0]));
-		for (int j = 1; j < this->mPlanes[i].mIndices.size(); j++)
+		if (this->mPlanes[i].mIndices.size() > 0)
 		{
-			float angle = calculateSignedAngle(start-this->mPlanes[i].average, this->mVertices[this->mPlanes[i].mIndices[j]]-this->mPlanes[i].average, this->mPlanes[i].mNormal);
-			indices.insert(std::make_pair(angle, this->mPlanes[i].mIndices[j]));
-		}
-		this->mPlanes[i].mIndices.clear();
-		for (std::map<float, int>::iterator itr = indices.begin(); itr != indices.end(); ++itr)
-		{
-			this->mPlanes[i].mIndices.push_back(itr->second);
+			Vector3 start = this->mVertices[this->mPlanes[i].mIndices[0]];
+			indices.insert(std::make_pair(0, this->mPlanes[i].mIndices[0]));
+			for (int j = 1; j < this->mPlanes[i].mIndices.size(); j++)
+			{
+				float angle = calculateSignedAngle(start-this->mPlanes[i].average, this->mVertices[this->mPlanes[i].mIndices[j]]-this->mPlanes[i].average, this->mPlanes[i].mNormal);
+				indices.insert(std::make_pair(angle, this->mPlanes[i].mIndices[j]));
+			}
+			this->mPlanes[i].mIndices.clear();
+			for (std::map<float, int>::iterator itr = indices.begin(); itr != indices.end(); ++itr)
+			{
+				this->mPlanes[i].mIndices.push_back(itr->second);
+			}
 		}
 	}
 }

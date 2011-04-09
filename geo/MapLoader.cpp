@@ -16,6 +16,7 @@ namespace geo
 {
 
 MapLoader::MapLoader()
+	: mVersion(100)
 {
 }
 
@@ -77,6 +78,10 @@ bool MapLoader::loadEntity(common::Tokenizer& tok, Scene* scene)
 				return false;
 			std::string value(tok.getToken());
 			e.data->addKeyValuePair(key, value);
+			if (key == "mapversion")
+			{
+				this->mVersion = atoi(value.c_str());
+			}
 		}
 	}
 	
@@ -112,12 +117,33 @@ bool MapLoader::loadBrush(common::Tokenizer& tok, Entity* entity)
 		v3.z(atoi(tok.getToken())); if (tok.nextToken() == false) return false;
 		if (tok.nextToken() == false) return false;	// Skip the ")"
 
-		if (tok.nextToken() == false) return false;	// Texture name
-		if (tok.nextToken() == false) return false;	// x_off     - Texture x-offset (must be multiple of 16)
-		if (tok.nextToken() == false) return false;	// y_off     - Texture y-offset (must be multiple of 16)
-		if (tok.nextToken() == false) return false;	// rot_angle - floating point value indicating texture rotation
-		if (tok.nextToken() == false) return false;	// x_scale   - scales x-dimension of texture (negative value to flip)Te
-//		if (tok.nextToken() == false) return false;	// y_scale   - scales y-dimension of texture (negative value to flip)
+		if (this->mVersion == 100)
+		{
+			if (tok.nextToken() == false) return false;	// Texture name
+			if (tok.nextToken() == false) return false;	// x_off     - Texture x-offset (must be multiple of 16)
+			if (tok.nextToken() == false) return false;	// y_off     - Texture y-offset (must be multiple of 16)
+			if (tok.nextToken() == false) return false;	// rot_angle - floating point value indicating texture rotation
+			if (tok.nextToken() == false) return false;	// x_scale   - scales x-dimension of texture (negative value to flip)Te
+	//		if (tok.nextToken() == false) return false;	// y_scale   - scales y-dimension of texture (negative value to flip)
+		}
+		else if (this->mVersion == 220)
+		{
+			if (tok.nextToken() == false) return false;	// Texture name
+			if (tok.nextToken() == false) return false;	// Skip the "["
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	// Skip the "]"
+			if (tok.nextToken() == false) return false;	// Skip the "["
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	// Skip the "]"
+			if (tok.nextToken() == false) return false;	//
+			if (tok.nextToken() == false) return false;	//
+		}
 
 		Plane p = Plane::fromVertices(v1, v2, v3);
 		b.data->addPlane(p);
