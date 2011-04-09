@@ -151,6 +151,8 @@ const Vector3& Vector3::operator = (const Vector3& v)
 {
     for (int i = 0; i < 3; i++)
         this->mVector[i] = v.mVector[i];
+
+    return (*this);
 }
 
 /*!
@@ -162,6 +164,8 @@ const Vector3& Vector3::operator = (const float v[3])
 {
     for (int i = 0; i < 3; i++)
         this->mVector[i] = v[i];
+
+    return (*this);
 }
 
 /*!

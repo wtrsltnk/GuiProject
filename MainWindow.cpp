@@ -12,7 +12,7 @@
 GlutApplication* gApplication = new MainWindow();
 
 MainWindow::MainWindow()
-	: GlutApplication("GuiProject"), rot(0), rot2(0), index1(0), index2(0)
+	: GlutApplication("GuiProject"), index1(0), index2(0)
 {
 	this->brush.mPlanes.push_back(geo::Plane::fromVertices(Vector3(1, 0, 0), Vector3(0, 0, 0), Vector3(0, 1, 0)));
 	this->brush.mPlanes.push_back(geo::Plane::fromVertices(Vector3(1, 0, 0), Vector3(0, 0, 1), Vector3(0, 0, 0)));

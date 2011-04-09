@@ -42,8 +42,6 @@ public:
 	geo::Brush brush;
 	geo::Scene scene;
 	int index1, index2;
-	float rot;
-	float rot2;
 //	Video video;
 
 };
