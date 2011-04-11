@@ -150,33 +150,8 @@ void MainWindow::render(int time)
 
 	this->mCamera.update();
 	glTranslatef(0, 0, -20.0f);
-//	glRotatef(this->vbx->value(), 0, 1, 0);
-//	glRotatef(this->vby->value(), 1, 0, 0);
 	glScalef(0.01f, 0.01f, 0.01f);
-/*
-	if (this->index1 < this->scene.mEntities[0]->mBrushes.size())
-	{
-		geo::Brush* brush = this->scene.mEntities[0]->mBrushes[this->index1];
-		if (this->index2 < brush->mPlanes.size())
-		{
-			geo::Plane& plane = brush->mPlanes[this->index2];
 
-			glColor3fv(plane.mColor);
-			glBegin(GL_LINE_STRIP);
-			for(std::vector<int>::iterator itr = plane.mIndices.begin(); itr != plane.mIndices.end(); ++itr)
-			{
-				glVertex3f(brush->mVertices[(*itr)][0], brush->mVertices[(*itr)][1], brush->mVertices[(*itr)][2]);
-			}
-			glEnd();
-			glPointSize(4);
-			glColor3f(1, 0, 0);
-			glBegin(GL_POINTS);
-			glVertex3fv(brush->mVertices[plane.mIndices[0]]);
-			glVertex3fv(plane.average);
-			glEnd();
-		}
-	}
-/*/
 	for(std::vector<geo::Entity*>::iterator e = this->scene.mEntities.begin(); e != this->scene.mEntities.end(); ++e)
 	{
 		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
@@ -184,13 +159,14 @@ void MainWindow::render(int time)
 			this->renderBrushVertices(*(*b));
 		}
 	}
-// */
+	
 	glPopMatrix();
 }
 
 void MainWindow::renderBrushVertices(geo::Brush& brush)
 {
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3fv(brush.mColor);
 	for(std::vector<geo::Plane>::iterator p = brush.mPlanes.begin(); p != brush.mPlanes.end(); ++p)
