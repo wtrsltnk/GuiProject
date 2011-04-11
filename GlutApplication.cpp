@@ -1,7 +1,14 @@
 #include "GlutApplication.h"
+#include "ui/uiManager.h"
 #include <stdlib.h>
 
 void resize(int w, int h);
+void keyboard(unsigned char key, int x, int y);
+void keyboardUp(unsigned char key, int x, int y);
+void specialKeyboard(int key, int x, int y);
+void specialKeyboardUp(int key, int x, int y);
+void mouseClick(int button, int state, int x, int y);
+void mouseMove(int x, int y);
 void display();
 
 bool running = true;
@@ -19,17 +26,22 @@ int main(int argc, char** argv)
 	glutInitWindowSize(800, 600);
 
 	glutCreateWindow(gApplication->title);
+	glutKeyboardFunc(&keyboard);
+	glutKeyboardUpFunc(&keyboardUp);
+	glutSpecialFunc(&specialKeyboard);
+	glutSpecialUpFunc(&specialKeyboardUp);
+	glutMouseFunc(&mouseClick);
+	glutMotionFunc(&mouseMove);
+	glutPassiveMotionFunc(&mouseMove);
 	glutReshapeFunc(&resize);
-	glutTimerFunc(30, &idle, 0);
 	glutDisplayFunc(&display);
+	glutTimerFunc(30, &idle, 0);
+
 	if (gApplication != 0)
 	{
-		if (gApplication->initialize() != false)
+		if (gApplication->initialize(argc, argv) != false)
 		{
-			while(running)
-			{
-				glutMainLoopEvent();
-			}
+			glutMainLoop();
 		}
 	}
 
@@ -41,11 +53,12 @@ int main(int argc, char** argv)
 
 void display()
 {
+	int time = glutGet(GLUT_ELAPSED_TIME);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (gApplication != 0)
 	{
-		gApplication->render();
+		gApplication->render(time);
 	}
 
 	glutSwapBuffers();
@@ -63,4 +76,59 @@ void resize(int w, int h)
 
 	if (gApplication != 0)
 		gApplication->resize(gApplication->width, gApplication->height);
+}
+
+void keyboard(unsigned char key, int x, int y)
+{
+	switch (key)
+	{
+	case '\x1B':
+		{
+			glutLeaveMainLoop();
+			break;
+		}
+	default:
+		{
+			if (gApplication != 0)
+				gApplication->onKeyboard(key, x, y);
+		}
+	}
+	ui::Manager::glutKeyboardDown(key, x, y);
+}
+
+void keyboardUp(unsigned char key, int x, int y)
+{
+	if (gApplication != 0)
+		gApplication->onKeyboardUp(key, x, y);
+	ui::Manager::glutKeyboardUp(key, x, y);
+}
+
+void specialKeyboard(int key, int x, int y)
+{
+	if (gApplication != 0)
+		gApplication->onSpecialKeyboard(key, x, y);
+	ui::Manager::glutSpecialKeyboardDown(key, x, y);
+}
+
+void specialKeyboardUp(int key, int x, int y)
+{
+	if (gApplication != 0)
+		gApplication->onSpecialKeyboardUp(key, x, y);
+	ui::Manager::glutSpecialKeyboardUp(key, x, y);
+}
+
+void mouseClick(int button, int state, int x, int y)
+{
+	if (gApplication != 0)
+		gApplication->onMouseClick(button, state, x, y);
+	glutPostRedisplay();
+	ui::Manager::glutMouseClick(button, state, x, y);
+}
+
+void mouseMove(int x, int y)
+{
+	if (gApplication != 0)
+		gApplication->onMouseMove(x, y);
+	glutPostRedisplay();
+	ui::Manager::glutMouseMove(x, y);
 }

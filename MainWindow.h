@@ -25,13 +25,13 @@ public:
 	virtual void omhoogDraaien(ui::Control* sender, event::EventArgs* e);
 	virtual void omlaagDraaien(ui::Control* sender, event::EventArgs* e);
 
-	virtual bool initialize();
+	virtual bool initialize(int argc, char* argv[]);
 	virtual void resize(int w, int h);
 	virtual void onKeyboard(unsigned char key, int x, int y) { }
 	virtual void onSpecialKeyboard(int key, int x, int y);
 	virtual void onMouseClick(int button, int state, int x, int y) { }
 	virtual void onMouseMove(int x, int y) { }
-	virtual void render();
+	virtual void render(int time);
 
 	void renderBrushVertices(geo::Brush& brush);
 	ui::Valuebox* vb;

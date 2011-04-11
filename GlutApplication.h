@@ -16,13 +16,15 @@ public:
 	GlutApplication(const char* title) { char* tmp = this->title; while (title[0] != '\0') { tmp[0] = title[0]; tmp++; title++; } tmp[0] = '\0'; }
 	virtual ~GlutApplication() { }
 
-	virtual bool initialize() { return true; }
+	virtual bool initialize(int argc, char* argv[]) { return true; }
 	virtual void resize(int w, int h) { }
 	virtual void onKeyboard(unsigned char key, int x, int y) { }
+	virtual void onKeyboardUp(unsigned char key, int x, int y) { }
 	virtual void onSpecialKeyboard(int key, int x, int y) { }
+	virtual void onSpecialKeyboardUp(int key, int x, int y) { }
 	virtual void onMouseClick(int button, int state, int x, int y) { }
 	virtual void onMouseMove(int x, int y) { }
-	virtual void render() { }
+	virtual void render(int time) { }
 
 	int width, height;
 	char title[64];

@@ -66,16 +66,6 @@ void Manager::initialize(const char* fontpath)
 	Manager::sDefaultFont->initializeFont(fontpath);
 
 	Manager::instance()->mRoot = new FreeContainer(20, 20, 10, 10);
-
-#ifndef SKIP_GLUT
-	glutKeyboardFunc(&Manager::glutKeyboardDown);
-	glutKeyboardUpFunc(&Manager::glutKeyboardUp);
-	glutSpecialFunc(&Manager::glutSpecialKeyboardDown);
-	glutSpecialUpFunc(&Manager::glutSpecialKeyboardUp);
-	glutMouseFunc(&Manager::glutMouseClick);
-	glutMotionFunc(&Manager::glutMouseMove);
-	glutPassiveMotionFunc(&Manager::glutMouseMove);
-#endif
 }
 
 void Manager::addControl(Control* ctr)
@@ -187,7 +177,6 @@ void Manager::render()
 	glPopMatrix();
 }
 
-#ifndef SKIP_GLUT
 void Manager::glutKeyboardDown(unsigned char key, int x, int y)
 {
 	if (Manager::instance()->mFocus != 0)
@@ -792,7 +781,5 @@ Key::Code Manager::sSpecialKeymap[] =
 /* 254 */	Key::Unknown,
 /* 255 */	Key::Unknown
 };
-
-#endif
 
 }

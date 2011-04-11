@@ -54,7 +54,6 @@ private:
 	Control* mFocus;
 	Container* mRoot;
 
-#ifndef SKIP_GLUT
 public:
 	static void glutKeyboardDown(unsigned char key, int x, int y);
 	static void glutKeyboardUp(unsigned char key, int x, int y);
@@ -66,7 +65,7 @@ public:
 	static Mouse::Button sButtonmap[];
 	static Key::Code sKeymap[];
 	static Key::Code sSpecialKeymap[];
-#endif
+
 };
 
 }

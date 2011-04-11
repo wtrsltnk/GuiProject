@@ -65,7 +65,7 @@ void MainWindow::onSpecialKeyboard(int key, int x, int y)
 {
 }
 
-bool MainWindow::initialize()
+bool MainWindow::initialize(int argc, char* argv[])
 {
 	geo::MapLoader loader;
 	if (loader.load("dust_001.map", &this->scene) == false)
@@ -111,7 +111,7 @@ void MainWindow::resize(int w, int h)
 	ui::Manager::instance()->setupSize(w, h);
 }
 
-void MainWindow::render()
+void MainWindow::render(int time)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
