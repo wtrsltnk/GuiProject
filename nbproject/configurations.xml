@@ -5,6 +5,8 @@
       <itemPath>common/MemoryGuard.h</itemPath>
       <itemPath>common/Tokenizer.cpp</itemPath>
       <itemPath>common/Tokenizer.h</itemPath>
+      <itemPath>common/matrix4x4.cpp</itemPath>
+      <itemPath>common/matrix4x4.h</itemPath>
       <itemPath>common/vector3.cpp</itemPath>
       <itemPath>common/vector3.h</itemPath>
     </logicalFolder>
@@ -27,6 +29,7 @@
                    kind="SOURCE_LOGICAL_FOLDER">
       <itemPath>GlutApplication.h</itemPath>
       <itemPath>MainWindow.h</itemPath>
+      <itemPath>camera.h</itemPath>
     </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
@@ -34,6 +37,7 @@
                    kind="SOURCE_LOGICAL_FOLDER">
       <itemPath>GlutApplication.cpp</itemPath>
       <itemPath>MainWindow.cpp</itemPath>
+      <itemPath>camera.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="f1" displayName="ui" projectFiles="true">
       <itemPath>ui/stb_truetype.cpp</itemPath>

@@ -8,6 +8,9 @@
 #ifndef MAINWINDOW_H_
 #define MAINWINDOW_H_
 
+#include "camera.h"
+
+
 #include "GlutApplication.h"
 #include "ui/uiControls.h"
 #include "geo/Brush.h"
@@ -27,13 +30,17 @@ public:
 
 	virtual bool initialize(int argc, char* argv[]);
 	virtual void resize(int w, int h);
-	virtual void onKeyboard(unsigned char key, int x, int y) { }
+	virtual void onKeyboard(unsigned char key, int x, int y);
+	virtual void onKeyboardUp(unsigned char key, int x, int y);
 	virtual void onSpecialKeyboard(int key, int x, int y);
-	virtual void onMouseClick(int button, int state, int x, int y) { }
-	virtual void onMouseMove(int x, int y) { }
+	virtual void onSpecialKeyboardUp(int key, int x, int y);
+	virtual void onMouseClick(int button, int state, int x, int y);
+	virtual void onMouseMove(int x, int y);
 	virtual void render(int time);
 
 	void renderBrushVertices(geo::Brush& brush);
+
+	Camera mCamera;
 	ui::Valuebox* vb;
 	ui::Valuebox* vbx;
 	ui::Valuebox* vby;

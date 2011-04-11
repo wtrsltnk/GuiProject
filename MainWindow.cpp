@@ -9,6 +9,13 @@
 #include "geo/MapLoader.h"
 #include <stdio.h>
 
+int startx = 0, starty = 0;
+bool leftIsPressed = false;
+bool isWPressed = false;
+bool isSPressed = false;
+bool isAPressed = false;
+bool isDPressed = false;
+
 GlutApplication* gApplication = new MainWindow();
 
 MainWindow::MainWindow()
@@ -59,10 +66,6 @@ void MainWindow::omlaagDraaien(ui::Control* sender, event::EventArgs* e)
 	char str[256] = { 0 };
 	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
 	lbl->setText(str);
-}
-
-void MainWindow::onSpecialKeyboard(int key, int x, int y)
-{
 }
 
 bool MainWindow::initialize(int argc, char* argv[])
@@ -132,9 +135,23 @@ void MainWindow::render(int time)
 	glLoadIdentity();
 
 	glPushMatrix();
+	static int lastTime = 0;
+	float speed = 1.0f * ((time - lastTime) / 100.0f);
+	lastTime = time;
+
+	if (isWPressed)
+		this->mCamera.moveForward(speed);
+	if (isSPressed)
+		this->mCamera.moveForward(-speed);
+	if (isAPressed)
+		this->mCamera.moveLeft(speed);
+	if (isDPressed)
+		this->mCamera.moveLeft(-speed);
+
+	this->mCamera.update();
 	glTranslatef(0, 0, -20.0f);
-	glRotatef(this->vbx->value(), 0, 1, 0);
-	glRotatef(this->vby->value(), 1, 0, 0);
+//	glRotatef(this->vbx->value(), 0, 1, 0);
+//	glRotatef(this->vby->value(), 1, 0, 0);
 	glScalef(0.01f, 0.01f, 0.01f);
 /*
 	if (this->index1 < this->scene.mEntities[0]->mBrushes.size())
@@ -173,6 +190,7 @@ void MainWindow::render(int time)
 
 void MainWindow::renderBrushVertices(geo::Brush& brush)
 {
+	glEnable(GL_DEPTH_TEST);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glColor3fv(brush.mColor);
 	for(std::vector<geo::Plane>::iterator p = brush.mPlanes.begin(); p != brush.mPlanes.end(); ++p)
@@ -184,8 +202,9 @@ void MainWindow::renderBrushVertices(geo::Brush& brush)
 		}
 		glEnd();
 	}
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glColor3f(1,1,1);
+	glColor3fv(brush.mColor);
 	for(std::vector<geo::Plane>::iterator p = brush.mPlanes.begin(); p != brush.mPlanes.end(); ++p)
 	{
 		glBegin(GL_POLYGON);
@@ -202,4 +221,69 @@ void MainWindow::renderBrushVertices(geo::Brush& brush)
 		glVertex3fv((*itr));
 	}
 	glEnd();
+}
+
+void MainWindow::onKeyboard(unsigned char key, int x, int y)
+{
+	if (key == 'w') isWPressed = true;
+	if (key == 's') isSPressed = true;
+	if (key == 'a') isAPressed = true;
+	if (key == 'd') isDPressed = true;
+}
+
+void MainWindow::onKeyboardUp(unsigned char key, int x, int y)
+{
+	if (key == 'w') isWPressed = false;
+	if (key == 's') isSPressed = false;
+	if (key == 'a') isAPressed = false;
+	if (key == 'd') isDPressed = false;
+}
+
+void MainWindow::onSpecialKeyboard(int key, int x, int y)
+{
+	if (key == GLUT_KEY_UP) isWPressed = true;
+	if (key == GLUT_KEY_DOWN) isSPressed = true;
+	if (key == GLUT_KEY_LEFT) isAPressed = true;
+	if (key == GLUT_KEY_RIGHT) isDPressed = true;
+}
+
+void MainWindow::onSpecialKeyboardUp(int key, int x, int y)
+{
+	if (key == GLUT_KEY_UP) isWPressed = false;
+	if (key == GLUT_KEY_DOWN) isSPressed = false;
+	if (key == GLUT_KEY_LEFT) isAPressed = false;
+	if (key == GLUT_KEY_RIGHT) isDPressed = false;
+}
+
+#define PI 3.14159265
+#define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
+
+void MainWindow::onMouseClick(int button, int state, int x, int y)
+{
+	if (button == 0)
+	{
+		leftIsPressed = (state == 0);
+	}
+	startx = x;
+	starty = y;
+}
+
+void MainWindow::onMouseMove(int x, int y)
+{
+#ifdef WIN32
+	if (leftIsPressed)
+	{
+		this->mCamera.rotate(Deg2Rad((y-(starty))/10.0f), 0, Deg2Rad((x-(startx))/10.0f));
+	}
+#else
+	static bool justWarped = false;
+	if (justWarped)
+	{
+		this->mCamera.rotate(Deg2Rad((y-(this->height/2))/10.0f), 0, Deg2Rad((x-(this->width/2))/10.0f));
+		glutWarpPointer(this->width/2, this->height/2);
+	}
+	justWarped = !justWarped;
+#endif
+	startx = x;
+	starty = y;
 }

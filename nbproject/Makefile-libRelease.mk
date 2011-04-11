@@ -55,6 +55,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiManager.o \
 	${OBJECTDIR}/ui/uiButton.o \
 	${OBJECTDIR}/ui/uiLabel.o \
+	${OBJECTDIR}/camera.o \
+	${OBJECTDIR}/common/matrix4x4.o \
 	${OBJECTDIR}/GlutApplication.o
 
 
@@ -193,6 +195,16 @@ ${OBJECTDIR}/ui/uiLabel.o: ui/uiLabel.cpp
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiLabel.o ui/uiLabel.cpp
+
+${OBJECTDIR}/camera.o: camera.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/camera.o camera.cpp
+
+${OBJECTDIR}/common/matrix4x4.o: common/matrix4x4.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/matrix4x4.o common/matrix4x4.cpp
 
 ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp 
 	${MKDIR} -p ${OBJECTDIR}
