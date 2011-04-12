@@ -85,6 +85,31 @@ enum
 
 class Container;
 
+class KeyboardEventArgs : public event::EventArgs
+{
+public:
+	KeyboardEventArgs();
+	virtual ~KeyboardEventArgs();
+
+	KeyboardState state;
+};
+
+typedef event::Event<Control, KeyboardEventArgs> KeyboardEvent;
+typedef KeyboardEvent::Handler KeyboardEventHandler;
+
+class MouseButtonEventArgs : public event::EventArgs
+{
+public:
+	MouseButtonEventArgs();
+	virtual ~MouseButtonEventArgs();
+
+	MouseState state;
+
+};
+
+typedef event::Event<Control, MouseButtonEventArgs> MouseEvent;
+typedef MouseEvent::Handler MouseButtonEventHandler;
+
 class Control
 {
 public:
@@ -118,6 +143,12 @@ public:
 	virtual void updateBox();
 
 	virtual bool isPointInBox(float point[2], float scroll = 0);
+
+	KeyboardEvent onKeyboardDown;
+	KeyboardEvent onKeyboardUp;
+	MouseEvent onMouseButtonDown;
+	MouseEvent onMouseButtonUp;
+	MouseEvent onMouseMove;
 	
 protected:
 	box_t mBox;

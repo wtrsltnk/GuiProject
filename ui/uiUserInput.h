@@ -161,7 +161,7 @@ public:
 	KeyboardState(const KeyboardState& state);
 	virtual ~KeyboardState();
 
-	bool isKeyPressed(Key::Code key);
+	bool isKeyPressed(Key::Code key) const;
 
 private:
 	bool mKeys[Key::Count];

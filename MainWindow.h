@@ -23,11 +23,9 @@ public:
 	MainWindow();
 	virtual ~MainWindow();
 
-	virtual void rechtsomDraaien(ui::Control* sender, event::EventArgs* e);
-	virtual void linksomDraaien(ui::Control* sender, event::EventArgs* e);
-	virtual void omhoogDraaien(ui::Control* sender, event::EventArgs* e);
-	virtual void omlaagDraaien(ui::Control* sender, event::EventArgs* e);
 	virtual void render3D(ui::Control* sender, event::EventArgs* e);
+
+	virtual void onMouseEvent(ui::Control* sender, ui::MouseButtonEventArgs* e);
 
 	virtual bool initialize(int argc, char* argv[]);
 	virtual void resize(int w, int h);
@@ -45,7 +43,6 @@ public:
 	ui::Valuebox* vb;
 	ui::Valuebox* vbx;
 	ui::Valuebox* vby;
-	ui::Label* lbl;
 
 	geo::Brush brush;
 	geo::Scene scene;

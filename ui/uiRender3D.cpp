@@ -16,7 +16,7 @@ Render3D::~Render3D()
 
 void Render3D::render()
 {
-	this->renderBox(false);
+	this->renderBox(true);
 	float aspect = 1.0f * ((float)this->width()/(float)this->height());
 
 	glMatrixMode(GL_PROJECTION);

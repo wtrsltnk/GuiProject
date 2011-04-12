@@ -179,38 +179,61 @@ void Manager::render()
 
 void Manager::glutKeyboardDown(unsigned char key, int x, int y)
 {
+	// Update the Keyboard State
+	KeyboardState::sCurrentState.mKeys[Manager::sKeymap[key]] = true;
+
 	if (Manager::instance()->mFocus != 0)
 	{
 		Manager::instance()->mFocus->keyDown(Manager::sKeymap[key]);
+		KeyboardEventArgs e;
+		Manager::instance()->mFocus->onKeyboardDown(&e);
 	}
 }
 void Manager::glutKeyboardUp(unsigned char key, int x, int y)
 {
+	// Update the Keyboard State
+	KeyboardState::sCurrentState.mKeys[Manager::sKeymap[key]] = false;
+
 	if (Manager::instance()->mFocus != 0)
 	{
 		Manager::instance()->mFocus->keyUp(Manager::sKeymap[key]);
+		KeyboardEventArgs e;
+		Manager::instance()->mFocus->onKeyboardUp(&e);
 	}
 }
 
 void Manager::glutSpecialKeyboardDown(int key, int x, int y)
 {
+	// Update the Keyboard State
+	KeyboardState::sCurrentState.mKeys[Manager::sSpecialKeymap[key]] = true;
+
 	if (Manager::instance()->mFocus != 0)
 	{
 		Manager::instance()->mFocus->keyDown(Manager::sSpecialKeymap[key]);
+		KeyboardEventArgs e;
+		Manager::instance()->mFocus->onKeyboardDown(&e);
 	}
 }
 
 void Manager::glutSpecialKeyboardUp(int key, int x, int y)
 {
+	// Update the Keyboard State
+	KeyboardState::sCurrentState.mKeys[Manager::sSpecialKeymap[key]] = false;
+
 	if (Manager::instance()->mFocus != 0)
 	{
 		Manager::instance()->mFocus->keyUp(Manager::sSpecialKeymap[key]);
+		KeyboardEventArgs e;
+		Manager::instance()->mFocus->onKeyboardUp(&e);
 	}
 }
 
 void Manager::glutMouseClick(int button, int state, int x, int y)
 {
 	float point[2] = { x, Manager::instance()->mViewSize[1] - y };
+
+	// Update the Mouse State
+	MouseState::sCurrentState.mMouseButton[Manager::sButtonmap[button]] = (state == 0);
 
 	Control* control = Manager::instance()->getTopControlAt(point);
 
@@ -229,12 +252,22 @@ void Manager::glutMouseClick(int button, int state, int x, int y)
 			control->mouseUp(Manager::sButtonmap[button]);
 		}
 	}
+	
+	if (Manager::instance()->mFocus != 0)
+	{
+		MouseButtonEventArgs e;
+		if (state == 0)
+			Manager::instance()->mFocus->onMouseButtonDown(&e);
+		else if (state == 1)
+			Manager::instance()->mFocus->onMouseButtonUp(&e);
+	}
 }
 
 void Manager::glutMouseMove(int x, int y)
 {
 	float point[2] = { x, Manager::instance()->mViewSize[1] - y };
 
+	// Update the Mouse State
 	MouseState::sCurrentState.mMouseX = x;
 	MouseState::sCurrentState.mMouseY = Manager::instance()->mViewSize[1] - y;
 
@@ -247,6 +280,11 @@ void Manager::glutMouseMove(int x, int y)
 		control->mouseIn();
 
 	lastHovered = control;
+	if (Manager::instance()->mFocus != 0)
+	{
+		MouseButtonEventArgs e;
+		Manager::instance()->mFocus->onMouseMove(&e);
+	}
 }
 
 Mouse::Button Manager::sButtonmap[]  =

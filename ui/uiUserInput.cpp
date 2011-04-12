@@ -76,7 +76,7 @@ KeyboardState::~KeyboardState()
 {
 }
 
-bool KeyboardState::isKeyPressed(Key::Code key)
+bool KeyboardState::isKeyPressed(Key::Code key) const
 {
 	return this->mKeys[key];
 }

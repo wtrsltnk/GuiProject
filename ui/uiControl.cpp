@@ -16,8 +16,27 @@
 namespace ui
 {
 
+KeyboardEventArgs::KeyboardEventArgs()
+	: state(KeyboardState::currentState())
+{
+}
+
+KeyboardEventArgs::~KeyboardEventArgs()
+{
+}
+
+MouseButtonEventArgs::MouseButtonEventArgs()
+	: state(MouseState::currentState())
+{
+}
+
+MouseButtonEventArgs::~MouseButtonEventArgs()
+{
+}
+
+
 Control::Control(int type)
-	: mParent(0), mType(type)
+	: mParent(0), mType(type), onKeyboardDown(this), onKeyboardUp(this), onMouseButtonDown(this), onMouseButtonUp(this), onMouseMove(this)
 {
 	this->setPosition(0, 0);
 	this->setSize(64, 24);
@@ -27,7 +46,7 @@ Control::Control(int type)
 }
 
 Control::Control(int type, int x, int y, int w, int h)
-	: mParent(0), mType(type)
+	: mParent(0), mType(type), onKeyboardDown(this), onKeyboardUp(this), onMouseButtonDown(this), onMouseButtonUp(this), onMouseMove(this)
 {
 	this->setPosition(x, y);
 	this->setSize(w, h);

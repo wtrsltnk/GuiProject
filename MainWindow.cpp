@@ -9,12 +9,8 @@
 #include "geo/MapLoader.h"
 #include <stdio.h>
 
-int startx = 0, starty = 0;
-bool leftIsPressed = false;
-bool isWPressed = false;
-bool isSPressed = false;
-bool isAPressed = false;
-bool isDPressed = false;
+#define PI 3.14159265
+#define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
 
 GlutApplication* gApplication = new MainWindow();
 
@@ -34,50 +30,28 @@ MainWindow::~MainWindow()
 	ui::Manager::destroyInstance();
 }
 
-void MainWindow::rechtsomDraaien(ui::Control* sender, event::EventArgs* e)
+void MainWindow::onMouseEvent(ui::Control* sender, ui::MouseButtonEventArgs* e)
 {
-	index1--;
-	if (index1 < 0) index1 = 0;
-	char str[256] = { 0 };
-	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
-	lbl->setText(str);
-}
-
-void MainWindow::linksomDraaien(ui::Control* sender, event::EventArgs* e)
-{
-	index1++;
-	char str[256] = { 0 };
-	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
-	lbl->setText(str);
-}
-
-void MainWindow::omhoogDraaien(ui::Control* sender, event::EventArgs* e)
-{
-	index2++;
-	char str[256] = { 0 };
-	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
-	lbl->setText(str);
-}
-
-void MainWindow::omlaagDraaien(ui::Control* sender, event::EventArgs* e)
-{
-	index2--;
-	if (index2 < 0) index2 = 0;
-	char str[256] = { 0 };
-	sprintf(str, "Brush : %d, Plane : %d", index1, index2);
-	lbl->setText(str);
+	static ui::MouseState lastState = e->state;
+	if (e->state.isButtonPressed(ui::Mouse::Left))
+	{
+		float deltax = e->state.getMousePositionX() - lastState.getMousePositionX();
+		float deltay = e->state.getMousePositionY() - lastState.getMousePositionY();
+		this->mCamera.rotate(Deg2Rad(deltay/10.0f), 0, Deg2Rad(deltax/10.0f));
+	}
+	lastState = e->state;
 }
 
 void MainWindow::render3D(ui::Control* sender, event::EventArgs* e)
 {
 	float speed = 1;
-	if (isWPressed)
+	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::W) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::w))
 		this->mCamera.moveForward(speed);
-	if (isSPressed)
+	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::S) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::s))
 		this->mCamera.moveForward(-speed);
-	if (isAPressed)
+	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::A) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::a))
 		this->mCamera.moveLeft(speed);
-	if (isDPressed)
+	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::D) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::d))
 		this->mCamera.moveLeft(-speed);
 
 	this->mCamera.update();
@@ -102,32 +76,19 @@ bool MainWindow::initialize(int argc, char* argv[])
 	
 	ui::Manager::createInstance("Ubuntu-R.ttf");
 
-	ui::Button* b1 = new ui::Button(10, 10, 64, 24, (const char*)"Next Brush");
-	ui::Button* b2 = new ui::Button(10, 10, 64, 24, (const char*)"Prev Brush");
-	ui::Button* b3 = new ui::Button(10, 10, 64, 24, (const char*)"Next Plane");
-	ui::Button* b4 = new ui::Button(10, 10, 64, 24, (const char*)"Prev Plane");
 	vb = new ui::Valuebox(10, 180, 64, 24, 5, 0, 10000);
 	vbx = new ui::Valuebox(10, 180, 64, 24, 5, 0, 360);
 	vby = new ui::Valuebox(10, 180, 64, 24, 5, 0, 360);
-	lbl = new ui::Label("Brush : 0, Plane : 0", 0, 0, 200, 200);
-	ui::Render3D* td = new ui::Render3D(0, 0, 200, 200);
-	ui::Container* cnt = new ui::VerticalContainer(30, 30, 500, 500);
-	cnt->addControl(b1);
-	cnt->addControl(b2);
-	cnt->addControl(b3);
-	cnt->addControl(b4);
+	ui::Render3D* td = new ui::Render3D(0, 0, 200, 500);
+	ui::Container* cnt = new ui::VerticalContainer(30, 30, 600, 500);
 	cnt->addControl(vb);
 	cnt->addControl(vbx);
 	cnt->addControl(vby);
-	cnt->addControl(lbl);
 	cnt->addControl(td);
 
 	// Voorbeeld van het toevoegen van events
-	b1->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::linksomDraaien);
-	b2->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::rechtsomDraaien);
-	b3->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::omhoogDraaien);
-	b4->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::omlaagDraaien);
 	td->onRender += ui::Render3DEventHandler(this, (ui::Render3DEvent::FunctionPtr)&MainWindow::render3D);
+	td->onMouseMove += ui::MouseButtonEventHandler(this, (ui::MouseEvent::FunctionPtr)&MainWindow::onMouseEvent);
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 
@@ -209,47 +170,44 @@ void MainWindow::renderBrushVertices(geo::Brush& brush)
 
 void MainWindow::onKeyboard(unsigned char key, int x, int y)
 {
-	if (key == 'w') isWPressed = true;
-	if (key == 's') isSPressed = true;
-	if (key == 'a') isAPressed = true;
-	if (key == 'd') isDPressed = true;
+//	if (key == 'w') isWPressed = true;
+//	if (key == 's') isSPressed = true;
+//	if (key == 'a') isAPressed = true;
+//	if (key == 'd') isDPressed = true;
 }
 
 void MainWindow::onKeyboardUp(unsigned char key, int x, int y)
 {
-	if (key == 'w') isWPressed = false;
-	if (key == 's') isSPressed = false;
-	if (key == 'a') isAPressed = false;
-	if (key == 'd') isDPressed = false;
+//	if (key == 'w') isWPressed = false;
+//	if (key == 's') isSPressed = false;
+//	if (key == 'a') isAPressed = false;
+//	if (key == 'd') isDPressed = false;
 }
 
 void MainWindow::onSpecialKeyboard(int key, int x, int y)
 {
-	if (key == GLUT_KEY_UP) isWPressed = true;
-	if (key == GLUT_KEY_DOWN) isSPressed = true;
-	if (key == GLUT_KEY_LEFT) isAPressed = true;
-	if (key == GLUT_KEY_RIGHT) isDPressed = true;
+//	if (key == GLUT_KEY_UP) isWPressed = true;
+//	if (key == GLUT_KEY_DOWN) isSPressed = true;
+//	if (key == GLUT_KEY_LEFT) isAPressed = true;
+//	if (key == GLUT_KEY_RIGHT) isDPressed = true;
 }
 
 void MainWindow::onSpecialKeyboardUp(int key, int x, int y)
 {
-	if (key == GLUT_KEY_UP) isWPressed = false;
-	if (key == GLUT_KEY_DOWN) isSPressed = false;
-	if (key == GLUT_KEY_LEFT) isAPressed = false;
-	if (key == GLUT_KEY_RIGHT) isDPressed = false;
+//	if (key == GLUT_KEY_UP) isWPressed = false;
+//	if (key == GLUT_KEY_DOWN) isSPressed = false;
+//	if (key == GLUT_KEY_LEFT) isAPressed = false;
+//	if (key == GLUT_KEY_RIGHT) isDPressed = false;
 }
-
-#define PI 3.14159265
-#define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
 
 void MainWindow::onMouseClick(int button, int state, int x, int y)
 {
-	if (button == 0)
-	{
-		leftIsPressed = (state == 0);
-	}
-	startx = x;
-	starty = y;
+//	if (button == 0)
+//	{
+//		leftIsPressed = (state == 0);
+//	}
+//	startx = x;
+//	starty = y;
 }
 
 void MainWindow::onMouseMove(int x, int y)
@@ -260,14 +218,15 @@ void MainWindow::onMouseMove(int x, int y)
 		this->mCamera.rotate(Deg2Rad((y-(starty))/10.0f), 0, Deg2Rad((x-(startx))/10.0f));
 	}
 #else
-	static bool justWarped = false;
-	if (justWarped)
-	{
-		this->mCamera.rotate(Deg2Rad((y-(this->height/2))/10.0f), 0, Deg2Rad((x-(this->width/2))/10.0f));
-		glutWarpPointer(this->width/2, this->height/2);
-	}
-	justWarped = !justWarped;
+//	static bool justWarped = false;
+////	if (justWarped)
+//	if (ui::MouseState::currentState().isButtonPressed(ui::Mouse::Left))
+//	{
+//		this->mCamera.rotate(Deg2Rad((y-starty)/10.0f), 0, Deg2Rad((x-startx)/10.0f));
+////		glutWarpPointer(this->width/2, this->height/2);
+//	}
+//	justWarped = !justWarped;
 #endif
-	startx = x;
-	starty = y;
+//	startx = x;
+//	starty = y;
 }
