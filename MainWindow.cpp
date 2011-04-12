@@ -68,6 +68,32 @@ void MainWindow::omlaagDraaien(ui::Control* sender, event::EventArgs* e)
 	lbl->setText(str);
 }
 
+void MainWindow::render3D(ui::Control* sender, event::EventArgs* e)
+{
+	float speed = 1;
+	if (isWPressed)
+		this->mCamera.moveForward(speed);
+	if (isSPressed)
+		this->mCamera.moveForward(-speed);
+	if (isAPressed)
+		this->mCamera.moveLeft(speed);
+	if (isDPressed)
+		this->mCamera.moveLeft(-speed);
+
+	this->mCamera.update();
+	glTranslatef(0, 0, -20.0f);
+	glScalef(0.01f, 0.01f, 0.01f);
+
+	for(std::vector<geo::Entity*>::iterator e = this->scene.mEntities.begin(); e != this->scene.mEntities.end(); ++e)
+	{
+		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
+		{
+			this->renderBrushVertices(*(*b));
+		}
+	}
+
+}
+
 bool MainWindow::initialize(int argc, char* argv[])
 {
 	geo::MapLoader loader;
@@ -84,7 +110,8 @@ bool MainWindow::initialize(int argc, char* argv[])
 	vbx = new ui::Valuebox(10, 180, 64, 24, 5, 0, 360);
 	vby = new ui::Valuebox(10, 180, 64, 24, 5, 0, 360);
 	lbl = new ui::Label("Brush : 0, Plane : 0", 0, 0, 200, 200);
-	ui::Container* cnt = new ui::VerticalContainer(30, 30, 200, 500);
+	ui::Render3D* td = new ui::Render3D(0, 0, 200, 200);
+	ui::Container* cnt = new ui::VerticalContainer(30, 30, 500, 500);
 	cnt->addControl(b1);
 	cnt->addControl(b2);
 	cnt->addControl(b3);
@@ -93,12 +120,14 @@ bool MainWindow::initialize(int argc, char* argv[])
 	cnt->addControl(vbx);
 	cnt->addControl(vby);
 	cnt->addControl(lbl);
+	cnt->addControl(td);
 
 	// Voorbeeld van het toevoegen van events
 	b1->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::linksomDraaien);
 	b2->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::rechtsomDraaien);
 	b3->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::omhoogDraaien);
 	b4->Click += ui::ClickEventHandler(this, (ui::ClickEvent::FunctionPtr)&MainWindow::omlaagDraaien);
+	td->onRender += ui::Render3DEventHandler(this, (ui::Render3DEvent::FunctionPtr)&MainWindow::render3D);
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 
@@ -139,27 +168,6 @@ void MainWindow::render(int time)
 	float speed = 1.0f * ((time - lastTime) / 100.0f);
 	lastTime = time;
 
-	if (isWPressed)
-		this->mCamera.moveForward(speed);
-	if (isSPressed)
-		this->mCamera.moveForward(-speed);
-	if (isAPressed)
-		this->mCamera.moveLeft(speed);
-	if (isDPressed)
-		this->mCamera.moveLeft(-speed);
-
-	this->mCamera.update();
-	glTranslatef(0, 0, -20.0f);
-	glScalef(0.01f, 0.01f, 0.01f);
-
-	for(std::vector<geo::Entity*>::iterator e = this->scene.mEntities.begin(); e != this->scene.mEntities.end(); ++e)
-	{
-		for (std::vector<geo::Brush*>::iterator b = (*e)->mBrushes.begin(); b != (*e)->mBrushes.end(); ++b)
-		{
-			this->renderBrushVertices(*(*b));
-		}
-	}
-	
 	glPopMatrix();
 }
 

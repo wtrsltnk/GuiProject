@@ -40,6 +40,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiCheckbox.o \
 	${OBJECTDIR}/ui/uiFont.o \
 	${OBJECTDIR}/ui/uiVerticalContainer.o \
+	${OBJECTDIR}/ui/uiRender3D.o \
 	${OBJECTDIR}/common/vector3.o \
 	${OBJECTDIR}/ui/uiValuebox.o \
 	${OBJECTDIR}/geo/MapLoader.o \
@@ -56,8 +57,8 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiButton.o \
 	${OBJECTDIR}/ui/uiLabel.o \
 	${OBJECTDIR}/camera.o \
-	${OBJECTDIR}/common/matrix4x4.o \
-	${OBJECTDIR}/GlutApplication.o
+	${OBJECTDIR}/GlutApplication.o \
+	${OBJECTDIR}/common/matrix4x4.o
 
 
 # C Compiler Flags
@@ -120,6 +121,11 @@ ${OBJECTDIR}/ui/uiVerticalContainer.o: ui/uiVerticalContainer.cpp
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiVerticalContainer.o ui/uiVerticalContainer.cpp
+
+${OBJECTDIR}/ui/uiRender3D.o: ui/uiRender3D.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiRender3D.o ui/uiRender3D.cpp
 
 ${OBJECTDIR}/common/vector3.o: common/vector3.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
@@ -201,15 +207,15 @@ ${OBJECTDIR}/camera.o: camera.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/camera.o camera.cpp
 
-${OBJECTDIR}/common/matrix4x4.o: common/matrix4x4.cpp 
-	${MKDIR} -p ${OBJECTDIR}/common
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/matrix4x4.o common/matrix4x4.cpp
-
 ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/GlutApplication.o GlutApplication.cpp
+
+${OBJECTDIR}/common/matrix4x4.o: common/matrix4x4.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/matrix4x4.o common/matrix4x4.cpp
 
 # Subprojects
 .build-subprojects:

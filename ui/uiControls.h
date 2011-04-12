@@ -68,7 +68,7 @@ enum
 	Textbox = 104,
 	Valuebox = 105,
 	Listbox = 106,
-	ListboxItem = 107,
+	Render3D = 107,
 };
 }
 
@@ -408,6 +408,20 @@ protected:
 	float mMaxValue;
 	char mInput[32];
 
+};
+
+typedef event::Event<Control, event::EventArgs> Render3DEvent;
+typedef Render3DEvent::Handler Render3DEventHandler;
+
+class Render3D : public Control
+{
+public:
+	Render3D(int x, int y, int w, int h);
+	virtual ~Render3D();
+	
+	virtual void render();
+
+	Render3DEvent onRender;
 };
 
 }	/* namespace ui */

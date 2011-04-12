@@ -56,6 +56,7 @@
       <itemPath>ui/uiListbox.cpp</itemPath>
       <itemPath>ui/uiManager.cpp</itemPath>
       <itemPath>ui/uiManager.h</itemPath>
+      <itemPath>ui/uiRender3D.cpp</itemPath>
       <itemPath>ui/uiTextbox.cpp</itemPath>
       <itemPath>ui/uiUserInput.cpp</itemPath>
       <itemPath>ui/uiUserInput.h</itemPath>

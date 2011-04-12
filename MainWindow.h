@@ -27,6 +27,7 @@ public:
 	virtual void linksomDraaien(ui::Control* sender, event::EventArgs* e);
 	virtual void omhoogDraaien(ui::Control* sender, event::EventArgs* e);
 	virtual void omlaagDraaien(ui::Control* sender, event::EventArgs* e);
+	virtual void render3D(ui::Control* sender, event::EventArgs* e);
 
 	virtual bool initialize(int argc, char* argv[]);
 	virtual void resize(int w, int h);
