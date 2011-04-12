@@ -57,6 +57,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiButton.o \
 	${OBJECTDIR}/ui/uiLabel.o \
 	${OBJECTDIR}/camera.o \
+	${OBJECTDIR}/ui/uiHorizontalContainer.o \
 	${OBJECTDIR}/GlutApplication.o \
 	${OBJECTDIR}/common/matrix4x4.o
 
@@ -204,6 +205,11 @@ ${OBJECTDIR}/camera.o: camera.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/camera.o camera.cpp
+
+${OBJECTDIR}/ui/uiHorizontalContainer.o: ui/uiHorizontalContainer.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiHorizontalContainer.o ui/uiHorizontalContainer.cpp
 
 ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp 
 	${MKDIR} -p ${OBJECTDIR}

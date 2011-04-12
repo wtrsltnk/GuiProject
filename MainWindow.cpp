@@ -30,21 +30,32 @@ MainWindow::~MainWindow()
 	ui::Manager::destroyInstance();
 }
 
-void MainWindow::onMouseEvent(ui::Control* sender, ui::MouseButtonEventArgs* e)
+void MainWindow::onMouseMoveEvent(ui::Control* sender, ui::MouseButtonEventArgs* e)
 {
 	static ui::MouseState lastState = e->state;
 	if (e->state.isButtonPressed(ui::Mouse::Left))
 	{
 		float deltax = e->state.getMousePositionX() - lastState.getMousePositionX();
-		float deltay = e->state.getMousePositionY() - lastState.getMousePositionY();
+		float deltay = lastState.getMousePositionY() - e->state.getMousePositionY();
 		this->mCamera.rotate(Deg2Rad(deltay/10.0f), 0, Deg2Rad(deltax/10.0f));
 	}
 	lastState = e->state;
 }
 
+void MainWindow::onMouseDownEvent(ui::Control* sender, ui::MouseButtonEventArgs* e)
+{
+	static ui::MouseState lastState = e->state;
+
+	if (e->button == ui::Mouse::Left)
+	{
+		// Left mouse button was just pressed
+		printf("Left mouse button was just pressed\n");
+	}
+}
+
 void MainWindow::render3D(ui::Control* sender, event::EventArgs* e)
 {
-	float speed = 1;
+	float speed = 0.2f;
 	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::W) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::w))
 		this->mCamera.moveForward(speed);
 	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::S) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::s))
@@ -79,16 +90,19 @@ bool MainWindow::initialize(int argc, char* argv[])
 	vb = new ui::Valuebox(10, 180, 64, 24, 5, 0, 10000);
 	vbx = new ui::Valuebox(10, 180, 64, 24, 5, 0, 360);
 	vby = new ui::Valuebox(10, 180, 64, 24, 5, 0, 360);
-	ui::Render3D* td = new ui::Render3D(0, 0, 200, 500);
-	ui::Container* cnt = new ui::VerticalContainer(30, 30, 600, 500);
+	ui::Render3D* td = new ui::Render3D(0, 0, 500, 500);
+	ui::Container* cnt = new ui::VerticalContainer(0, 0, 100, 500);
+	ui::Container* cnt2 = new ui::HorizontalContainer(40, 0, 600, 500);
 	cnt->addControl(vb);
 	cnt->addControl(vbx);
 	cnt->addControl(vby);
-	cnt->addControl(td);
+	cnt2->addControl(cnt);
+	cnt2->addControl(td);
 
 	// Voorbeeld van het toevoegen van events
 	td->onRender += ui::Render3DEventHandler(this, (ui::Render3DEvent::FunctionPtr)&MainWindow::render3D);
-	td->onMouseMove += ui::MouseButtonEventHandler(this, (ui::MouseEvent::FunctionPtr)&MainWindow::onMouseEvent);
+	td->onMouseMove += ui::MouseButtonEventHandler(this, (ui::MouseEvent::FunctionPtr)&MainWindow::onMouseMoveEvent);
+	td->onMouseButtonDown += ui::MouseButtonEventHandler(this, (ui::MouseEvent::FunctionPtr)&MainWindow::onMouseDownEvent);
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 
@@ -166,67 +180,4 @@ void MainWindow::renderBrushVertices(geo::Brush& brush)
 		glVertex3fv((*itr));
 	}
 	glEnd();
-}
-
-void MainWindow::onKeyboard(unsigned char key, int x, int y)
-{
-//	if (key == 'w') isWPressed = true;
-//	if (key == 's') isSPressed = true;
-//	if (key == 'a') isAPressed = true;
-//	if (key == 'd') isDPressed = true;
-}
-
-void MainWindow::onKeyboardUp(unsigned char key, int x, int y)
-{
-//	if (key == 'w') isWPressed = false;
-//	if (key == 's') isSPressed = false;
-//	if (key == 'a') isAPressed = false;
-//	if (key == 'd') isDPressed = false;
-}
-
-void MainWindow::onSpecialKeyboard(int key, int x, int y)
-{
-//	if (key == GLUT_KEY_UP) isWPressed = true;
-//	if (key == GLUT_KEY_DOWN) isSPressed = true;
-//	if (key == GLUT_KEY_LEFT) isAPressed = true;
-//	if (key == GLUT_KEY_RIGHT) isDPressed = true;
-}
-
-void MainWindow::onSpecialKeyboardUp(int key, int x, int y)
-{
-//	if (key == GLUT_KEY_UP) isWPressed = false;
-//	if (key == GLUT_KEY_DOWN) isSPressed = false;
-//	if (key == GLUT_KEY_LEFT) isAPressed = false;
-//	if (key == GLUT_KEY_RIGHT) isDPressed = false;
-}
-
-void MainWindow::onMouseClick(int button, int state, int x, int y)
-{
-//	if (button == 0)
-//	{
-//		leftIsPressed = (state == 0);
-//	}
-//	startx = x;
-//	starty = y;
-}
-
-void MainWindow::onMouseMove(int x, int y)
-{
-#ifdef WIN32
-	if (leftIsPressed)
-	{
-		this->mCamera.rotate(Deg2Rad((y-(starty))/10.0f), 0, Deg2Rad((x-(startx))/10.0f));
-	}
-#else
-//	static bool justWarped = false;
-////	if (justWarped)
-//	if (ui::MouseState::currentState().isButtonPressed(ui::Mouse::Left))
-//	{
-//		this->mCamera.rotate(Deg2Rad((y-starty)/10.0f), 0, Deg2Rad((x-startx)/10.0f));
-////		glutWarpPointer(this->width/2, this->height/2);
-//	}
-//	justWarped = !justWarped;
-#endif
-//	startx = x;
-//	starty = y;
 }

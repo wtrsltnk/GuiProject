@@ -52,6 +52,7 @@
       <itemPath>ui/uiFont.cpp</itemPath>
       <itemPath>ui/uiFont.h</itemPath>
       <itemPath>ui/uiFreeContainer.cpp</itemPath>
+      <itemPath>ui/uiHorizontalContainer.cpp</itemPath>
       <itemPath>ui/uiLabel.cpp</itemPath>
       <itemPath>ui/uiListbox.cpp</itemPath>
       <itemPath>ui/uiManager.cpp</itemPath>

@@ -61,7 +61,8 @@ namespace ControlTypes
 enum
 {
 	VerticalContainer = 1,
-	FreeContainer = 2,
+	HorizontalContainer = 2,
+	FreeContainer = 3,
 	Label = 101,
 	Button = 102,
 	Checkbox = 103,
@@ -91,6 +92,7 @@ public:
 	KeyboardEventArgs();
 	virtual ~KeyboardEventArgs();
 
+	Key::Code key;
 	KeyboardState state;
 };
 
@@ -103,6 +105,7 @@ public:
 	MouseButtonEventArgs();
 	virtual ~MouseButtonEventArgs();
 
+	Mouse::Button button;
 	MouseState state;
 
 };
@@ -244,6 +247,19 @@ class VerticalContainer : public Container
 public:
 	VerticalContainer(int x, int y, int w, int h);
 	virtual ~VerticalContainer();
+
+	virtual void render();
+
+private:
+
+	virtual void updateChildControls();
+};
+
+class HorizontalContainer : public Container
+{
+public:
+	HorizontalContainer(int x, int y, int w, int h);
+	virtual ~HorizontalContainer();
 
 	virtual void render();
 

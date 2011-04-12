@@ -65,7 +65,7 @@ void Manager::initialize(const char* fontpath)
 	Manager::sDefaultFont = new Font();
 	Manager::sDefaultFont->initializeFont(fontpath);
 
-	Manager::instance()->mRoot = new FreeContainer(20, 20, 10, 10);
+	Manager::instance()->mRoot = new FreeContainer(0, 0, 0, 0);
 }
 
 void Manager::addControl(Control* ctr)
@@ -130,7 +130,7 @@ void Manager::setupSize(int w, int h)
 	this->mViewSize[0] = w;
 	this->mViewSize[1] = h;
 	if (this->mRoot != 0)
-		this->mRoot->setSize(w-40, h-40);
+		this->mRoot->setSize(w, h);
 }
 
 void Manager::render()
@@ -186,6 +186,7 @@ void Manager::glutKeyboardDown(unsigned char key, int x, int y)
 	{
 		Manager::instance()->mFocus->keyDown(Manager::sKeymap[key]);
 		KeyboardEventArgs e;
+		e.key = Manager::sKeymap[key];
 		Manager::instance()->mFocus->onKeyboardDown(&e);
 	}
 }
@@ -198,6 +199,7 @@ void Manager::glutKeyboardUp(unsigned char key, int x, int y)
 	{
 		Manager::instance()->mFocus->keyUp(Manager::sKeymap[key]);
 		KeyboardEventArgs e;
+		e.key = Manager::sKeymap[key];
 		Manager::instance()->mFocus->onKeyboardUp(&e);
 	}
 }
@@ -211,6 +213,7 @@ void Manager::glutSpecialKeyboardDown(int key, int x, int y)
 	{
 		Manager::instance()->mFocus->keyDown(Manager::sSpecialKeymap[key]);
 		KeyboardEventArgs e;
+		e.key = Manager::sSpecialKeymap[key];
 		Manager::instance()->mFocus->onKeyboardDown(&e);
 	}
 }
@@ -224,6 +227,7 @@ void Manager::glutSpecialKeyboardUp(int key, int x, int y)
 	{
 		Manager::instance()->mFocus->keyUp(Manager::sSpecialKeymap[key]);
 		KeyboardEventArgs e;
+		e.key = Manager::sSpecialKeymap[key];
 		Manager::instance()->mFocus->onKeyboardUp(&e);
 	}
 }
@@ -256,6 +260,7 @@ void Manager::glutMouseClick(int button, int state, int x, int y)
 	if (Manager::instance()->mFocus != 0)
 	{
 		MouseButtonEventArgs e;
+		e.button = Manager::sButtonmap[button];
 		if (state == 0)
 			Manager::instance()->mFocus->onMouseButtonDown(&e);
 		else if (state == 1)
