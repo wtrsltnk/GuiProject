@@ -691,8 +691,8 @@ void mouseMove(int x, int y)
 	MouseState::sCurrentState.mMouseY = gApplication->height - y;
 
 	if (gApplication != 0)
-		gApplication->onMouseMove(x, y);
-	ui::Manager::onMouseMove(x, y);
+		gApplication->onMouseMove(MouseState::sCurrentState.mMouseX, MouseState::sCurrentState.mMouseY);
+	ui::Manager::onMouseMove(MouseState::sCurrentState.mMouseX, MouseState::sCurrentState.mMouseY);
 
 	glutPostRedisplay();
 }

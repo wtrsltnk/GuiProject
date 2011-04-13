@@ -2,7 +2,13 @@
 <configurationDescriptor version="69">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="f4" displayName="common" projectFiles="true">
+      <itemPath>common/FileLoader.cpp</itemPath>
+      <itemPath>FileLoader.h</itemPath>
       <itemPath>common/MemoryGuard.h</itemPath>
+      <itemPath>common/Texture.cpp</itemPath>
+      <itemPath>common/Texture.h</itemPath>
+      <itemPath>common/TextureLoader.cpp</itemPath>
+      <itemPath>common/TextureLoader.h</itemPath>
       <itemPath>common/Tokenizer.cpp</itemPath>
       <itemPath>common/Tokenizer.h</itemPath>
       <itemPath>common/camera.cpp</itemPath>

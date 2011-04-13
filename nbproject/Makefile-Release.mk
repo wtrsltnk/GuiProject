@@ -46,20 +46,23 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiValuebox.o \
 	${OBJECTDIR}/geo/MapLoader.o \
 	${OBJECTDIR}/geo/Entity.o \
+	${OBJECTDIR}/common/TextureLoader.o \
 	${OBJECTDIR}/ui/uiClipper.o \
 	${OBJECTDIR}/ui/uiContainer.o \
 	${OBJECTDIR}/geo/Scene.o \
 	${OBJECTDIR}/ui/uiTextbox.o \
+	${OBJECTDIR}/common/FileLoader.o \
 	${OBJECTDIR}/ui/uiListbox.o \
 	${OBJECTDIR}/ui/uiControl.o \
 	${OBJECTDIR}/common/Tokenizer.o \
 	${OBJECTDIR}/ui/uiManager.o \
+	${OBJECTDIR}/common/Texture.o \
 	${OBJECTDIR}/ui/uiButton.o \
 	${OBJECTDIR}/ui/uiLabel.o \
 	${OBJECTDIR}/userInput.o \
 	${OBJECTDIR}/ui/uiHorizontalContainer.o \
-	${OBJECTDIR}/GLee.o \
 	${OBJECTDIR}/GlutApplication.o \
+	${OBJECTDIR}/GLee.o \
 	${OBJECTDIR}/common/matrix4x4.o
 
 
@@ -152,6 +155,11 @@ ${OBJECTDIR}/geo/Entity.o: geo/Entity.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Entity.o geo/Entity.cpp
 
+${OBJECTDIR}/common/TextureLoader.o: common/TextureLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/TextureLoader.o common/TextureLoader.cpp
+
 ${OBJECTDIR}/ui/uiClipper.o: ui/uiClipper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
@@ -171,6 +179,11 @@ ${OBJECTDIR}/ui/uiTextbox.o: ui/uiTextbox.cpp
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiTextbox.o ui/uiTextbox.cpp
+
+${OBJECTDIR}/common/FileLoader.o: common/FileLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/FileLoader.o common/FileLoader.cpp
 
 ${OBJECTDIR}/ui/uiListbox.o: ui/uiListbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -192,6 +205,11 @@ ${OBJECTDIR}/ui/uiManager.o: ui/uiManager.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiManager.o ui/uiManager.cpp
 
+${OBJECTDIR}/common/Texture.o: common/Texture.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Texture.o common/Texture.cpp
+
 ${OBJECTDIR}/ui/uiButton.o: ui/uiButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
@@ -212,15 +230,15 @@ ${OBJECTDIR}/ui/uiHorizontalContainer.o: ui/uiHorizontalContainer.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiHorizontalContainer.o ui/uiHorizontalContainer.cpp
 
-${OBJECTDIR}/GLee.o: GLee.c 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/GLee.o GLee.c
-
 ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/GlutApplication.o GlutApplication.cpp
+
+${OBJECTDIR}/GLee.o: GLee.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/GLee.o GLee.c
 
 ${OBJECTDIR}/common/matrix4x4.o: common/matrix4x4.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
