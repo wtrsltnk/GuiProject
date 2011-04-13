@@ -54,6 +54,8 @@ public:
 	// All the vertices of this brush
 	std::vector<Vector3> mVertices;
 
+	float mMins[3], mMaxs[3];
+
 	// The color of this plane
 	float mColor[4];
 	

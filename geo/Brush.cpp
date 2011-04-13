@@ -149,6 +149,10 @@ float calculateSignedAngle(const Vector3& v1, const Vector3& v2, const Vector3& 
 
 void Brush::updateVertices()
 {
+	// Reset the boundingbox
+	this->mMins[0] = this->mMins[1] = this->mMins[2] =  99999.9f;
+	this->mMaxs[0] = this->mMaxs[1] = this->mMaxs[2] = -99999.9f;
+	
 	// Loop through all the planes, and gather 3 different planes to create a vertex from
 	for(int i = 0; i < this->mPlanes.size() - 2; i++)
 	{
@@ -191,6 +195,15 @@ void Brush::updateVertices()
 								{
 									index = this->mVertices.size();
 									this->mVertices.push_back(intersection);
+
+									// Update the bounding box
+									if (this->mMins[0] > intersection.x()) this->mMins[0] = intersection.x();
+									if (this->mMins[1] > intersection.y()) this->mMins[1] = intersection.y();
+									if (this->mMins[2] > intersection.z()) this->mMins[2] = intersection.z();
+
+									if (this->mMaxs[0] < intersection.x()) this->mMaxs[0] = intersection.x();
+									if (this->mMaxs[1] < intersection.y()) this->mMaxs[1] = intersection.y();
+									if (this->mMaxs[2] < intersection.z()) this->mMaxs[2] = intersection.z();
 								}
 
 								// Only add the point when it is not yet in the index list
