@@ -42,28 +42,29 @@ class Brush
 public:
 	Brush();
 	virtual ~Brush();
-	
+
+	// Adds a plane to this brush
 	void addPlane(Plane& plane);
 
 	// All the planes a brush is made of
 	std::vector<Plane> mPlanes;
 
-	// The current selected plane from this Brush
-	Plane* mSelectedPlane;
-
 	// All the vertices of this brush
 	std::vector<Vector3> mVertices;
 
+	// Bounding of this brush
 	float mMins[3], mMaxs[3];
 
 	// The color of this plane
 	float mColor[4];
-	
+
+	// Gets the index of a  vertex at the given position
 	int getIndexOf(const Vector3& vertex);
 
 	// Updates all the vertices of this brush
 	void updateVertices();
 
+	// Determine if the given position is within this world
 	static bool pointInWorld(const Vector3& point)
 	{
 		if(point.x() < -WORLD || point.x() > WORLD)
