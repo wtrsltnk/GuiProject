@@ -31,7 +31,7 @@ DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release libRelease 
+ALLCONFS=Debug Release libRelease libDebug 
 
 
 # build

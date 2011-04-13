@@ -8,10 +8,8 @@
 #ifndef MAINWINDOW_H_
 #define MAINWINDOW_H_
 
-#include "camera.h"
-
-
 #include "GlutApplication.h"
+#include "common/camera.h"
 #include "ui/uiControls.h"
 #include "geo/Brush.h"
 #include "geo/Scene.h"

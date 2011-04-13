@@ -30,3 +30,11 @@ CND_ARTIFACT_PATH_libRelease=dist/libRelease/GNU-Linux-x86/libguiproject.a
 CND_PACKAGE_DIR_libRelease=dist/libRelease/GNU-Linux-x86/package
 CND_PACKAGE_NAME_libRelease=GuiProject.tar
 CND_PACKAGE_PATH_libRelease=dist/libRelease/GNU-Linux-x86/package/GuiProject.tar
+# libDebug configuration
+CND_PLATFORM_libDebug=GNU-Linux-x86
+CND_ARTIFACT_DIR_libDebug=dist/libDebug/GNU-Linux-x86
+CND_ARTIFACT_NAME_libDebug=libguiproject.a
+CND_ARTIFACT_PATH_libDebug=dist/libDebug/GNU-Linux-x86/libguiproject.a
+CND_PACKAGE_DIR_libDebug=dist/libDebug/GNU-Linux-x86/package
+CND_PACKAGE_NAME_libDebug=GuiProject.tar
+CND_PACKAGE_PATH_libDebug=dist/libDebug/GNU-Linux-x86/package/GuiProject.tar
