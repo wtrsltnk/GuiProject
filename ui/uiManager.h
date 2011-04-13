@@ -9,7 +9,7 @@
 #define UIMANAGER_H_
 
 #include "../events.h"
-#include "uiUserInput.h"
+#include "../userInput.h"
 #include <vector>
 
 namespace ui
@@ -30,10 +30,6 @@ public:
 	virtual ~Manager();
 
 	void setupSize(int w, int h);
-	void onKeyboard(unsigned char key, int x, int y);
-	void onSpecialKeyboard(int key, int x, int y);
-	void onMouseClick(int button, int state, int x, int y);
-	void onMouseMove(int x, int y);
 	void render();
 
 	Container* getRoot();
@@ -55,16 +51,11 @@ private:
 	Container* mRoot;
 
 public:
-	static void glutKeyboardDown(unsigned char key, int x, int y);
-	static void glutKeyboardUp(unsigned char key, int x, int y);
-	static void glutSpecialKeyboardDown(int key, int x, int y);
-	static void glutSpecialKeyboardUp(int key, int x, int y);
-	static void glutMouseClick(int button, int state, int x, int y);
-	static void glutMouseMove(int x, int y);
-
-	static Mouse::Button sButtonmap[];
-	static Key::Code sKeymap[];
-	static Key::Code sSpecialKeymap[];
+	static void onKeyDown(Key::Code key);
+	static void onKeyUp(Key::Code key);
+	static void onMouseButtonDown(Mouse::Button button);
+	static void onMouseButtonUp(Mouse::Button button);
+	static void onMouseMove(int x, int y);
 
 };
 

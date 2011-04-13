@@ -34,11 +34,11 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/ui/uiFreeContainer.o \
-	${OBJECTDIR}/MainWindow.o \
 	${OBJECTDIR}/geo/Brush.o \
 	${OBJECTDIR}/ui/stb_truetype.o \
 	${OBJECTDIR}/ui/uiCheckbox.o \
 	${OBJECTDIR}/ui/uiFont.o \
+	${OBJECTDIR}/GuiProject.o \
 	${OBJECTDIR}/ui/uiVerticalContainer.o \
 	${OBJECTDIR}/common/camera.o \
 	${OBJECTDIR}/ui/uiRender3D.o \
@@ -50,14 +50,15 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiContainer.o \
 	${OBJECTDIR}/geo/Scene.o \
 	${OBJECTDIR}/ui/uiTextbox.o \
-	${OBJECTDIR}/ui/uiUserInput.o \
 	${OBJECTDIR}/ui/uiListbox.o \
 	${OBJECTDIR}/ui/uiControl.o \
 	${OBJECTDIR}/common/Tokenizer.o \
 	${OBJECTDIR}/ui/uiManager.o \
 	${OBJECTDIR}/ui/uiButton.o \
 	${OBJECTDIR}/ui/uiLabel.o \
+	${OBJECTDIR}/userInput.o \
 	${OBJECTDIR}/ui/uiHorizontalContainer.o \
+	${OBJECTDIR}/GLee.o \
 	${OBJECTDIR}/GlutApplication.o \
 	${OBJECTDIR}/common/matrix4x4.o
 
@@ -91,11 +92,6 @@ ${OBJECTDIR}/ui/uiFreeContainer.o: ui/uiFreeContainer.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiFreeContainer.o ui/uiFreeContainer.cpp
 
-${OBJECTDIR}/MainWindow.o: MainWindow.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/MainWindow.o MainWindow.cpp
-
 ${OBJECTDIR}/geo/Brush.o: geo/Brush.cpp 
 	${MKDIR} -p ${OBJECTDIR}/geo
 	${RM} $@.d
@@ -115,6 +111,11 @@ ${OBJECTDIR}/ui/uiFont.o: ui/uiFont.cpp
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiFont.o ui/uiFont.cpp
+
+${OBJECTDIR}/GuiProject.o: GuiProject.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/GuiProject.o GuiProject.cpp
 
 ${OBJECTDIR}/ui/uiVerticalContainer.o: ui/uiVerticalContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -171,11 +172,6 @@ ${OBJECTDIR}/ui/uiTextbox.o: ui/uiTextbox.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiTextbox.o ui/uiTextbox.cpp
 
-${OBJECTDIR}/ui/uiUserInput.o: ui/uiUserInput.cpp 
-	${MKDIR} -p ${OBJECTDIR}/ui
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiUserInput.o ui/uiUserInput.cpp
-
 ${OBJECTDIR}/ui/uiListbox.o: ui/uiListbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
@@ -206,10 +202,20 @@ ${OBJECTDIR}/ui/uiLabel.o: ui/uiLabel.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiLabel.o ui/uiLabel.cpp
 
+${OBJECTDIR}/userInput.o: userInput.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/userInput.o userInput.cpp
+
 ${OBJECTDIR}/ui/uiHorizontalContainer.o: ui/uiHorizontalContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiHorizontalContainer.o ui/uiHorizontalContainer.cpp
+
+${OBJECTDIR}/GLee.o: GLee.c 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/GLee.o GLee.c
 
 ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp 
 	${MKDIR} -p ${OBJECTDIR}

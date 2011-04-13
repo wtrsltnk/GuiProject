@@ -1,12 +1,12 @@
 /*
- * MainWindow.h
+ * GuiProject.h
  *
  *  Created on: Mar 12, 2011
  *      Author: wouter
  */
 
-#ifndef MAINWINDOW_H_
-#define MAINWINDOW_H_
+#ifndef GUIPROJECT_H_
+#define GUIPROJECT_H_
 
 #include "GlutApplication.h"
 #include "common/camera.h"
@@ -28,11 +28,10 @@ public:
 
 	virtual bool initialize(int argc, char* argv[]);
 	virtual void resize(int w, int h);
-	virtual void onKeyboard(unsigned char key, int x, int y) { }
-	virtual void onKeyboardUp(unsigned char key, int x, int y) { }
-	virtual void onSpecialKeyboard(int key, int x, int y) { }
-	virtual void onSpecialKeyboardUp(int key, int x, int y) { }
-	virtual void onMouseClick(int button, int state, int x, int y) { }
+	virtual void onKeyboardDown(Key::Code key) { }
+	virtual void onKeyboardUp(Key::Code key) { }
+	virtual void onMouseDown(Mouse::Button button) { }
+	virtual void onMouseUp(Mouse::Button button) { }
 	virtual void onMouseMove(int x, int y) { }
 	virtual void render(int time);
 
@@ -50,4 +49,4 @@ public:
 
 };
 
-#endif /* MAINWINDOW_H_ */
+#endif /* GUIPROJECT_H_ */

@@ -8,9 +8,6 @@
 #ifndef _USERINPUT_H
 #define	_USERINPUT_H
 
-namespace ui
-{
-
 /// Definitions for the keys on a keyboard
 namespace Key
 {
@@ -166,7 +163,12 @@ public:
 private:
 	bool mKeys[Key::Count];
 
-	friend class Manager;
+	friend void keyboardDown(unsigned char key, int x, int y);
+	friend void keyboardUp(unsigned char key, int x, int y);
+	friend void specialKeyboardDown(int key, int x, int y);
+	friend void specialKeyboardUp(int key, int x, int y);
+	friend void mouseClick(int button, int state, int x, int y);
+	friend void mouseMove(int x, int y);
 };
 
 /// Definitions for the Mouse buttons
@@ -202,9 +204,13 @@ private:
 	bool mMouseButton[Mouse::Count];
 	int mMouseX, mMouseY;
 
-	friend class Manager;
+	friend void keyboardDown(unsigned char key, int x, int y);
+	friend void keyboardUp(unsigned char key, int x, int y);
+	friend void specialKeyboardDown(int key, int x, int y);
+	friend void specialKeyboardUp(int key, int x, int y);
+	friend void mouseClick(int button, int state, int x, int y);
+	friend void mouseMove(int x, int y);
 };
 
-}
 
 #endif	/* _USERINPUT_H */

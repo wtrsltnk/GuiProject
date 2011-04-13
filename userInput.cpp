@@ -1,7 +1,4 @@
-#include "uiUserInput.h"
-
-namespace ui
-{
+#include "userInput.h"
 
 /**************************************************************/
 /** Mouse State												 **/
@@ -79,6 +76,4 @@ KeyboardState::~KeyboardState()
 bool KeyboardState::isKeyPressed(Key::Code key) const
 {
 	return this->mKeys[key];
-}
-
 }

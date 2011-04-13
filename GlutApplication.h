@@ -8,44 +8,49 @@
 #ifndef GLUTAPPLICATION_H_
 #define GLUTAPPLICATION_H_
 
-#include <GL/freeglut.h>
+#include "userInput.h"
 
 class GlutApplication
 {
 public:
-	GlutApplication(const char* title) { char* tmp = this->title; while (title[0] != '\0') { tmp[0] = title[0]; tmp++; title++; } tmp[0] = '\0'; }
+	GlutApplication(const char* title);
 	virtual ~GlutApplication() { }
+
+	void quit();
 
 	virtual bool initialize(int argc, char* argv[]) { return true; }
 	virtual void resize(int w, int h) { }
-	virtual void onKeyboard(unsigned char key, int x, int y) { }
-	virtual void onKeyboardUp(unsigned char key, int x, int y) { }
-	virtual void onSpecialKeyboard(int key, int x, int y) { }
-	virtual void onSpecialKeyboardUp(int key, int x, int y) { }
-	virtual void onMouseClick(int button, int state, int x, int y) { }
+	virtual void onKeyDown(Key::Code key) { }
+	virtual void onKeyUp(Key::Code key) { }
+	virtual void onMouseButtonDown(Mouse::Button button) { }
+	virtual void onMouseButtonUp(Mouse::Button button) { }
 	virtual void onMouseMove(int x, int y) { }
 	virtual void render(int time) { }
 
 	int width, height;
 	char title[64];
+
 };
 
 extern GlutApplication* gApplication;
 
 /* Example class:
  *
- *	class Example01 : public GlutApplication
- *	{
- *	public:
- * 		Example01();
- * 		virtual ~Example01();
- *
- * 		virtual void resize(int w, int h);
- * 		virtual void onKeyboard(unsigned char key, int x, int y);
- * 		virtual void onMouseClick(int button, int state, int x, int y);
- * 		virtual void onMouseMove(int x, int y) { }
- * 		virtual void render();
- *	};
+	class Example01 : public GlutApplication
+	{
+	public:
+		Example01();
+		virtual ~Example01();
+
+		virtual bool initialize(int argc, char* argv[]) { return true; }
+		virtual void resize(int w, int h) { }
+		virtual void onKeyDown(Key::Code key) { }
+		virtual void onKeyUp(Key::Code key) { }
+		virtual void onMouseButtonDown(Mouse::Button button) { }
+		virtual void onMouseButtonUp(Mouse::Button button) { }
+		virtual void onMouseMove(int x, int y) { }
+		virtual void render(int time) { }
+	};
  *
  * Don't forget to include the following line somewhere
  * in your implementation (cpp) file:

@@ -1,12 +1,14 @@
 /*
- * MainWindow.cpp
+ * GuiProject.cpp
  *
  *  Created on: Mar 12, 2011
  *      Author: wouter
  */
 
-#include "MainWindow.h"
+#include "GuiProject.h"
 #include "geo/MapLoader.h"
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <stdio.h>
 
 #define PI 3.14159265
@@ -32,8 +34,8 @@ MainWindow::~MainWindow()
 
 void MainWindow::onMouseMoveEvent(ui::Control* sender, ui::MouseButtonEventArgs* e)
 {
-	static ui::MouseState lastState = e->state;
-	if (e->state.isButtonPressed(ui::Mouse::Left))
+	static MouseState lastState = e->state;
+	if (e->state.isButtonPressed(Mouse::Left))
 	{
 		float deltax = e->state.getMousePositionX() - lastState.getMousePositionX();
 		float deltay = lastState.getMousePositionY() - e->state.getMousePositionY();
@@ -44,9 +46,9 @@ void MainWindow::onMouseMoveEvent(ui::Control* sender, ui::MouseButtonEventArgs*
 
 void MainWindow::onMouseDownEvent(ui::Control* sender, ui::MouseButtonEventArgs* e)
 {
-	static ui::MouseState lastState = e->state;
+	static MouseState lastState = e->state;
 
-	if (e->button == ui::Mouse::Left)
+	if (e->button == Mouse::Left)
 	{
 		// Left mouse button was just pressed
 		printf("Left mouse button was just pressed\n");
@@ -56,13 +58,13 @@ void MainWindow::onMouseDownEvent(ui::Control* sender, ui::MouseButtonEventArgs*
 void MainWindow::render3D(ui::Control* sender, event::EventArgs* e)
 {
 	float speed = 0.2f;
-	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::W) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::w))
+	if (KeyboardState::currentState().isKeyPressed(Key::W) || KeyboardState::currentState().isKeyPressed(Key::w))
 		this->mCamera.moveForward(speed);
-	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::S) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::s))
+	if (KeyboardState::currentState().isKeyPressed(Key::S) || KeyboardState::currentState().isKeyPressed(Key::s))
 		this->mCamera.moveForward(-speed);
-	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::A) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::a))
+	if (KeyboardState::currentState().isKeyPressed(Key::A) || KeyboardState::currentState().isKeyPressed(Key::a))
 		this->mCamera.moveLeft(speed);
-	if (ui::KeyboardState::currentState().isKeyPressed(ui::Key::D) || ui::KeyboardState::currentState().isKeyPressed(ui::Key::d))
+	if (KeyboardState::currentState().isKeyPressed(Key::D) || KeyboardState::currentState().isKeyPressed(Key::d))
 		this->mCamera.moveLeft(-speed);
 
 	this->mCamera.update();

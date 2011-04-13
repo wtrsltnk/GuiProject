@@ -9,7 +9,7 @@
 #define CONTROLS_H
 
 #include "uiManager.h"
-#include "uiUserInput.h"
+#include "../userInput.h"
 
 namespace ui
 {
