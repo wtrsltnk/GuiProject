@@ -19,6 +19,7 @@ public:
 	void quit();
 
 	virtual bool initialize(int argc, char* argv[]) { return true; }
+	virtual void destroy() { }
 	virtual void resize(int w, int h) { }
 	virtual void onKeyDown(Key::Code key) { }
 	virtual void onKeyUp(Key::Code key) { }
