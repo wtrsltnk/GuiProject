@@ -90,9 +90,11 @@ Vector3& Camera::position()
 
 void Camera::move(float forward, float left, float up)
 {
-	if (forward != 0 || left != 0 || up != 0) this->mIsChanged = true;
+//	if (forward != 0 || left != 0 || up != 0) this->mIsChanged = true;
+//
+//    this->mPosition += (this->mMatrix.forwardVector() * forward) * (this->mMatrix.leftVector() * left) * (this->mMatrix.upVector() * up);
 
-    this->mPosition += (this->mMatrix.forwardVector() * forward) * (this->mMatrix.leftVector() * left) * (this->mMatrix.upVector() * up);
+	this->mPosition += Vector3(forward, left, up);
 }
 
 void Camera::moveForward(float amount)
