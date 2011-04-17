@@ -97,7 +97,21 @@ unsigned int Texture::upload(bool repeat)
 
 void Texture::download()
 {
-	glDeleteTextures(1, &this->mGlIndex);
+	int format = GL_RGB;
+
+	// Determine format
+	switch (this->mBpp)
+	{
+		case 3: format = GL_RGB; break;
+		case 4: format = GL_RGBA; break;
+	}
+
+	glBindTexture(GL_TEXTURE_2D, this->mGlIndex);
+//	glGetTexImage
+	if (this->mData == 0)
+		this->mData = new unsigned char[this->mWidth * this->mHeight * this->mBpp];
+
+	glGetTexImage(GL_TEXTURE_2D, 0, format, GL_UNSIGNED_BYTE, (GLvoid*)this->mData);
 }
 
 void Texture::use()

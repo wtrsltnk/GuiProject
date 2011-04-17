@@ -99,3 +99,79 @@ Texture* TextureLoader::loadFromTga(const char* textureName)
 	delete []data;
 	return result;
 }
+
+bool TextureLoader::writeTGA(const char *file, const Texture* texture)
+{
+	// To save a screen shot is just like reading in a image.  All you do
+	// is the opposite.  Istead of calling fread to read in data you call
+	// fwrite to save it.
+	FILE *pFile;
+	// The file pointer.
+	unsigned char uselessChar;
+	// used for useless char.
+	short int uselessInt;
+	// used for useless int.
+	unsigned char imageType;
+	// Type of image we are saving.
+	int index;
+	// used with the for loop.
+	unsigned char bits;
+	// Bit depth.
+	long Size;
+	// Size of the picture.
+	int colorMode;
+	unsigned char tempColors;
+	unsigned char* data;
+
+	pFile = fopen(file, "wb");
+
+	if(!pFile)
+	{
+		fclose(pFile);
+		return false;
+	}
+	// Set the image type, the color mode, and the bit depth.
+	imageType = 2;
+	colorMode = texture->mBpp;
+	bits = texture->mBpp == 3 ? 24 : 32;
+
+	int dataSize = texture->mWidth*texture->mHeight*texture->mBpp;
+	data = new unsigned char[dataSize];
+	memcpy(data, texture->mData, dataSize);
+	
+	// Set these two to 0.
+	uselessChar = 0;
+	uselessInt = 0;
+	// Write useless data.
+	fwrite(&uselessChar, sizeof(unsigned char), 1, pFile);
+	fwrite(&uselessChar, sizeof(unsigned char), 1, pFile);
+	// Now image type.
+	fwrite(&imageType, sizeof(unsigned char), 1, pFile);
+	// Write useless data.
+	fwrite(&uselessInt, sizeof(short int), 1, pFile);
+	fwrite(&uselessInt, sizeof(short int), 1, pFile);
+	fwrite(&uselessChar, sizeof(unsigned char), 1, pFile);
+	fwrite(&uselessInt, sizeof(short int), 1, pFile);
+	fwrite(&uselessInt, sizeof(short int), 1, pFile);
+	// Write the size that you want.
+	fwrite(&texture->mWidth, sizeof(short int), 1, pFile);
+	fwrite(&texture->mHeight, sizeof(short int), 1, pFile);
+	fwrite(&bits, sizeof(unsigned char), 1, pFile);
+	// Write useless data.
+	fwrite(&uselessChar, sizeof(unsigned char), 1, pFile);
+	// Get image size.
+	Size = texture->mWidth * texture->mHeight * colorMode;
+	// Now switch image from RGB to BGR.
+	for(index = 0; index < Size; index += colorMode)
+	{
+		tempColors = data[index];
+		data[index] = data[index + 2];
+		data[index + 2] = tempColors;
+	}
+
+	fwrite(data, sizeof(unsigned char), Size, pFile);
+	delete []data;
+
+	fclose(pFile);
+	return true;
+}

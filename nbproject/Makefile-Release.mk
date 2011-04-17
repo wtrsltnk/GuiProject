@@ -46,18 +46,18 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiValuebox.o \
 	${OBJECTDIR}/geo/MapLoader.o \
 	${OBJECTDIR}/geo/Entity.o \
-	${OBJECTDIR}/common/TextureLoader.o \
 	${OBJECTDIR}/ui/uiClipper.o \
+	${OBJECTDIR}/common/TextureLoader.o \
 	${OBJECTDIR}/ui/uiContainer.o \
 	${OBJECTDIR}/geo/Scene.o \
 	${OBJECTDIR}/ui/uiTextbox.o \
-	${OBJECTDIR}/common/FileLoader.o \
 	${OBJECTDIR}/ui/uiListbox.o \
+	${OBJECTDIR}/common/FileLoader.o \
 	${OBJECTDIR}/ui/uiControl.o \
 	${OBJECTDIR}/common/Tokenizer.o \
 	${OBJECTDIR}/ui/uiManager.o \
-	${OBJECTDIR}/common/Texture.o \
 	${OBJECTDIR}/ui/uiButton.o \
+	${OBJECTDIR}/common/Texture.o \
 	${OBJECTDIR}/ui/uiLabel.o \
 	${OBJECTDIR}/userInput.o \
 	${OBJECTDIR}/ui/uiHorizontalContainer.o \
@@ -155,15 +155,15 @@ ${OBJECTDIR}/geo/Entity.o: geo/Entity.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Entity.o geo/Entity.cpp
 
-${OBJECTDIR}/common/TextureLoader.o: common/TextureLoader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/common
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/TextureLoader.o common/TextureLoader.cpp
-
 ${OBJECTDIR}/ui/uiClipper.o: ui/uiClipper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiClipper.o ui/uiClipper.cpp
+
+${OBJECTDIR}/common/TextureLoader.o: common/TextureLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/TextureLoader.o common/TextureLoader.cpp
 
 ${OBJECTDIR}/ui/uiContainer.o: ui/uiContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -180,15 +180,15 @@ ${OBJECTDIR}/ui/uiTextbox.o: ui/uiTextbox.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiTextbox.o ui/uiTextbox.cpp
 
-${OBJECTDIR}/common/FileLoader.o: common/FileLoader.cpp 
-	${MKDIR} -p ${OBJECTDIR}/common
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/FileLoader.o common/FileLoader.cpp
-
 ${OBJECTDIR}/ui/uiListbox.o: ui/uiListbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiListbox.o ui/uiListbox.cpp
+
+${OBJECTDIR}/common/FileLoader.o: common/FileLoader.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/FileLoader.o common/FileLoader.cpp
 
 ${OBJECTDIR}/ui/uiControl.o: ui/uiControl.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -205,15 +205,15 @@ ${OBJECTDIR}/ui/uiManager.o: ui/uiManager.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiManager.o ui/uiManager.cpp
 
-${OBJECTDIR}/common/Texture.o: common/Texture.cpp 
-	${MKDIR} -p ${OBJECTDIR}/common
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Texture.o common/Texture.cpp
-
 ${OBJECTDIR}/ui/uiButton.o: ui/uiButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiButton.o ui/uiButton.cpp
+
+${OBJECTDIR}/common/Texture.o: common/Texture.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Texture.o common/Texture.cpp
 
 ${OBJECTDIR}/ui/uiLabel.o: ui/uiLabel.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui

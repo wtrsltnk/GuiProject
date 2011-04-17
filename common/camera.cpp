@@ -70,10 +70,7 @@ void Camera::rotateZ(float amount)
 
 void Camera::setPosition(const float mPosition[3])
 {
-	if (mPosition[0] != 0 || mPosition[1] != 0 || mPosition[2] != 0) this->mIsChanged = true;
-
-    for (int i = 0; i < 3; i++)
-        this->mPosition[i] = mPosition[i];
+	this->setPosition(this->mPosition[0], this->mPosition[1], this->mPosition[2]);
 }
 
 void Camera::setPosition(float x, float y, float z)
@@ -94,28 +91,34 @@ void Camera::move(float forward, float left, float up)
 //
 //    this->mPosition += (this->mMatrix.forwardVector() * forward) * (this->mMatrix.leftVector() * left) * (this->mMatrix.upVector() * up);
 
-	this->mPosition += Vector3(forward, left, up);
+	setPosition(this->mPosition.x()+forward, this->mPosition.y()+left, this->mPosition.z()+up);
 }
 
 void Camera::moveForward(float amount)
 {
 	if (amount != 0) this->mIsChanged = true;
 
-	this->mPosition += (this->mMatrix.forwardVector() * amount);
+	setPosition(this->mPosition.x()+(this->mMatrix.forwardVector() * amount).x(),
+			this->mPosition.y()+(this->mMatrix.forwardVector() * amount).y(),
+			this->mPosition.z()+(this->mMatrix.forwardVector() * amount).z());
 }
 
 void Camera::moveUp(float amount)
 {
 	if (amount != 0) this->mIsChanged = true;
 
-	this->mPosition += (this->mMatrix.upVector() * amount);
+	setPosition(this->mPosition.x()+(this->mMatrix.upVector() * amount).x(),
+			this->mPosition.y()+(this->mMatrix.upVector() * amount).y(),
+			this->mPosition.z()+(this->mMatrix.upVector() * amount).z());
 }
 
 void Camera::moveLeft(float amount)
 {
 	if (amount != 0) this->mIsChanged = true;
 
-	this->mPosition += (this->mMatrix.leftVector() * amount);
+	setPosition(this->mPosition.x()+(this->mMatrix.leftVector() * amount).x(),
+			this->mPosition.y()+(this->mMatrix.leftVector() * amount).y(),
+			this->mPosition.z()+(this->mMatrix.leftVector() * amount).z());
 }
 
 Vector3 Camera::forward()
