@@ -9,6 +9,7 @@
 #include <cmath>
 #include <map>
 #include <stdio.h>
+#include <stdlib.h>
 
 namespace geo
 {
@@ -113,11 +114,11 @@ static int brushCount = 0;
 
 Brush::Brush()
 {
-	this->mColor[0] = 0;
-	this->mColor[1] = 0;
-	this->mColor[2] = 0;
-	this->mColor[brushCount%3] = (155 + (brushCount*10) % 99) / 255.0f;
-	this->mColor[(brushCount+1)%3] = (155 + (brushCount*7) % 99) / 255.0f;
+	this->mColor[0] = float(rand() % 255) / 255.0f;
+	this->mColor[1] = float(rand() % 255) / 255.0f;
+	this->mColor[2] = float(rand() % 255) / 255.0f;
+//	this->mColor[brushCount%3] = (155 + (brushCount*10) % 99) / 255.0f;
+//	this->mColor[(brushCount+1)%3] = (155 + (brushCount*7) % 99) / 255.0f;
 	this->mColor[3] = 1.0f;
 
 	brushCount++;
