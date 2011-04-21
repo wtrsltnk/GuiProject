@@ -35,8 +35,8 @@ OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/ui/uiFreeContainer.o \
 	${OBJECTDIR}/geo/Brush.o \
-	${OBJECTDIR}/ui/stb_truetype.o \
 	${OBJECTDIR}/ui/uiCheckbox.o \
+	${OBJECTDIR}/ui/stb_truetype.o \
 	${OBJECTDIR}/ui/uiFont.o \
 	${OBJECTDIR}/GuiProject.o \
 	${OBJECTDIR}/ui/uiVerticalContainer.o \
@@ -58,6 +58,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/ui/uiManager.o \
 	${OBJECTDIR}/ui/uiButton.o \
 	${OBJECTDIR}/common/Texture.o \
+	${OBJECTDIR}/common/quaternion.o \
 	${OBJECTDIR}/ui/uiLabel.o \
 	${OBJECTDIR}/userInput.o \
 	${OBJECTDIR}/ui/uiHorizontalContainer.o \
@@ -100,15 +101,15 @@ ${OBJECTDIR}/geo/Brush.o: geo/Brush.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Brush.o geo/Brush.cpp
 
-${OBJECTDIR}/ui/stb_truetype.o: ui/stb_truetype.cpp 
-	${MKDIR} -p ${OBJECTDIR}/ui
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/stb_truetype.o ui/stb_truetype.cpp
-
 ${OBJECTDIR}/ui/uiCheckbox.o: ui/uiCheckbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiCheckbox.o ui/uiCheckbox.cpp
+
+${OBJECTDIR}/ui/stb_truetype.o: ui/stb_truetype.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/stb_truetype.o ui/stb_truetype.cpp
 
 ${OBJECTDIR}/ui/uiFont.o: ui/uiFont.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -214,6 +215,11 @@ ${OBJECTDIR}/common/Texture.o: common/Texture.cpp
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Texture.o common/Texture.cpp
+
+${OBJECTDIR}/common/quaternion.o: common/quaternion.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/quaternion.o common/quaternion.cpp
 
 ${OBJECTDIR}/ui/uiLabel.o: ui/uiLabel.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui

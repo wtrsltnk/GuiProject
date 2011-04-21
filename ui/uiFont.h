@@ -27,15 +27,16 @@ public:
 	Font();
 	virtual ~Font();
 
-	bool initializeFont(const char* fontpath);
+	bool initializeFont(const char* fontpath, float size = 15.0f);
 	int getTextLength(const char* text, int count = 0);
 	int getTextHeight(const char* text);
-	void drawText(float x, float y, const char *text, unsigned int col);
+	void drawText(float x, float y, const char *text, unsigned int col = ui::RGBA(255, 255, 255, 255));
 	void getBakedQuad(int pw, int ph, int char_index, float *xpos, float *ypos, stbtt_aligned_quad *q);
 
 protected:
 	stbtt_bakedchar mCharData[96]; // ASCII 32..126 is 95 glyphs
 	GLuint mTextureId;
+	float mFontSize;
 
 };
 

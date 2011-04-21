@@ -20,8 +20,10 @@ Font::~Font()
 {
 }
 
-bool Font::initializeFont(const char* fontpath)
+bool Font::initializeFont(const char* fontpath, float fontSize)
 {
+	this->mFontSize = fontSize;
+	
     // Load font.
     FILE* fp = fopen(fontpath, "rb");
     if (!fp) return false;
@@ -47,7 +49,7 @@ bool Font::initializeFont(const char* fontpath)
 		return false;
     }
 
-    stbtt_BakeFontBitmap(ttfBuffer,0, 15.0f, bmap,512,512, 32,96, this->mCharData);
+    stbtt_BakeFontBitmap(ttfBuffer,0, fontSize, bmap,512,512, 32,96, this->mCharData);
 
     // can free ttf_buffer at this point
     glGenTextures(1, &this->mTextureId);
