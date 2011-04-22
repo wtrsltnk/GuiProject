@@ -27,8 +27,8 @@ GlutApplication::GlutApplication(const char* title)
 
 void GlutApplication::quit()
 {
-	this->destroy();
 	glutLeaveMainLoop();
+	this->destroy();
 }
 
 void idle(int value)

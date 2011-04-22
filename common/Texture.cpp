@@ -107,7 +107,7 @@ void Texture::download()
 	}
 
 	glBindTexture(GL_TEXTURE_2D, this->mGlIndex);
-//	glGetTexImage
+
 	if (this->mData == 0)
 		this->mData = new unsigned char[this->mWidth * this->mHeight * this->mBpp];
 
