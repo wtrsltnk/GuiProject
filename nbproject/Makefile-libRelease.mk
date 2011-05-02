@@ -17,26 +17,27 @@ RANLIB=ranlib
 CC=gcc
 CCC=g++
 CXX=g++
-FC=
+FC=gfortran
 AS=as
 
 # Macros
 CND_PLATFORM=GNU-Linux-x86
 CND_CONF=libRelease
 CND_DISTDIR=dist
+CND_BUILDDIR=build
 
 # Include project Makefile
 include Makefile
 
 # Object Directory
-OBJECTDIR=build/${CND_CONF}/${CND_PLATFORM}
+OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/ui/uiFreeContainer.o \
 	${OBJECTDIR}/geo/Brush.o \
-	${OBJECTDIR}/ui/uiCheckbox.o \
 	${OBJECTDIR}/ui/stb_truetype.o \
+	${OBJECTDIR}/ui/uiCheckbox.o \
 	${OBJECTDIR}/ui/uiFont.o \
 	${OBJECTDIR}/GuiProject.o \
 	${OBJECTDIR}/ui/uiVerticalContainer.o \
@@ -85,13 +86,13 @@ LDLIBSOPTIONS=
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-libRelease.mk dist/libRelease/GNU-Linux-x86/libguiproject.a
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a
 
-dist/libRelease/GNU-Linux-x86/libguiproject.a: ${OBJECTFILES}
-	${MKDIR} -p dist/libRelease/GNU-Linux-x86
-	${RM} dist/libRelease/GNU-Linux-x86/libguiproject.a
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a: ${OBJECTFILES}
+	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a
 	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a ${OBJECTFILES} 
-	$(RANLIB) dist/libRelease/GNU-Linux-x86/libguiproject.a
+	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a
 
 ${OBJECTDIR}/ui/uiFreeContainer.o: ui/uiFreeContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -103,15 +104,15 @@ ${OBJECTDIR}/geo/Brush.o: geo/Brush.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Brush.o geo/Brush.cpp
 
-${OBJECTDIR}/ui/uiCheckbox.o: ui/uiCheckbox.cpp 
-	${MKDIR} -p ${OBJECTDIR}/ui
-	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiCheckbox.o ui/uiCheckbox.cpp
-
 ${OBJECTDIR}/ui/stb_truetype.o: ui/stb_truetype.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/stb_truetype.o ui/stb_truetype.cpp
+
+${OBJECTDIR}/ui/uiCheckbox.o: ui/uiCheckbox.cpp 
+	${MKDIR} -p ${OBJECTDIR}/ui
+	${RM} $@.d
+	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiCheckbox.o ui/uiCheckbox.cpp
 
 ${OBJECTDIR}/ui/uiFont.o: ui/uiFont.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -258,8 +259,8 @@ ${OBJECTDIR}/common/matrix4x4.o: common/matrix4x4.cpp
 
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
-	${RM} -r build/libRelease
-	${RM} dist/libRelease/GNU-Linux-x86/libguiproject.a
+	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a
 
 # Subprojects
 .clean-subprojects:
