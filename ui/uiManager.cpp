@@ -106,7 +106,7 @@ Control* Manager::getTopControlAt(float point[2], Container* container)
 		for (std::vector<Control*>::iterator itr = container->controls().begin(); itr != container->controls().end(); ++itr)
 		{
 			Control* c = (*itr);
-			if (c->isPointInBox(point))
+			if (c->visible() && c->isPointInBox(point))
 			{
 				result = c;
 
