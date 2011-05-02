@@ -16,7 +16,7 @@ FreeContainer::~FreeContainer()
 
 void FreeContainer::render()
 {
-	this->renderBox(false);
+	//this->renderBox(false);
 
 	this->scrollbar.renderScrollbar();
 

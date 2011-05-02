@@ -16,9 +16,9 @@ namespace ui
 
 namespace BoxState
 {
-enum
+enum State
 {
-	None = 0x00,
+	Nothing = 0x00,
 	Hovered = 0x01,
 	Pressed = 0x02
 };
@@ -85,6 +85,7 @@ enum
 }
 
 class Container;
+class Control;
 
 class KeyboardEventArgs : public event::EventArgs
 {
@@ -142,6 +143,9 @@ public:
 	virtual float clientHeight();
 	virtual void setSize(float size[2]);
 	virtual void setSize(float w, float h);
+	
+	virtual bool visible() const;
+	virtual void setVisible(bool v);
 
 	virtual void updateBox();
 
@@ -156,6 +160,7 @@ public:
 protected:
 	box_t mBox;
 	Container* mParent;
+	bool mVisible;
 
 	virtual void render() = 0;
 
@@ -225,6 +230,7 @@ public:
 	void removeControl(Control* ctr);
 
 	virtual void setSize(float w, float h);
+	virtual void setPosition(float x, float y);
 
 	float padding();
 	void setPadding(float padding);
@@ -370,6 +376,7 @@ public:
 
 	bool checked();
 	void setChecked(bool state);
+	void setSilentChecked(bool state);
 	void toggleChecked();
 
 	StateChangedEvent StateChanged;

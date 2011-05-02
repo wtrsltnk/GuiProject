@@ -53,6 +53,12 @@ void Container::removeControl(Control* ctr)
 	}
 }
 
+void Container::setPosition(float x, float y)
+{
+	Control::setPosition(x, y);
+	this->updateChildControls();
+}
+
 void Container::setSize(float w, float h)
 {
 	Control::setSize(w, h);

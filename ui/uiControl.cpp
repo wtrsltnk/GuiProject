@@ -36,7 +36,7 @@ MouseButtonEventArgs::~MouseButtonEventArgs()
 
 
 Control::Control(int type)
-	: mParent(0), mType(type), onKeyboardDown(this), onKeyboardUp(this), onMouseButtonDown(this), onMouseButtonUp(this), onMouseMove(this)
+	: mParent(0), mVisible(true), mType(type), onKeyboardDown(this), onKeyboardUp(this), onMouseButtonDown(this), onMouseButtonUp(this), onMouseMove(this)
 {
 	this->setPosition(0, 0);
 	this->setSize(64, 24);
@@ -46,7 +46,7 @@ Control::Control(int type)
 }
 
 Control::Control(int type, int x, int y, int w, int h)
-	: mParent(0), mType(type), onKeyboardDown(this), onKeyboardUp(this), onMouseButtonDown(this), onMouseButtonUp(this), onMouseMove(this)
+	: mParent(0), mVisible(true), mType(type), onKeyboardDown(this), onKeyboardUp(this), onMouseButtonDown(this), onMouseButtonUp(this), onMouseMove(this)
 {
 	this->setPosition(x, y);
 	this->setSize(w, h);
@@ -62,22 +62,25 @@ Control::~Control()
 
 void Control::renderControl()
 {
-	Clipper c(this->mBox.hitbox);
-	this->render();
-
-	if (this == Manager::instance()->mFocus)
+	if (this->mVisible)
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		glBegin(GL_QUADS);
-		glColor4f(0.0f, 0.6f, 1.0f, 0.1f);
-		glBegin(GL_QUADS);
-		glVertex2f(this->mBox.boxPosition[0], this->mBox.boxPosition[1]);
-		glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0], this->mBox.boxPosition[1]);
-		glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0], this->mBox.boxPosition[1]+this->mBox.boxSize[1]);
-		glVertex2f(this->mBox.boxPosition[0], this->mBox.boxPosition[1]+this->mBox.boxSize[1]);
-		glEnd();
-		glDisable(GL_BLEND);
+		Clipper c(this->mBox.hitbox);
+		this->render();
+
+		if (this == Manager::instance()->mFocus)
+		{
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+			glBegin(GL_QUADS);
+			glColor4f(0.0f, 0.6f, 1.0f, 0.1f);
+			glBegin(GL_QUADS);
+			glVertex2f(this->mBox.boxPosition[0], this->mBox.boxPosition[1]);
+			glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0], this->mBox.boxPosition[1]);
+			glVertex2f(this->mBox.boxPosition[0]+this->mBox.boxSize[0], this->mBox.boxPosition[1]+this->mBox.boxSize[1]);
+			glVertex2f(this->mBox.boxPosition[0], this->mBox.boxPosition[1]+this->mBox.boxSize[1]);
+			glEnd();
+			glDisable(GL_BLEND);
+		}
 	}
 }
 
@@ -106,7 +109,7 @@ void Control::mouseUp(Mouse::Button button)
 
 void Control::mouseOut()
 {
-	this->box().state = BoxState::None;
+	this->box().state = BoxState::Nothing;
 }
 
 void Control::keyDown(Key::Code key)
@@ -138,7 +141,8 @@ void Control::setPosition(float pos[2])
 
 void Control::setPosition(float x, float y)
 {
-	if (this->mParent == 0)
+	FreeContainer* f = dynamic_cast<FreeContainer*> (this->mParent);
+	if (this->mParent == 0 || f != 0)
 	{
 		this->mBox.hitbox[0] = x;
 		this->mBox.hitbox[1] = y;
@@ -178,6 +182,16 @@ void Control::setSize(float w, float h)
 		this->mParent->updateChildControls();
 	}
 	this->updateBox();
+}
+
+bool Control::visible() const
+{
+	return this->mVisible;
+}
+
+void Control::setVisible(bool v)
+{
+	this->mVisible = v;
 }
 
 void Control::updateBox()
@@ -231,18 +245,18 @@ void Control::renderBox(bool ignoreState)
 	glVertex2f(0.0f, 0.0f);
 
 
-	glColor3f(47.0f / 255.0f, 47.0f / 255.0f, 47.0f / 255.0f);
-	glVertex2f(1.0f, 1.0f);
-	glVertex2f(this->mBox.boxSize[0]-1.0f, 1.0f);
-
-	glVertex2f(this->mBox.boxSize[0]-1.0f, 1.0f);
-	glVertex2f(this->mBox.boxSize[0]-1.0f, this->mBox.boxSize[1]-1.0f);
-
-	glVertex2f(this->mBox.boxSize[0]-1.0f, this->mBox.boxSize[1]-1.0f);
-	glVertex2f(1.0f,this-> mBox.boxSize[1]-1.0f);
-
-	glVertex2f(1.0f, this->mBox.boxSize[1]-1.0f);
-	glVertex2f(1.0f, 1.0f);
+//	glColor3f(47.0f / 255.0f, 47.0f / 255.0f, 47.0f / 255.0f);
+//	glVertex2f(1.0f, 1.0f);
+//	glVertex2f(this->mBox.boxSize[0]-1.0f, 1.0f);
+//
+//	glVertex2f(this->mBox.boxSize[0]-1.0f, 1.0f);
+//	glVertex2f(this->mBox.boxSize[0]-1.0f, this->mBox.boxSize[1]-1.0f);
+//
+//	glVertex2f(this->mBox.boxSize[0]-1.0f, this->mBox.boxSize[1]-1.0f);
+//	glVertex2f(1.0f,this-> mBox.boxSize[1]-1.0f);
+//
+//	glVertex2f(1.0f, this->mBox.boxSize[1]-1.0f);
+//	glVertex2f(1.0f, 1.0f);
 
 
 	glColor3f(85.0f / 255.0f, 83.0f / 255.0f, 80.0f / 255.0f);

@@ -5,7 +5,7 @@ namespace ui
 {
 
 Checkbox::Checkbox(int x, int y, int w, int h, const char* text)
-	: Label(text, x, y, w, h, ControlTypes::Checkbox), StateChanged(StateChangedEvent(this))
+	: Label(text, x, y, w, h, ControlTypes::Checkbox), StateChanged(StateChangedEvent(this)), mChecked(true)
 {
 }
 
@@ -51,6 +51,11 @@ void Checkbox::setChecked(bool state)
 	this->mChecked = state;
 	event::EventArgs e;
 	this->StateChanged(&e);
+}
+
+void Checkbox::setSilentChecked(bool state)
+{
+	this->mChecked = state;
 }
 
 void Checkbox::toggleChecked()
