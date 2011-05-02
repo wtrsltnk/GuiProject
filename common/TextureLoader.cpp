@@ -93,10 +93,15 @@ Texture* TextureLoader::loadFromTga(const char* textureName)
 			pixel[c] = pixel[c+2];
 			pixel[c+2] = t;
 		}
-
+		
 		result = new Texture();
 		result->setData(header->width, header->height, bpp, pixel);
 		delete []pixel;
+		
+		if ((header->attributes & (1 << 5)))
+			result->flipHorizontally();
+		if ((header->attributes & (1 << 4)))
+			result->flipVertically();
 	}
 	delete []data;
 	return result;

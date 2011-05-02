@@ -21,6 +21,9 @@ public:
 	unsigned int upload(bool repeat = true);
 	void download();
 	virtual void use();
+	
+	void flipHorizontally();
+	void flipVertically();
 
 	const char* getName() const;
 	void setName(const char* name);

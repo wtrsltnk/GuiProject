@@ -119,6 +119,44 @@ void Texture::use()
 	glBindTexture(GL_TEXTURE_2D, this->mGlIndex);
 }
 
+void Texture::flipHorizontally()
+{
+	unsigned char* tmp = new unsigned char[this->mWidth*this->mHeight*this->mBpp];
+	
+	for (int row = 0; row < this->mHeight; row++)
+	{
+		for (int col = 0; col < this->mWidth; col++)
+		{
+			int inIndex = (row)*this->mWidth+(col);
+			int outIndex = (this->mHeight-1-row)*this->mWidth+(col);
+			
+			for (int i = 0; i < this->mBpp; i++)
+				tmp[inIndex*this->mBpp+i] = this->mData[outIndex*this->mBpp+i];
+		}
+	}
+	delete []this->mData;
+	this->mData = tmp;
+}
+
+void Texture::flipVertically()
+{
+	unsigned char* tmp = new unsigned char[this->mWidth*this->mHeight*this->mBpp];
+	
+	for (int row = 0; row < this->mHeight; row++)
+	{
+		for (int col = 0; col < this->mWidth; col++)
+		{
+			int inIndex = (row)*this->mWidth+(col);
+			int outIndex = (row)*this->mWidth+(this->mWidth-1-col);
+			
+			for (int i = 0; i < this->mBpp; i++)
+				tmp[inIndex*this->mBpp+i] = this->mData[outIndex*this->mBpp+i];
+		}
+	}
+	delete []this->mData;
+	this->mData = tmp;
+}
+
 const char* Texture::getName() const
 {
 	return this->mName;
