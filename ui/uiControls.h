@@ -281,6 +281,7 @@ public:
 	virtual ~FreeContainer();
 
 	virtual void render();
+	virtual float clientHeight();
 
 private:
 

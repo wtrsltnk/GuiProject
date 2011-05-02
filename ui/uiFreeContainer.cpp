@@ -1,6 +1,7 @@
 #include "uiControls.h"
 #include "uiClipper.h"
 #include <GL/gl.h>
+#include <stdio.h>
 
 namespace ui
 {
@@ -19,7 +20,7 @@ void FreeContainer::render()
 	//this->renderBox(false);
 
 	this->scrollbar.renderScrollbar();
-
+	printf("%f %f\n", this->clientHeight(), this->height());
 	float hitbox[4] = {
 			this->mBox.hitbox[0]+3,
 			this->mBox.hitbox[1]+3,
@@ -33,6 +34,18 @@ void FreeContainer::render()
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 		(*itr)->renderControl();
 	glPopMatrix();
+}
+
+float FreeContainer::clientHeight()
+{
+	float childHeight = this->padding();
+	for (ControlList::iterator itr = this->controls().begin(); itr != this->controls().end(); ++itr)
+	{
+		if ((*itr)->box().boxPosition[1]+(*itr)->box().boxPosition[3] > childHeight)
+			childHeight += (*itr)->box().boxPosition[1]+(*itr)->box().boxPosition[3];
+	}
+
+	return childHeight;
 }
 
 void FreeContainer::updateChildControls()
