@@ -14,10 +14,30 @@
                 <sourceRootElem>.</sourceRootElem>
             </sourceRootList>
             <confList>
-                <confElem>Debug</confElem>
-                <confElem>Release</confElem>
-                <confElem>libRelease</confElem>
-                <confElem>libDebug</confElem>
+                <confElem>
+                    <name>Debug</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>Release</name>
+                    <type>1</type>
+                </confElem>
+                <confElem>
+                    <name>libRelease</name>
+                    <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>libDebug</name>
+                    <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>win32libRelease</name>
+                    <type>3</type>
+                </confElem>
+                <confElem>
+                    <name>win32libDebug</name>
+                    <type>3</type>
+                </confElem>
             </confList>
         </data>
     </configuration>

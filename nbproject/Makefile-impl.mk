@@ -31,7 +31,7 @@ DEFAULTCONF=Debug
 CONF=${DEFAULTCONF}
 
 # All Configurations
-ALLCONFS=Debug Release libRelease libDebug 
+ALLCONFS=Debug Release libRelease libDebug win32libRelease win32libDebug 
 
 
 # build
