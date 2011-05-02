@@ -98,9 +98,9 @@ Texture* TextureLoader::loadFromTga(const char* textureName)
 		result->setData(header->width, header->height, bpp, pixel);
 		delete []pixel;
 		
-		if ((header->attributes & (1 << 5)))
+		if ((header->attributes & (1 << 5)) == 0)
 			result->flipHorizontally();
-		if ((header->attributes & (1 << 4)))
+		if ((header->attributes & (1 << 4)) == 0)
 			result->flipVertically();
 	}
 	delete []data;
