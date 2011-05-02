@@ -72,7 +72,9 @@ Texture* TextureLoader::loadFromTga(const char* textureName)
 	int len;
 	if (this->loadBinaryFile(textureName, data, len) == false)
 	{
+#ifdef SHOW_DEBUG_TEXT
 		printf("Could not load TGA texture %s\n\n", textureName);
+#endif
 		return 0;
 	}
 
