@@ -37,6 +37,7 @@ public:
 
 private:
 	virtual void initialize(const char* fontpath);
+	virtual void initialize(Font* font);
 
 private:
 	void addControl(Control* ctr);

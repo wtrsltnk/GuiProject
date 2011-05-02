@@ -66,6 +66,22 @@ void Manager::initialize(const char* fontpath)
 	Manager::sDefaultFont = new Font();
 	Manager::sDefaultFont->initializeFont(fontpath);
 
+	if (Manager::instance()->mRoot != 0)
+		delete Manager::instance()->mRoot;
+	
+	Manager::instance()->mRoot = new FreeContainer(0, 0, 0, 0);
+}
+
+void Manager::initialize(Font* font)
+{
+	if (Manager::sDefaultFont != 0)
+		delete Manager::sDefaultFont;
+
+	Manager::sDefaultFont = font;
+
+	if (Manager::instance()->mRoot != 0)
+		delete Manager::instance()->mRoot;
+	
 	Manager::instance()->mRoot = new FreeContainer(0, 0, 0, 0);
 }
 
