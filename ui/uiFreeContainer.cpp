@@ -20,7 +20,6 @@ void FreeContainer::render()
 	//this->renderBox(false);
 
 	this->scrollbar.renderScrollbar();
-	printf("%f %f\n", this->clientHeight(), this->height());
 	float hitbox[4] = {
 			this->mBox.hitbox[0]+3,
 			this->mBox.hitbox[1]+3,

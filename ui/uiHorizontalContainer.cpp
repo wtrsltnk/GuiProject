@@ -18,21 +18,30 @@ void HorizontalContainer::render()
 {
 	this->renderBox(false);
 
-	this->scrollbar.renderScrollbar();
+//	this->scrollbar.renderScrollbar();
 
 	float hitbox[4] = {
 			this->mBox.hitbox[0]+3,
 			this->mBox.hitbox[1]+3,
-			this->mBox.hitbox[2]-6 - this->scrollbar.width(),
+			this->mBox.hitbox[2]-6,
 			this->mBox.hitbox[3]-6
 	};
 	Clipper c(hitbox);
 
 	glPushMatrix();
-	glTranslatef(0, this->scrollbar.scroll(), 0);
+//	glTranslatef(0, this->scrollbar.scroll(), 0);
 	for (ControlList::iterator itr = this->mControls.begin(); itr != this->mControls.end(); ++itr)
 		(*itr)->renderControl();
 	glPopMatrix();
+}
+
+float HorizontalContainer::clientHeight()
+{
+	float childWidth = this->padding();
+	for (ControlList::iterator itr = this->controls().begin(); itr != this->controls().end(); ++itr)
+		childWidth += (*itr)->width() + this->padding();
+
+	return childWidth;
 }
 
 void HorizontalContainer::updateChildControls()

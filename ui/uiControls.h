@@ -268,6 +268,7 @@ public:
 	virtual ~HorizontalContainer();
 
 	virtual void render();
+	virtual float clientHeight();
 
 private:
 
