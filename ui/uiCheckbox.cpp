@@ -1,5 +1,6 @@
 #include "uiControls.h"
 #include "uiFont.h"
+#include <GL/gl.h>
 
 namespace ui
 {

@@ -10,7 +10,6 @@
 
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
-#include <GL/gl.h>
 
 namespace ui
 {
@@ -35,7 +34,7 @@ public:
 
 protected:
 	stbtt_bakedchar mCharData[96]; // ASCII 32..126 is 95 glyphs
-	GLuint mTextureId;
+	unsigned int mTextureId;
 	float mFontSize;
 
 };

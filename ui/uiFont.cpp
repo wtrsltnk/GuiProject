@@ -6,6 +6,7 @@
  */
 
 #include "uiFont.h"
+#include <GL/gl.h>
 #include <stdio.h>
 
 namespace ui
