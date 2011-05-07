@@ -46,9 +46,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/common/vector3.o \
 	${OBJECTDIR}/ui/uiValuebox.o \
 	${OBJECTDIR}/geo/MapLoader.o \
+	${OBJECTDIR}/geo/Entity.o \
 	${OBJECTDIR}/ui/uiClipper.o \
 	${OBJECTDIR}/common/TextureLoader.o \
-	${OBJECTDIR}/geo/Entity.o \
 	${OBJECTDIR}/ui/uiContainer.o \
 	${OBJECTDIR}/geo/Scene.o \
 	${OBJECTDIR}/ui/uiTextbox.o \
@@ -58,9 +58,9 @@ OBJECTFILES= \
 	${OBJECTDIR}/common/Tokenizer.o \
 	${OBJECTDIR}/ui/uiManager.o \
 	${OBJECTDIR}/ui/uiButton.o \
+	${OBJECTDIR}/common/Texture.o \
 	${OBJECTDIR}/common/quaternion.o \
 	${OBJECTDIR}/ui/uiLabel.o \
-	${OBJECTDIR}/common/Texture.o \
 	${OBJECTDIR}/userInput.o \
 	${OBJECTDIR}/ui/uiHorizontalContainer.o \
 	${OBJECTDIR}/GlutApplication.o \
@@ -152,6 +152,11 @@ ${OBJECTDIR}/geo/MapLoader.o: geo/MapLoader.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/MapLoader.o geo/MapLoader.cpp
 
+${OBJECTDIR}/geo/Entity.o: geo/Entity.cpp 
+	${MKDIR} -p ${OBJECTDIR}/geo
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Entity.o geo/Entity.cpp
+
 ${OBJECTDIR}/ui/uiClipper.o: ui/uiClipper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
@@ -161,11 +166,6 @@ ${OBJECTDIR}/common/TextureLoader.o: common/TextureLoader.cpp
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/TextureLoader.o common/TextureLoader.cpp
-
-${OBJECTDIR}/geo/Entity.o: geo/Entity.cpp 
-	${MKDIR} -p ${OBJECTDIR}/geo
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Entity.o geo/Entity.cpp
 
 ${OBJECTDIR}/ui/uiContainer.o: ui/uiContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
@@ -212,6 +212,11 @@ ${OBJECTDIR}/ui/uiButton.o: ui/uiButton.cpp
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiButton.o ui/uiButton.cpp
 
+${OBJECTDIR}/common/Texture.o: common/Texture.cpp 
+	${MKDIR} -p ${OBJECTDIR}/common
+	${RM} $@.d
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Texture.o common/Texture.cpp
+
 ${OBJECTDIR}/common/quaternion.o: common/quaternion.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
@@ -221,11 +226,6 @@ ${OBJECTDIR}/ui/uiLabel.o: ui/uiLabel.cpp
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
 	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiLabel.o ui/uiLabel.cpp
-
-${OBJECTDIR}/common/Texture.o: common/Texture.cpp 
-	${MKDIR} -p ${OBJECTDIR}/common
-	${RM} $@.d
-	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Texture.o common/Texture.cpp
 
 ${OBJECTDIR}/userInput.o: userInput.cpp 
 	${MKDIR} -p ${OBJECTDIR}
