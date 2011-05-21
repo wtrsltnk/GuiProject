@@ -78,6 +78,9 @@ public:
 	
 	// Rotate the brush
 	void rotate(float x, float y, float z, const Vector3& origin);
+	
+	// Returns the origin from the vertices
+	Vector3 origin();
 
 	// Determine if the given position is within this world
 	static bool pointInWorld(const Vector3& point)

@@ -334,4 +334,13 @@ void Brush::rotate(float x, float y, float z, const Vector3& origin)
 	this->updateBounds();
 }
 
+Vector3 Brush::origin()
+{
+	return Vector3(
+			this->mMins[0] + ((this->mMaxs[0]-this->mMins[0]) / 2),
+			this->mMins[1] + ((this->mMaxs[1]-this->mMins[1]) / 2),
+			this->mMins[2] + ((this->mMaxs[2]-this->mMins[2]) / 2)
+		);
+}
+
 }
