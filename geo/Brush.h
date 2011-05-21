@@ -17,6 +17,8 @@ namespace geo
 #define EPSILON 0.01
 #define WORLD 8192.0
 
+class Brush;
+
 class Plane
 {
 public:
@@ -32,6 +34,7 @@ public:
 	Vector3 average;
 	
 	int getIndexOf(int vertexIndex);
+	void updateFromVertices(Brush* brush);
 
 	static bool getIntersection(const Plane& p1, const Plane& p2, const Plane& p3, Vector3& out);
 	static Plane fromVertices(const Vector3& v1, const Vector3& v2, const Vector3& v3);
@@ -63,6 +66,18 @@ public:
 
 	// Updates all the vertices of this brush
 	void updateVertices();
+
+	// Updates the bounding box of this brush
+	void updateBounds();
+	
+	// Move the brush
+	void move(float x, float y, float z);
+	
+	// Scale the brush
+	void scale(float x, float y, float z, const Vector3& origin);
+	
+	// Rotate the brush
+	void rotate(float x, float y, float z, const Vector3& origin);
 
 	// Determine if the given position is within this world
 	static bool pointInWorld(const Vector3& point)

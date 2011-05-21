@@ -6,6 +6,7 @@
  */
 
 #include "Brush.h"
+#include "../common/matrix4x4.h"
 #include <cmath>
 #include <map>
 #include <stdio.h>
@@ -37,6 +38,16 @@ int Plane::getIndexOf(int vertexIndex)
 		if (this->mIndices[i] == vertexIndex)
 			return i;
 	return -1;
+}
+
+void Plane::updateFromVertices(Brush* brush)
+{
+	Vector3 v1(brush->mVertices[this->mIndices[0]]);
+	Vector3 v2(brush->mVertices[this->mIndices[1]]);
+	Vector3 v3(brush->mVertices[this->mIndices[2]]);
+	
+	this->mNormal = (v3-v2).crossProduct(v1-v2).unit();
+	this->mDistance = this->mNormal.dotProduct(v2);
 }
 
 // This is magic from Nemesis MapViewer. ToDo: create my own code for this
@@ -249,6 +260,78 @@ void Brush::updateVertices()
 				this->mPlanes[i].mIndices.push_back(itr->second);
 		}
 	}
+}
+
+void Brush::updateBounds()
+{
+	// Reset the boundingbox
+	this->mMins[0] = this->mMins[1] = this->mMins[2] =  99999.9f;
+	this->mMaxs[0] = this->mMaxs[1] = this->mMaxs[2] = -99999.9f;
+	
+	for (std::vector<Vector3>::iterator itr = this->mVertices.begin(); itr != this->mVertices.end(); ++itr)
+	{
+		if ((*itr).x() > this->mMaxs[0]) this->mMaxs[0] = (*itr).x();
+		if ((*itr).y() > this->mMaxs[1]) this->mMaxs[1] = (*itr).y();
+		if ((*itr).z() > this->mMaxs[2]) this->mMaxs[2] = (*itr).z();
+		
+		if ((*itr).x() < this->mMins[0]) this->mMins[0] = (*itr).x();
+		if ((*itr).y() < this->mMins[1]) this->mMins[1] = (*itr).y();
+		if ((*itr).z() < this->mMins[2]) this->mMins[2] = (*itr).z();
+	}
+}
+
+void Brush::move(float x, float y, float z)
+{
+	for (std::vector<Vector3>::iterator itr = this->mVertices.begin(); itr != this->mVertices.end(); ++itr)
+	{
+		(*itr).x((*itr).x()+x);
+		(*itr).y((*itr).y()+y);
+		(*itr).z((*itr).z()+z);
+	}
+	for (std::vector<Plane>::iterator itr = this->mPlanes.begin(); itr != this->mPlanes.end(); ++itr)
+	{
+		(*itr).updateFromVertices(this);
+	}
+	this->updateBounds();
+}
+
+void Brush::scale(float x, float y, float z, const Vector3& origin)
+{
+	for (std::vector<Vector3>::iterator itr = this->mVertices.begin(); itr != this->mVertices.end(); ++itr)
+	{
+		float newx = (((*itr).x() - origin.x()) * x) + origin.x();
+		float newy = (((*itr).y() - origin.y()) * y) + origin.y();
+		float newz = (((*itr).z() - origin.z()) * z) + origin.z();
+		(*itr).x(newx);
+		(*itr).y(newy);
+		(*itr).z(newz);
+	}
+	for (std::vector<Plane>::iterator itr = this->mPlanes.begin(); itr != this->mPlanes.end(); ++itr)
+	{
+		(*itr).updateFromVertices(this);
+	}
+	this->updateBounds();
+}
+
+void Brush::rotate(float x, float y, float z, const Vector3& origin)
+{
+	for (std::vector<Vector3>::iterator itr = this->mVertices.begin(); itr != this->mVertices.end(); ++itr)
+	{
+		float resultx = (*itr).x()-origin.x();
+		float resulty = (*itr).y()-origin.y();
+		float resultz = (*itr).z()-origin.z();
+
+		// ToDo rotate here
+		
+		(*itr).x(resultx+origin.x());
+		(*itr).y(resulty+origin.y());
+		(*itr).z(resultz+origin.z());
+	}
+	for (std::vector<Plane>::iterator itr = this->mPlanes.begin(); itr != this->mPlanes.end(); ++itr)
+	{
+		(*itr).updateFromVertices(this);
+	}
+	this->updateBounds();
 }
 
 }
