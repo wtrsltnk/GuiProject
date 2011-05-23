@@ -278,6 +278,15 @@ void Brush::updateBounds()
 		if ((*itr).y() < this->mMins[1]) this->mMins[1] = (*itr).y();
 		if ((*itr).z() < this->mMins[2]) this->mMins[2] = (*itr).z();
 	}
+	// Now we need to make sure all vertices of the planes are ordered CCW
+	for(int i = 0; i < this->mPlanes.size(); i++)
+	{
+		this->mPlanes[i].average = Vector3();
+		// Determine an avarage over all points in this face
+		for(int j = 0; j < this->mPlanes[i].mIndices.size(); j++)
+			this->mPlanes[i].average += this->mVertices[this->mPlanes[i].mIndices[j]];
+		this->mPlanes[i].average *= (1.0f / this->mPlanes[i].mIndices.size());
+	}
 }
 
 void Brush::move(float x, float y, float z)
