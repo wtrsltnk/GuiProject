@@ -19,6 +19,10 @@ public:
 	void rotateX(float amount);
 	void rotateY(float amount);
 	void rotateZ(float amount);
+	void rotateDegree(float x, float y, float z);
+	void rotateXDegree(float amount);
+	void rotateYDegree(float amount);
+	void rotateZDegree(float amount);
 
 	Vector3& position();
     void setPosition(const float position[3]);

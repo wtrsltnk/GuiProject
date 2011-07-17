@@ -1,5 +1,8 @@
 #include "camera.h"
 
+#define PI 3.14159265
+#define Deg2Rad(Ang) ((float)( Ang * PI / 180.0 ))
+
 Camera::Camera()
 	: mIsChanged(true)
 {
@@ -65,6 +68,40 @@ void Camera::rotateZ(float amount)
 	if (amount != 0) this->mIsChanged = true;
 
 	this->mRotation[2] += amount;
+    this->mMatrix = Matrix4x4::rotateMatrixZ(this->mRotation[2]) * Matrix4x4::rotateMatrixY(this->mRotation[1]) * Matrix4x4::rotateMatrixX(this->mRotation[0]);
+}
+
+void Camera::rotateDegree(float x, float y, float z)
+{
+	if (x != 0 || y != 0 || z != 0) this->mIsChanged = true;
+
+	this->mRotation[0] += Deg2Rad(x);
+	this->mRotation[1] += Deg2Rad(y);
+	this->mRotation[2] += Deg2Rad(z);
+    this->mMatrix = Matrix4x4::rotateMatrixZ(this->mRotation[2]) * Matrix4x4::rotateMatrixY(this->mRotation[1]) * Matrix4x4::rotateMatrixX(this->mRotation[0]);
+}
+
+void Camera::rotateXDegree(float amount)
+{
+	if (amount != 0) this->mIsChanged = true;
+
+	this->mRotation[0] += Deg2Rad(amount);
+    this->mMatrix = Matrix4x4::rotateMatrixZ(this->mRotation[2]) * Matrix4x4::rotateMatrixY(this->mRotation[1]) * Matrix4x4::rotateMatrixX(this->mRotation[0]);
+}
+
+void Camera::rotateYDegree(float amount)
+{
+	if (amount != 0) this->mIsChanged = true;
+
+	this->mRotation[1] += Deg2Rad(amount);
+    this->mMatrix = Matrix4x4::rotateMatrixZ(this->mRotation[2]) * Matrix4x4::rotateMatrixY(this->mRotation[1]) * Matrix4x4::rotateMatrixX(this->mRotation[0]);
+}
+
+void Camera::rotateZDegree(float amount)
+{
+	if (amount != 0) this->mIsChanged = true;
+
+	this->mRotation[2] += Deg2Rad(amount);
     this->mMatrix = Matrix4x4::rotateMatrixZ(this->mRotation[2]) * Matrix4x4::rotateMatrixY(this->mRotation[1]) * Matrix4x4::rotateMatrixX(this->mRotation[0]);
 }
 
