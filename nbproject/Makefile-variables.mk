@@ -39,21 +39,29 @@ CND_PACKAGE_DIR_libDebug=dist/libDebug/GNU-Linux-x86/package
 CND_PACKAGE_NAME_libDebug=GuiProject.tar
 CND_PACKAGE_PATH_libDebug=dist/libDebug/GNU-Linux-x86/package/GuiProject.tar
 # win32libRelease configuration
-CND_PLATFORM_win32libRelease=GNU-Windows
-CND_ARTIFACT_DIR_win32libRelease=dist/win32libRelease/GNU-Windows
+CND_PLATFORM_win32libRelease=MinGW-Windows
+CND_ARTIFACT_DIR_win32libRelease=dist/win32libRelease/MinGW-Windows
 CND_ARTIFACT_NAME_win32libRelease=libguiproject.a
-CND_ARTIFACT_PATH_win32libRelease=dist/win32libRelease/GNU-Windows/libguiproject.a
-CND_PACKAGE_DIR_win32libRelease=dist/win32libRelease/GNU-Windows/package
+CND_ARTIFACT_PATH_win32libRelease=dist/win32libRelease/MinGW-Windows/libguiproject.a
+CND_PACKAGE_DIR_win32libRelease=dist/win32libRelease/MinGW-Windows/package
 CND_PACKAGE_NAME_win32libRelease=GuiProject.tar
-CND_PACKAGE_PATH_win32libRelease=dist/win32libRelease/GNU-Windows/package/GuiProject.tar
+CND_PACKAGE_PATH_win32libRelease=dist/win32libRelease/MinGW-Windows/package/GuiProject.tar
 # win32libDebug configuration
-CND_PLATFORM_win32libDebug=GNU-Windows
-CND_ARTIFACT_DIR_win32libDebug=dist/win32libDebug/GNU-Windows
+CND_PLATFORM_win32libDebug=MinGW-Windows
+CND_ARTIFACT_DIR_win32libDebug=dist/win32libDebug/MinGW-Windows
 CND_ARTIFACT_NAME_win32libDebug=libguiproject.a
-CND_ARTIFACT_PATH_win32libDebug=dist/win32libDebug/GNU-Windows/libguiproject.a
-CND_PACKAGE_DIR_win32libDebug=dist/win32libDebug/GNU-Windows/package
+CND_ARTIFACT_PATH_win32libDebug=dist/win32libDebug/MinGW-Windows/libguiproject.a
+CND_PACKAGE_DIR_win32libDebug=dist/win32libDebug/MinGW-Windows/package
 CND_PACKAGE_NAME_win32libDebug=GuiProject.tar
-CND_PACKAGE_PATH_win32libDebug=dist/win32libDebug/GNU-Windows/package/GuiProject.tar
+CND_PACKAGE_PATH_win32libDebug=dist/win32libDebug/MinGW-Windows/package/GuiProject.tar
+# win32Debug configuration
+CND_PLATFORM_win32Debug=MinGW-Windows
+CND_ARTIFACT_DIR_win32Debug=dist/win32Debug/MinGW-Windows
+CND_ARTIFACT_NAME_win32Debug=guiproject
+CND_ARTIFACT_PATH_win32Debug=dist/win32Debug/MinGW-Windows/guiproject
+CND_PACKAGE_DIR_win32Debug=dist/win32Debug/MinGW-Windows/package
+CND_PACKAGE_NAME_win32Debug=guiproject.tar
+CND_PACKAGE_PATH_win32Debug=dist/win32Debug/MinGW-Windows/package/guiproject.tar
 #
 # include compiler specific variables
 #

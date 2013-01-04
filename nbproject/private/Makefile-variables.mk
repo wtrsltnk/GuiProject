@@ -9,3 +9,4 @@
 # libDebug configuration
 # win32libRelease configuration
 # win32libDebug configuration
+# win32Debug configuration

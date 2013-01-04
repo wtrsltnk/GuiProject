@@ -23,7 +23,7 @@ AS=as.exe
 # Macros
 CND_PLATFORM=MinGW-Windows
 CND_DLIB_EXT=dll
-CND_CONF=win32libRelease
+CND_CONF=win32Debug
 CND_DISTDIR=dist
 CND_BUILDDIR=build
 
@@ -83,177 +83,175 @@ FFLAGS=
 ASFLAGS=
 
 # Link Libraries and Options
-LDLIBSOPTIONS=
+LDLIBSOPTIONS=-lfreeglut -lopengl32 -lglu32
 
 # Build Targets
 .build-conf: ${BUILD_SUBPROJECTS}
-	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a
+	"${MAKE}"  -f nbproject/Makefile-${CND_CONF}.mk ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/guiproject.exe
 
-${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a: ${OBJECTFILES}
+${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/guiproject.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a
-	${AR} -rv ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a ${OBJECTFILES} 
-	$(RANLIB) ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a
+	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/guiproject ${OBJECTFILES} ${LDLIBSOPTIONS} 
 
 ${OBJECTDIR}/ui/uiFreeContainer.o: ui/uiFreeContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiFreeContainer.o ui/uiFreeContainer.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiFreeContainer.o ui/uiFreeContainer.cpp
 
 ${OBJECTDIR}/geo/Brush.o: geo/Brush.cpp 
 	${MKDIR} -p ${OBJECTDIR}/geo
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Brush.o geo/Brush.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Brush.o geo/Brush.cpp
 
 ${OBJECTDIR}/ui/stb_truetype.o: ui/stb_truetype.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/stb_truetype.o ui/stb_truetype.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/stb_truetype.o ui/stb_truetype.cpp
 
 ${OBJECTDIR}/ui/uiCheckbox.o: ui/uiCheckbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiCheckbox.o ui/uiCheckbox.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiCheckbox.o ui/uiCheckbox.cpp
 
 ${OBJECTDIR}/ui/uiFont.o: ui/uiFont.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiFont.o ui/uiFont.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiFont.o ui/uiFont.cpp
 
 ${OBJECTDIR}/GuiProject.o: GuiProject.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/GuiProject.o GuiProject.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/GuiProject.o GuiProject.cpp
 
 ${OBJECTDIR}/ui/uiVerticalContainer.o: ui/uiVerticalContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiVerticalContainer.o ui/uiVerticalContainer.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiVerticalContainer.o ui/uiVerticalContainer.cpp
 
 ${OBJECTDIR}/common/camera.o: common/camera.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/camera.o common/camera.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/camera.o common/camera.cpp
 
 ${OBJECTDIR}/ui/uiRender3D.o: ui/uiRender3D.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiRender3D.o ui/uiRender3D.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiRender3D.o ui/uiRender3D.cpp
 
 ${OBJECTDIR}/common/vector3.o: common/vector3.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/vector3.o common/vector3.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/vector3.o common/vector3.cpp
 
 ${OBJECTDIR}/ui/uiValuebox.o: ui/uiValuebox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiValuebox.o ui/uiValuebox.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiValuebox.o ui/uiValuebox.cpp
 
 ${OBJECTDIR}/geo/MapLoader.o: geo/MapLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/geo
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/MapLoader.o geo/MapLoader.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/MapLoader.o geo/MapLoader.cpp
 
 ${OBJECTDIR}/geo/Entity.o: geo/Entity.cpp 
 	${MKDIR} -p ${OBJECTDIR}/geo
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Entity.o geo/Entity.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Entity.o geo/Entity.cpp
 
 ${OBJECTDIR}/ui/uiClipper.o: ui/uiClipper.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiClipper.o ui/uiClipper.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiClipper.o ui/uiClipper.cpp
 
 ${OBJECTDIR}/common/TextureLoader.o: common/TextureLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/TextureLoader.o common/TextureLoader.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/TextureLoader.o common/TextureLoader.cpp
 
 ${OBJECTDIR}/ui/uiContainer.o: ui/uiContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiContainer.o ui/uiContainer.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiContainer.o ui/uiContainer.cpp
 
 ${OBJECTDIR}/geo/Scene.o: geo/Scene.cpp 
 	${MKDIR} -p ${OBJECTDIR}/geo
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Scene.o geo/Scene.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/geo/Scene.o geo/Scene.cpp
 
 ${OBJECTDIR}/ui/uiTextbox.o: ui/uiTextbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiTextbox.o ui/uiTextbox.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiTextbox.o ui/uiTextbox.cpp
 
 ${OBJECTDIR}/ui/uiListbox.o: ui/uiListbox.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiListbox.o ui/uiListbox.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiListbox.o ui/uiListbox.cpp
 
 ${OBJECTDIR}/common/FileLoader.o: common/FileLoader.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/FileLoader.o common/FileLoader.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/FileLoader.o common/FileLoader.cpp
 
 ${OBJECTDIR}/ui/uiControl.o: ui/uiControl.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiControl.o ui/uiControl.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiControl.o ui/uiControl.cpp
 
 ${OBJECTDIR}/common/Tokenizer.o: common/Tokenizer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Tokenizer.o common/Tokenizer.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Tokenizer.o common/Tokenizer.cpp
 
 ${OBJECTDIR}/ui/uiManager.o: ui/uiManager.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiManager.o ui/uiManager.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiManager.o ui/uiManager.cpp
 
 ${OBJECTDIR}/ui/uiButton.o: ui/uiButton.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiButton.o ui/uiButton.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiButton.o ui/uiButton.cpp
 
 ${OBJECTDIR}/common/Texture.o: common/Texture.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Texture.o common/Texture.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/Texture.o common/Texture.cpp
 
 ${OBJECTDIR}/common/quaternion.o: common/quaternion.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/quaternion.o common/quaternion.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/quaternion.o common/quaternion.cpp
 
 ${OBJECTDIR}/ui/uiLabel.o: ui/uiLabel.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiLabel.o ui/uiLabel.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiLabel.o ui/uiLabel.cpp
 
 ${OBJECTDIR}/userInput.o: userInput.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/userInput.o userInput.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/userInput.o userInput.cpp
 
 ${OBJECTDIR}/ui/uiHorizontalContainer.o: ui/uiHorizontalContainer.cpp 
 	${MKDIR} -p ${OBJECTDIR}/ui
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiHorizontalContainer.o ui/uiHorizontalContainer.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/ui/uiHorizontalContainer.o ui/uiHorizontalContainer.cpp
 
 ${OBJECTDIR}/GlutApplication.o: GlutApplication.cpp 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/GlutApplication.o GlutApplication.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/GlutApplication.o GlutApplication.cpp
 
 ${OBJECTDIR}/GLee.o: GLee.c 
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} $@.d
-	$(COMPILE.c) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/GLee.o GLee.c
+	$(COMPILE.c) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/GLee.o GLee.c
 
 ${OBJECTDIR}/common/matrix4x4.o: common/matrix4x4.cpp 
 	${MKDIR} -p ${OBJECTDIR}/common
 	${RM} $@.d
-	$(COMPILE.cc) -O2 -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/matrix4x4.o common/matrix4x4.cpp
+	$(COMPILE.cc) -g -MMD -MP -MF $@.d -o ${OBJECTDIR}/common/matrix4x4.o common/matrix4x4.cpp
 
 # Subprojects
 .build-subprojects:
@@ -261,7 +259,7 @@ ${OBJECTDIR}/common/matrix4x4.o: common/matrix4x4.cpp
 # Clean Targets
 .clean-conf: ${CLEAN_SUBPROJECTS}
 	${RM} -r ${CND_BUILDDIR}/${CND_CONF}
-	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/libguiproject.a
+	${RM} ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/guiproject.exe
 
 # Subprojects
 .clean-subprojects:

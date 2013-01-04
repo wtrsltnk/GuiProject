@@ -22,6 +22,7 @@ AS=as.exe
 
 # Macros
 CND_PLATFORM=MinGW-Windows
+CND_DLIB_EXT=dll
 CND_CONF=win32libDebug
 CND_DISTDIR=dist
 CND_BUILDDIR=build

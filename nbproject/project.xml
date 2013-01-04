@@ -38,6 +38,10 @@
                     <name>win32libDebug</name>
                     <type>3</type>
                 </confElem>
+                <confElem>
+                    <name>win32Debug</name>
+                    <type>1</type>
+                </confElem>
             </confList>
         </data>
     </configuration>
