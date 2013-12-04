@@ -108,7 +108,7 @@ bool MainWindow::initialize(int argc, char* argv[])
 
 	glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 
-//	this->video.load("/media/data/Films/tron/Tron.Legacy.2010.x264.1080.BluRay.AC3-DTS.NLSUBS-SRT/Tron.Legacy.2010.x264.1080.BluRay.AC3-DTS.NLSUBS-SRT.mkv");
+	this->video.load("/media/data/Films/tron/Tron.Legacy.2010.x264.1080.BluRay.AC3-DTS.NLSUBS-SRT/Tron.Legacy.2010.x264.1080.BluRay.AC3-DTS.NLSUBS-SRT.mkv");
 
 	return true;
 }
@@ -124,9 +124,8 @@ void MainWindow::render(int time)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-//	if (this->cb->checked())
-//		this->video.nextFrame();
-//	this->video.render();
+	this->video.nextFrame();
+	this->video.render();
 
 	ui::Manager::instance()->render();
 

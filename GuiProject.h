@@ -13,7 +13,7 @@
 #include "ui/uiControls.h"
 #include "geo/Brush.h"
 #include "geo/Scene.h"
-//#include "Video.h"
+#include "Video.h"
 
 class MainWindow : public GlutApplication, public event::EventHandler
 {
@@ -45,7 +45,7 @@ public:
 	geo::Brush brush;
 	geo::Scene scene;
 	int index1, index2;
-//	Video video;
+	Video video;
 
 };
 
