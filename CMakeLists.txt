@@ -53,15 +53,9 @@ CPMAddPackage("gh:g-truc/glm#master")
 CPMAddPackage("gh:freeglut/freeglut#master")
 CPMAddPackage(
     NAME ffmpeg
-    URL "https://master.dl.sourceforge.net/project/ffmpeg-windows-builds/release/n4.2.4/ffmpeg-N-95014-gf9f95ceebf-win64-shared.7z?viasf=1"
+    URL "https://github.com/BtbN/FFmpeg-Builds/releases/download/autobuild-2024-03-31-17-28/ffmpeg-n4.4.4-94-g5d07afd482-win64-gpl-shared-4.4.zip"
     DOWNLOAD_ONLY YES
 )
-
-if(ffmpeg_ADDED)
-    add_library(ffmpeg INTERFACE)
-    target_include_directories(ffmpeg INTERFACE ${ffmpeg_SOURCE_DIR}/include)
-    target_link_directories(ffmpeg INTERFACE ${ffmpeg_SOURCE_DIR})
-endif()
 
 target_include_directories(GuiProject
     PRIVATE
@@ -70,7 +64,7 @@ target_include_directories(GuiProject
         "${ffmpeg_SOURCE_DIR}/include"
 )
 
-target_link_directories(GuiProject PUBLIC ${ffmpeg_SOURCE_DIR})
+target_link_directories(GuiProject PUBLIC ${ffmpeg_SOURCE_DIR}/lib)
 
 target_link_libraries(GuiProject
     PRIVATE
