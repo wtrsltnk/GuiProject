@@ -33,7 +33,7 @@ private:
 	float m[4][4];
 
 public:
-	(*operator float (void))[4] { return this->m; }
+//	(*operator float (void))[4] { return this->m; }
 
 };
 

@@ -43,11 +43,17 @@ public:
 		Handler(EventHandler* handler, FunctionPtr method) : mHandler(handler), mMethod(method) { }
 
 		// Fire this handler with given sender and event args
-		inline void operator () (S* sender, E* e) { ((this->mHandler)->*this->mMethod)(sender, e); }
+        inline void operator () (S* sender, E* e)
+        {
+            if (this->mHandler != nullptr)
+            {
+                ((this->mHandler)->*this->mMethod)(sender, e);
+            }
+        }
 
 	private:
-		EventHandler* mHandler;
-		FunctionPtr mMethod;
+        EventHandler* mHandler = nullptr;
+        FunctionPtr mMethod = nullptr;
 
 		// Make sure Event class can access the private members of this Handler class
 		friend class Event;

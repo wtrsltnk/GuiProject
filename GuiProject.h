@@ -45,7 +45,7 @@ public:
 	geo::Brush brush;
 	geo::Scene scene;
 	int index1, index2;
-	Video video;
+    //Video video;
 
 };
 
