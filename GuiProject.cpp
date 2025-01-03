@@ -107,7 +107,7 @@ bool MainWindow::initialize(int argc, char *argv[])
 
     glClearColor(62.0f / 255.0f, 62.0f / 255.0f, 62.0f / 255.0f, 1.0f);
 
-    // this->video.load("/media/data/Films/tron/Tron.Legacy.2010.x264.1080.BluRay.AC3-DTS.NLSUBS-SRT/Tron.Legacy.2010.x264.1080.BluRay.AC3-DTS.NLSUBS-SRT.mkv");
+    this->video.load("bbb_sunflower_1080p_30fps_normal.mp4");
 
     return true;
 }
@@ -115,6 +115,8 @@ bool MainWindow::initialize(int argc, char *argv[])
 void MainWindow::resize(int w, int h)
 {
     this->width = w;
+    this->height = h;
+
     glViewport(0, 0, w, h);
     ui::Manager::instance()->setupSize(w, h);
 }
@@ -125,27 +127,27 @@ void MainWindow::render(int time)
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
-    // this->video.nextFrame();
-    // this->video.render();
+    this->video.nextFrame();
+    this->video.render(width, height);
 
-    ui::Manager::instance()->render();
+    // ui::Manager::instance()->render();
 
-    float aspect = 1.0f * ((float)this->width / (float)this->height);
+    // float aspect = 1.0f * ((float)this->width / (float)this->height);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    // glMatrixMode(GL_PROJECTION);
+    // glLoadIdentity();
 
-    perspectiveGL(45.0f, aspect, 0.1f, 3000.0f);
+    // perspectiveGL(45.0f, aspect, 0.1f, 3000.0f);
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    // glMatrixMode(GL_MODELVIEW);
+    // glLoadIdentity();
 
-    glPushMatrix();
-    static int lastTime = 0;
-    float speed = 1.0f * ((time - lastTime) / 100.0f);
-    lastTime = time;
+    // glPushMatrix();
+    // static int lastTime = 0;
+    // float speed = 1.0f * ((time - lastTime) / 100.0f);
+    // lastTime = time;
 
-    glPopMatrix();
+    // glPopMatrix();
 }
 
 void MainWindow::renderBrushVertices(geo::Brush &brush)

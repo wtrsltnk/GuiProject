@@ -15,7 +15,7 @@ public:
 	bool load(const char* filename);
 
 	void nextFrame();
-	void render();
+    void render(int w, int h);
 
 	void uploadFrame(AVFrame* pFrame, int width, int height);
 
@@ -27,7 +27,9 @@ private:
 	AVFrame* m_pFrameRGB;
 	unsigned char* m_pBuffer;
 	int m_nBufferSize;
-	int m_nVideoStream;
+    int m_nVideoStream;
+    int m_videoWidth = 1;
+    int m_videoHeight = 1;
 	unsigned int m_unCurrentFrameGLIndex;
 
 };

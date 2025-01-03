@@ -13,7 +13,7 @@ find_package(OpenGL REQUIRED)
 add_executable(GuiProject
     GlutApplication.cpp
     GuiProject.cpp
-    #Video.cpp
+    Video.cpp
     common/FileLoader.cpp
     common/Texture.cpp
     common/TextureLoader.cpp
@@ -58,8 +58,9 @@ CPMAddPackage(
 )
 
 if(ffmpeg_ADDED)
-    add_library(ffmpeg INTERFACE )
-    target_include_directories(ffmpeg INTERFACE ${ffmpeg_SOURCE_DIR})
+    add_library(ffmpeg INTERFACE)
+    target_include_directories(ffmpeg INTERFACE ${ffmpeg_SOURCE_DIR}/include)
+    target_link_directories(ffmpeg INTERFACE ${ffmpeg_SOURCE_DIR})
 endif()
 
 target_include_directories(GuiProject
@@ -69,10 +70,15 @@ target_include_directories(GuiProject
         "${ffmpeg_SOURCE_DIR}/include"
 )
 
+target_link_directories(GuiProject PUBLIC ${ffmpeg_SOURCE_DIR})
+
 target_link_libraries(GuiProject
     PRIVATE
         ${OpenGL_LIBRARIES}
         glm
         freeglut_static
-        ffmpeg
+        avcodec
+        avutil
+        avformat
+        swscale
 )
